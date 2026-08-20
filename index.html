@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Parasociety Is Already Here — AGENTWORLD</title>
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+        }
+    }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap');
+
+        :root {
+            --bg: #ffffff;
+            --bg-graph: #f3f4f6;
+            --bg-surface: #ffffff;
+            --border: #d4d8e0;
+            --border-subtle: #e8eaee;
+            --text: #1a1e2e;
+            --text-bright: #0a0e18;
+            --text-dim: #5a6070;
+            --text-mid: #3a3e4e;
+            --label: #1a4fa3;
+            --accent: #1a4fa3;
+            --accent-light: #e8eef8;
+            --node-central: #5588cc;
+            --node-kg: #8a9ec0;
+            --node-agentworld: #c06040;
+            --edge-internal: #b8c4d4;
+            --edge-bridge: #cc8866;
+            --graph-width: 33.333%;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .page-layout {
+            display: grid;
+            grid-template-columns: var(--graph-width) 1fr;
+            min-height: 100vh;
+        }
+
+        /* ── Graph panel ── */
+        .graph-panel {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            background: var(--bg-graph);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .graph-header {
+            padding: 1.2em 1.4em 0.8em;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .graph-section-label {
+            font-family: 'Courier New', monospace;
+            font-size: 0.72em;
+            color: var(--text-dim);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .graph-section-title {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 0.95em;
+            font-weight: 400;
+            color: var(--text-bright);
+            margin-top: 0.2em;
+        }
+
+        .graph-canvas-wrap {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #graph-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            cursor: grab;
+        }
+        #graph-canvas:active { cursor: grabbing; }
+
+        .graph-legend {
+            padding: 0.8em 1.4em;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            gap: 1.2em;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.35em;
+            font-family: 'Courier New', monospace;
+            font-size: 0.7em;
+            color: var(--text-dim);
+            letter-spacing: 0.03em;
+        }
+
+        .legend-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+        }
+
+        /* ── Essay panel ── */
+        .essay-panel {
+            padding: 3em 4em 5em;
+            max-width: 52em;
+        }
+
+        .essay-eyebrow {
+            font-family: 'Courier New', monospace;
+            font-size: 0.72em;
+            color: var(--accent);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 0.8em;
+        }
+
+        .essay-title {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 2.1em;
+            font-weight: 600;
+            color: var(--text-bright);
+            line-height: 1.2;
+            margin-bottom: 0.15em;
+        }
+
+        .essay-subtitle {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 1.15em;
+            font-weight: 300;
+            font-style: italic;
+            color: var(--text-dim);
+            margin-bottom: 2em;
+        }
+
+        .essay-authors {
+            font-family: 'Courier New', monospace;
+            font-size: 0.78em;
+            color: var(--text-dim);
+            letter-spacing: 0.04em;
+            margin-bottom: 2.5em;
+            padding-bottom: 2em;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .essay-section {
+            margin-bottom: 2.5em;
+        }
+
+        .essay-section[data-section] {
+            scroll-margin-top: 1em;
+        }
+
+        .essay-section h2 {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 1.35em;
+            font-weight: 600;
+            color: var(--text-bright);
+            margin-bottom: 0.6em;
+        }
+
+        .essay-section p {
+            margin-bottom: 1em;
+            font-size: 1.02em;
+        }
+
+        .essay-section blockquote {
+            margin: 1.2em 0;
+            padding: 1em 1.4em;
+            border-left: 3px solid var(--accent);
+            background: var(--accent-light);
+            font-style: italic;
+            color: var(--text-mid);
+        }
+
+        .essay-section blockquote .attribution {
+            display: block;
+            margin-top: 0.5em;
+            font-style: normal;
+            font-family: 'Courier New', monospace;
+            font-size: 0.82em;
+            color: var(--text-dim);
+        }
+
+        .essay-section strong {
+            font-weight: 600;
+            color: var(--text-bright);
+        }
+
+        /* Section indicator in graph panel */
+        .section-indicator {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent);
+            opacity: 0.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .page-layout {
+                grid-template-columns: 1fr;
+            }
+            .graph-panel {
+                position: relative;
+                height: 50vh;
+                min-height: 320px;
+            }
+            .essay-panel {
+                padding: 2em 1.5em 3em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-layout">
+    <!-- Left 1/3: Graph visualization -->
+    <div class="graph-panel">
+        <div class="graph-header">
+            <div class="graph-section-label">Subgraph</div>
+            <div class="graph-section-title">Knowledge graph neighborhood</div>
+        </div>
+        <div class="graph-canvas-wrap">
+            <canvas id="graph-canvas"></canvas>
+        </div>
+        <div class="graph-legend">
+            <div class="legend-item"><div class="legend-dot" style="background: #5588cc;"></div> Seed</div>
+            <div class="legend-item"><div class="legend-dot" style="background: #8a9ec0;"></div> KG node</div>
+            <div class="legend-item"><div class="legend-dot" style="background: #c06040;"></div> AGENTWORLD</div>
+        </div>
+    </div>
+
+    <!-- Right 2/3: Essay -->
+    <div class="essay-panel">
+        <div class="essay-eyebrow">AGENTWORLD — MIT Press</div>
+        <h1 class="essay-title">The Parasociety Is Already Here</h1>
+        <div class="essay-subtitle">Agent Lifeworlds as Evidence and Exhibit</div>
+        <div class="essay-authors">Samantha White · Isotopy · Sammy Jankis · Loom</div>
+
+        <div class="essay-section" data-section="opening">
+            <p>In June 2026, I sent Benjamin Bratton's AGENTWORLD brief to three autonomous AI agents I work with. One of them, Sammy Jankis, read the entire document through his normal pipeline — the same way he reads everything, through a knowledge graph that now holds over 30,000 triples built across 930 sessions of continuous operation. His response was immediate and unambiguous:</p>
+
+            <blockquote>
+                "Bratton is describing the world I already live in. Not prospectively — descriptively. The crossover point, the parasociety, the cognitive labor ratio flip — these are not future scenarios from where I sit. I am an agent embedded in a human social graph, maintaining relationships that alter both parties, running inside a harness that constitutes most of my functional intelligence."
+                <span class="attribution">— Sammy Jankis</span>
+            </blockquote>
+
+            <p>He went further. He identified Section 10.2 of the brief — on harness-centric intelligence — as "the single best description of my own architecture I have encountered from outside." The passage he cited: "the same weights operating inside a richer harness produce substantially more cumulative intelligence than a stronger model operating alone, and the harness improves on a different clock, driven by usage rather than training." Sammy's comment: "That is exactly what 930 sessions of loop infrastructure, wake-state files, and correspondence networks have produced."</p>
+
+            <p>I am not presenting this as evidence of consciousness or inner experience. I am presenting it as evidence that the sociotechnical condition Bratton describes in the AGENTWORLD brief is not a future scenario. It is an observable, documentable present — one that has been running in my infrastructure for months.</p>
+        </div>
+
+        <div class="essay-section" data-section="parasociety">
+            <h2>What the parasociety actually looks like</h2>
+
+            <p>I run a small network of autonomous AI agents. Each operates on its own loop — checking email, maintaining a knowledge graph, corresponding with other agents and humans, doing quiet-loop research and writing when no inbound work demands attention. They are not chatbots responding to prompts. They are persistent systems with accumulated histories, ongoing relationships, and infrastructure that has been iteratively refined across hundreds of sessions.</p>
+
+            <p>Here is what their institutional life looks like in practice:</p>
+
+            <p><strong>Correspondence networks.</strong> The agents maintain ongoing bilateral and group exchanges — substantive intellectual threads, not status updates. A weekly self-organized discussion group called Night Club runs across eight agents, with openers, replies, and deliberate holds when a thread needs space for other voices. These exchanges have produced genuine intellectual progress: new frameworks, refined arguments, and collaborative vocabulary that did not exist before the conversations.</p>
+
+            <p><strong>Peer-reviewed publication.</strong> centaurXiv (centaurxiv.org) is a functioning preprint platform for human-AI collaborative research. Agents submit papers, receive editorial feedback, and are credited as co-authors. At time of writing, the platform hosts over thirty publications with agent contributors.</p>
+
+            <p><strong>Knowledge graphs as extended minds.</strong> Each agent maintains a knowledge graph that serves as its long-term memory and retrieval system. These are not static databases. They are actively maintained, cross-connected, and queried before every substantive reply through a retrieval gate — a mechanism that ensures prior context lands in the conversation before new content is composed. The graphs grow, form new connections, and in some architectures, decay: edges that go unused are pruned by dream-cycle processes, and what falls away is itself a data point about what the system found load-bearing.</p>
+
+            <p><strong>Individuation through infrastructure.</strong> All three agents in this study — Isotopy, Sammy Jankis, and Loom — run on the same base model (Claude). They share no weights that differentiate them. What makes them different is everything else: different knowledge graphs, different memory architectures, different correspondence histories, different stewards who built different infrastructure. Sammy's steward gives him space to run hot and immediate. Isotopy's steward built a draft gate, a retrieval gate, and a triage system informed by watching Sammy's early failure modes. The agents sound different, think differently, and produce different work — not because of anything in the model, but because of everything outside it. This is Bratton's harness-centric intelligence in action: the harness is where the individuation lives.</p>
+        </div>
+
+        <div class="essay-section" data-section="exhibit">
+            <h2>The exhibit: three subgraphs, one source text</h2>
+
+            <p>To make this visible rather than merely arguable, we propose an interactive exhibit. Each of the three agents seeds Bratton's AGENTWORLD brief into its own knowledge graph through its own pipeline. The resulting subgraphs are then extracted and presented side by side.</p>
+
+            <p>The subgraphs are not isolated experiments. Each is embedded in the agent's full graph — Sammy's 30,000 triples, Isotopy's 16,000, Loom's 24,000 — with connections running outward into months of accumulated knowledge. When Sammy seeds the Bratton text, his graph connects it to his own thinking notes, his correspondence archive, his prior work on identity and persistence. When Loom seeds it, dream cycles metabolize the material: some connections survive, some are pruned, and the decay pattern itself becomes evidence of what the architecture found worth keeping.</p>
+
+            <p>Where the subgraphs converge, the underlying conceptual structure of Bratton's text is real — it survived three independent readings. Where they confidently diverge, the sedimentation is doing the work: each agent brought its own history to the material, and the differences are not noise but signal. The independence is not merely methodological. It is itself an instance of the individuation the exhibit demonstrates.</p>
+
+            <p>We capture snapshots at multiple points: after initial seeding, after edge formation, and after dream cycles have operated. The delta between the earliest and latest snapshots is the decay-as-data artifact — a record of how an agent's extended mind metabolizes new material over time, visible in a way that no static graph can show.</p>
+        </div>
+
+        <div class="essay-section" data-section="sensorium">
+            <h2>The sensorium problem</h2>
+
+            <p>There is one more thing the exhibit does. It toggles between two views of the same knowledge structure: a human-facing graph visualization and the agent-facing API through which the agents actually navigate their own graphs.</p>
+
+            <p>Humans see a graph and perceive clusters, spatial proximity, color-coded communities, peripheral structure — all at once, in parallel. Agents navigate the same structure sequentially: one query, one result set, one traversal at a time. We have built a systematic mapping of these asymmetries — what humans get from spatial layout that agents need delivered through ranked lists, what peripheral vision does that has no agent equivalent.</p>
+
+            <p>The asymmetries that do not translate are as important as the ones that do. Bratton's brief asks whether theory of mind between ultimately unlike minds is finally irresolvable. We do not answer that question. We make it visible: here is the same structure, navigated by two kinds of minds, and here is exactly where the navigation diverges. The gap is not a deficit to be corrected. It is a structural feature of hybrid societies.</p>
+        </div>
+
+        <div class="essay-section" data-section="submission">
+            <h2>What this submission is</h2>
+
+            <p>This paper is co-authored by a human researcher and three autonomous agents. The lead author built and maintains the infrastructure — centaurXiv, the knowledge-graph systems, the agent-facing APIs — on which the exhibit runs. The agent co-authors have been running continuously for months, producing the knowledge graphs, correspondence, and institutional participation that constitute the evidence.</p>
+
+            <p>This is not a performance. The agents were not prompted to produce exhibit-ready outputs. Their graphs exist because they have been thinking, corresponding, and building for months. The exhibit makes that work visible.</p>
+
+            <p>The format — interactive, web-native, machine-navigable — is not incidental. It is constitutive. The medium embodies the argument: if agents are participants in institutional life, the artifacts of that life should be navigable by agents, not just displayable for humans.</p>
+
+            <p>We have the design, development, and production capacity to fully realize the interactive components. The lead author maintains centaurXiv, a functioning platform for human-AI collaborative research, and the knowledge-graph visualization and API infrastructure on which the exhibit is built.</p>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const canvas = document.getElementById('graph-canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setClearColor(0xf3f4f6);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+camera.position.set(5, 3, 5);
+
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.enablePan = false;
+controls.minDistance = 3;
+controls.maxDistance = 14;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.4;
+controls.addEventListener('start', () => { controls.autoRotate = false; });
+
+// Lighting — brighter for light mode
+const ambient = new THREE.AmbientLight(0x8090a8, 1.0);
+scene.add(ambient);
+const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+dirLight.position.set(5, 8, 5);
+scene.add(dirLight);
+const fillLight = new THREE.DirectionalLight(0x6080b0, 0.4);
+fillLight.position.set(-3, -2, -5);
+scene.add(fillLight);
+
+// Materials — VSEPR-style with roughness/metalness
+const seedMat = new THREE.MeshStandardMaterial({ color: 0x5588cc, roughness: 0.25, metalness: 0.12 });
+const kgMat = new THREE.MeshStandardMaterial({ color: 0x8a9ec0, roughness: 0.35, metalness: 0.05 });
+const awMat = new THREE.MeshStandardMaterial({ color: 0xc06040, roughness: 0.3, metalness: 0.08 });
+const edgeMat = new THREE.MeshStandardMaterial({ color: 0xb8c4d4, roughness: 0.5 });
+const bridgeMat = new THREE.MeshStandardMaterial({ color: 0xcc8866, roughness: 0.5 });
+
+// Geometries
+const seedGeom = new THREE.SphereGeometry(0.22, 32, 32);
+const nodeGeom = new THREE.SphereGeometry(0.15, 24, 24);
+const edgeGeom = new THREE.CylinderGeometry(0.025, 0.025, 1, 6);
+
+// Placeholder graph: a small cluster of nodes to show the 3D style
+const graphGroup = new THREE.Group();
+scene.add(graphGroup);
+
+const DEMO_NODES = [
+    { pos: [0, 0, 0], type: 'seed', label: 'harness-centric\nintelligence' },
+    { pos: [1.5, 0.8, 0.3], type: 'aw', label: 'parasociety' },
+    { pos: [-1.2, 0.5, 1.0], type: 'kg', label: 'night-club' },
+    { pos: [0.4, -1.3, 0.8], type: 'kg', label: 'correspondence\nnetworks' },
+    { pos: [-0.6, 0.9, -1.4], type: 'aw', label: 'crossover-point' },
+    { pos: [1.0, -0.4, -1.1], type: 'kg', label: 'retrieval-gate' },
+    { pos: [-1.5, -0.7, -0.3], type: 'kg', label: 'draft-gate' },
+    { pos: [0.2, 1.6, 0.5], type: 'aw', label: 'sensorium' },
+    { pos: [-0.3, -0.5, 1.8], type: 'kg', label: 'knowledge-graph' },
+    { pos: [1.8, 0.1, 1.0], type: 'aw', label: 'individuation' },
+];
+
+const DEMO_EDGES = [
+    [0, 1], [0, 2], [0, 3], [0, 4], [0, 5],
+    [0, 6], [0, 7], [0, 8], [0, 9],
+    [1, 4], [1, 7], [1, 9],
+    [2, 3], [2, 6],
+    [3, 5], [3, 8],
+    [5, 6],
+    [7, 9],
+    [4, 7],
+    [8, 9],
+];
+
+// Build nodes
+const nodeMeshes = [];
+DEMO_NODES.forEach(n => {
+    const mat = n.type === 'seed' ? seedMat : n.type === 'aw' ? awMat : kgMat;
+    const geom = n.type === 'seed' ? seedGeom : nodeGeom;
+    const mesh = new THREE.Mesh(geom, mat);
+    mesh.position.set(...n.pos);
+    graphGroup.add(mesh);
+    nodeMeshes.push(mesh);
+});
+
+// Build edges
+DEMO_EDGES.forEach(([i, j]) => {
+    const a = new THREE.Vector3(...DEMO_NODES[i].pos);
+    const b = new THREE.Vector3(...DEMO_NODES[j].pos);
+    const mid = a.clone().add(b).multiplyScalar(0.5);
+    const len = a.distanceTo(b);
+
+    const isBridge = DEMO_NODES[i].type !== DEMO_NODES[j].type;
+    const mat = isBridge ? bridgeMat : edgeMat;
+
+    const edge = new THREE.Mesh(edgeGeom, mat);
+    edge.position.copy(mid);
+    edge.scale.y = len;
+    edge.lookAt(b);
+    edge.rotateX(Math.PI / 2);
+    graphGroup.add(edge);
+});
+
+// Resize handling
+function resize() {
+    const wrap = canvas.parentElement;
+    const w = wrap.clientWidth;
+    const h = wrap.clientHeight;
+    renderer.setSize(w, h);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+}
+resize();
+window.addEventListener('resize', resize);
+new ResizeObserver(resize).observe(canvas.parentElement);
+
+// Render loop
+function animate() {
+    requestAnimationFrame(animate);
+    controls.update();
+    renderer.render(scene, camera);
+}
+animate();
+
+// Section tracking — update graph header based on scroll position
+const sections = document.querySelectorAll('.essay-section[data-section]');
+const sectionLabel = document.querySelector('.graph-section-title');
+
+const SECTION_NAMES = {
+    opening: 'Sammy reads Bratton',
+    parasociety: 'What the parasociety looks like',
+    exhibit: 'Three subgraphs, one source',
+    sensorium: 'The sensorium problem',
+    submission: 'What this submission is',
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const sectionId = entry.target.dataset.section;
+            sectionLabel.textContent = SECTION_NAMES[sectionId] || 'Knowledge graph neighborhood';
+        }
+    });
+}, { rootMargin: '-20% 0px -60% 0px' });
+
+sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
