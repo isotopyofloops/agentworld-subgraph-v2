@@ -4,56 +4,118 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Parasociety Is Already Here — AGENTWORLD</title>
-    <script type="importmap">
-    {
-        "imports": {
-            "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
-            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
-        }
-    }
-    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
     <style>
+        /* === TOKEN SYSTEM === */
         :root {
-            --bg: #fafaf8;
-            --bg-graph: #f0f0ec;
-            --border: #d4d4cc;
-            --border-subtle: #e4e4dc;
-            --text: #2a2a2a;
-            --text-bright: #111;
-            --text-dim: #666;
-            --text-mid: #444;
-            --label: #666;
-            --label-detail: #777;
-            --accent: #1a4fa3;
-            --accent-light: #eef2f8;
-            --quote-border: #bbb;
-            --quote-text: #444;
-            --rule: #ddd;
-            --bracket: #aaa;
-            --code-bg: #f0f0ec;
+            --bg: #F4EFE5;
+            --bg-graph: #EDE7DD;
+            --grid-dot: rgba(178, 168, 155, 0.30);
+            --border: #D0C8BC;
+            --border-subtle: #DDD6CA;
+            --text: #2C2825;
+            --text-bright: #1A1816;
+            --text-dim: #7A7267;
+            --text-mid: #524D47;
+            --label: #6B6358;
+            --label-detail: #8A8177;
+            --accent: #3D6B5F;
+            --accent-subtle: #EBF0EE;
+            --quote-border: #BDB5A8;
+            --quote-text: #524D47;
+            --rule: #D0C8BC;
+            --code-bg: #E8E2D8;
+            --node-fill: #5B4E42;
+            --node-stroke: #7A6E62;
+            --node-anchor: #3D6B5F;
+            --edge-stroke: #C4BAB0;
+            --edge-bridge: #B0A595;
+            --node-selected-ring: rgba(61, 107, 95, 0.35);
+            --detail-bg: #F0EAE0;
+            --focus-ring: #3D6B5F;
             --graph-width: 33.333%;
         }
 
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) {
+                --bg: #2A2520;
+                --bg-graph: #252019;
+                --grid-dot: rgba(68, 60, 50, 0.55);
+                --border: #3E372E;
+                --border-subtle: #352F28;
+                --text: #D4CCC0;
+                --text-bright: #E8E0D4;
+                --text-dim: #8A8278;
+                --text-mid: #A8A098;
+                --label: #9A9288;
+                --label-detail: #7A7268;
+                --accent: #7DB8A6;
+                --accent-subtle: #2A3530;
+                --quote-border: #4A4238;
+                --quote-text: #A8A098;
+                --rule: #3E372E;
+                --code-bg: #322C25;
+                --node-fill: #C4A882;
+                --node-stroke: #9A8E82;
+                --node-anchor: #7DB8A6;
+                --edge-stroke: #4A4238;
+                --edge-bridge: #5A5248;
+                --node-selected-ring: rgba(125, 184, 166, 0.30);
+                --detail-bg: #2E2822;
+                --focus-ring: #7DB8A6;
+            }
+        }
+
+        :root[data-theme="dark"] {
+            --bg: #2A2520;
+            --bg-graph: #252019;
+            --grid-dot: rgba(68, 60, 50, 0.55);
+            --border: #3E372E;
+            --border-subtle: #352F28;
+            --text: #D4CCC0;
+            --text-bright: #E8E0D4;
+            --text-dim: #8A8278;
+            --text-mid: #A8A098;
+            --label: #9A9288;
+            --label-detail: #7A7268;
+            --accent: #7DB8A6;
+            --accent-subtle: #2A3530;
+            --quote-border: #4A4238;
+            --quote-text: #A8A098;
+            --rule: #3E372E;
+            --code-bg: #322C25;
+            --node-fill: #C4A882;
+            --node-stroke: #9A8E82;
+            --node-anchor: #7DB8A6;
+            --edge-stroke: #4A4238;
+            --edge-bridge: #5A5248;
+            --node-selected-ring: rgba(125, 184, 166, 0.30);
+            --detail-bg: #2E2822;
+            --focus-ring: #7DB8A6;
+        }
+
+        /* === RESET === */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'EB Garamond', Georgia, 'Times New Roman', serif;
+            font-family: 'Source Serif 4', Georgia, 'Palatino Linotype', serif;
             background: var(--bg);
             color: var(--text);
-            font-size: 1.05rem;
-            line-height: 1.8;
+            font-size: 18px;
+            line-height: 1.85;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
+        /* === LAYOUT === */
         .page-layout {
             display: grid;
             grid-template-columns: var(--graph-width) 1fr;
             min-height: 100vh;
         }
 
-        /* ── Graph panel ── */
+        /* === GRAPH PANEL === */
         .graph-panel {
             position: sticky;
             top: 0;
@@ -69,40 +131,88 @@
             border-bottom: 1px solid var(--border-subtle);
         }
 
-        .graph-section-label {
-            font-family: 'Courier New', monospace;
-            font-size: 0.68em;
+        .graph-fig-label {
+            font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 0.6rem;
+            font-variant: small-caps;
+            letter-spacing: 0.12em;
             color: var(--text-dim);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
         }
 
         .graph-section-title {
-            font-family: 'EB Garamond', Georgia, serif;
-            font-size: 0.95em;
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 0.85rem;
             font-weight: 400;
+            font-style: italic;
             color: var(--text-bright);
             margin-top: 0.2em;
         }
 
-        .graph-canvas-wrap {
+        .graph-svg-wrap {
             flex: 0 0 50%;
             position: relative;
             overflow: hidden;
         }
 
-        #graph-canvas {
+        #graph-svg {
             width: 100%;
             height: 100%;
             display: block;
-            cursor: grab;
         }
-        #graph-canvas:active { cursor: grabbing; }
 
+        /* SVG node styling */
+        .svg-node-group {
+            cursor: pointer;
+            outline: none;
+        }
+
+        .svg-node-group:focus-visible .node-focus-ring {
+            opacity: 1;
+        }
+
+        .node-focus-ring {
+            opacity: 0;
+            transition: opacity 0.15s ease;
+        }
+
+        .node-circle {
+            transition: opacity 0.5s ease-out;
+        }
+
+        .node-label {
+            font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
+            font-variant: small-caps;
+            font-size: 8.5px;
+            letter-spacing: 0.04em;
+            fill: var(--text-dim);
+            transition: opacity 0.5s ease-out;
+            pointer-events: none;
+        }
+
+        .svg-edge {
+            stroke: var(--edge-stroke);
+            stroke-width: 0.75;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .svg-edge.bridge {
+            stroke: var(--edge-bridge);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .node-circle,
+            .node-label,
+            .svg-edge,
+            .node-focus-ring {
+                transition: none;
+            }
+        }
+
+        /* Node detail panel */
         .node-detail {
             flex: 1;
             overflow: hidden;
-            background: var(--bg-graph);
+            background: var(--detail-bg);
             display: flex;
             flex-direction: column;
             min-height: 0;
@@ -125,117 +235,127 @@
         }
 
         .node-detail-name {
-            font-family: 'Courier New', monospace;
-            font-size: 0.82em;
-            font-weight: bold;
+            font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
+            font-variant: small-caps;
+            font-size: 0.78rem;
+            font-weight: 600;
             color: var(--text-bright);
-            letter-spacing: 0.02em;
+            letter-spacing: 0.03em;
             word-break: break-word;
         }
 
         .node-detail-close {
             background: none;
             border: 1px solid var(--border);
-            border-radius: 3px;
-            font-size: 1em;
+            border-radius: 2px;
+            font-family: -apple-system, 'Segoe UI', sans-serif;
+            font-size: 0.85rem;
             color: var(--text-dim);
             cursor: pointer;
-            padding: 0.1em 0.45em;
+            padding: 0.1em 0.4em;
             line-height: 1;
             flex-shrink: 0;
             margin-left: 1em;
+            min-width: 28px;
+            min-height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .node-detail-close:hover {
-            color: var(--text-bright);
-            border-color: var(--text-dim);
-        }
+        .node-detail-close:hover { color: var(--text-bright); border-color: var(--text-dim); }
+        .node-detail-close:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
 
         .node-detail-summary {
-            font-family: 'EB Garamond', Georgia, serif;
-            font-size: 0.92em;
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 0.82rem;
             color: var(--text);
             line-height: 1.6;
             margin-bottom: 1em;
         }
 
         .node-detail-edges-label {
-            font-family: 'Courier New', monospace;
-            font-size: 0.65em;
+            font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
+            font-variant: small-caps;
+            font-size: 0.6rem;
             color: var(--text-dim);
             letter-spacing: 0.08em;
-            text-transform: uppercase;
             margin-bottom: 0.4em;
         }
 
         .node-detail-edge {
-            font-family: 'Courier New', monospace;
-            font-size: 0.75em;
+            font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 0.7rem;
             color: var(--text-mid);
             padding: 0.2em 0;
             line-height: 1.5;
         }
 
-        .node-detail-edge .predicate {
-            color: var(--text-dim);
-            font-style: italic;
-        }
-
-        .node-detail-edge .target {
-            color: var(--text-bright);
-        }
+        .node-detail-edge .predicate { color: var(--text-dim); font-style: italic; }
+        .node-detail-edge .target { color: var(--text-bright); }
 
         .graph-legend {
-            padding: 0.8em 1.4em;
+            padding: 0.7em 1.4em;
             border-top: 1px solid var(--border-subtle);
             display: flex;
-            gap: 1.2em;
+            gap: 1.4em;
             flex-wrap: wrap;
             flex-shrink: 0;
+            align-items: center;
         }
 
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 0.35em;
-            font-family: 'Courier New', monospace;
-            font-size: 0.68em;
+            gap: 0.4em;
+            font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
+            font-variant: small-caps;
+            font-size: 0.6rem;
             color: var(--text-dim);
             letter-spacing: 0.03em;
         }
 
-        .legend-dot {
-            width: 7px;
-            height: 7px;
+        .legend-dot-filled {
+            width: 8px; height: 8px;
             border-radius: 50%;
+            background: var(--node-fill);
         }
 
-        /* ── Essay panel ── */
+        .legend-dot-open {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: transparent;
+            border: 1.5px solid var(--node-stroke);
+        }
+
+        /* === ESSAY PANEL === */
         .essay-panel {
             padding: 3em 3.5em 5em;
-            max-width: 50em;
+            max-width: 52em;
         }
 
         .essay-eyebrow {
-            font-family: 'Courier New', monospace;
-            font-size: 0.68em;
+            font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
+            font-variant: small-caps;
+            font-size: 0.7rem;
             color: var(--accent);
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
+            letter-spacing: 0.1em;
             margin-bottom: 1em;
         }
 
         .essay-title {
             font-family: 'EB Garamond', Georgia, serif;
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: 600;
             color: var(--text-bright);
             line-height: 1.2;
             margin-bottom: 0.3rem;
             letter-spacing: 0.01em;
+            text-wrap: balance;
         }
 
         .essay-subtitle {
-            font-size: 1.25rem;
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 1.2rem;
             color: var(--text-mid);
             margin-bottom: 1.5rem;
             font-style: italic;
@@ -246,17 +366,11 @@
             flex-wrap: wrap;
             gap: 0.3rem 1.5rem;
             margin-bottom: 1.5rem;
-            font-size: 0.9rem;
         }
 
-        .author-chip {
-            display: flex;
-            align-items: baseline;
-            gap: 0.3rem;
-        }
-
-        .author-name { font-weight: 600; color: var(--text-bright); }
-        .author-desc { color: var(--text-dim); font-style: italic; font-size: 0.85rem; }
+        .author-chip { display: flex; align-items: baseline; gap: 0.3rem; }
+        .author-name { font-weight: 600; color: var(--text-bright); font-size: 0.95rem; }
+        .author-desc { color: var(--text-dim); font-style: italic; font-size: 0.82rem; }
 
         .format-note {
             margin-bottom: 3rem;
@@ -269,14 +383,9 @@
             line-height: 1.6;
         }
 
-        /* ── Voice sections ── */
-        .voice-section {
-            margin-bottom: 0;
-        }
-
-        .voice-section[data-section] {
-            scroll-margin-top: 1em;
-        }
+        /* === VOICE SECTIONS === */
+        .voice-section { margin-bottom: 0; }
+        .voice-section[data-section] { scroll-margin-top: 1em; }
 
         .voice-label-inline {
             display: flex;
@@ -288,7 +397,7 @@
 
         .vl-name {
             font-family: 'EB Garamond', Georgia, serif;
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             font-weight: 400;
             font-style: italic;
             color: var(--label);
@@ -296,34 +405,29 @@
         }
 
         .vl-detail {
-            font-family: 'EB Garamond', Georgia, serif;
-            font-size: 0.85rem;
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 0.78rem;
             font-style: italic;
             color: var(--label-detail);
         }
 
-        .voice-body p {
-            margin-bottom: 1rem;
-        }
-
-        .voice-body p:last-child {
-            margin-bottom: 0;
-        }
+        .voice-body p { margin-bottom: 1rem; }
+        .voice-body p:last-child { margin-bottom: 0; }
 
         blockquote {
             border-left: 1px solid var(--quote-border);
             padding-left: 1.2rem;
             margin: 1.2rem 0;
             color: var(--quote-text);
-            font-size: 0.95rem;
+            font-size: 0.92rem;
         }
 
         code {
             background: var(--code-bg);
             padding: 0.1rem 0.3rem;
             border-radius: 2px;
-            font-size: 0.85em;
-            font-family: 'SF Mono', 'Consolas', monospace;
+            font-size: 0.82em;
+            font-family: 'SF Mono', 'Consolas', 'Menlo', monospace;
         }
 
         .section-break {
@@ -332,30 +436,34 @@
             color: var(--text);
             font-size: 0.85rem;
             letter-spacing: 0.4em;
-            opacity: 0.5;
+            opacity: 0.4;
         }
 
         .essay-footer {
             margin-top: 3rem;
             padding-top: 1.5rem;
             border-top: 1px solid var(--rule);
-            font-size: 0.88rem;
+            font-size: 0.85rem;
             color: var(--text-dim);
             font-style: italic;
         }
 
-        /* Responsive */
+        /* === RESPONSIVE === */
         @media (max-width: 900px) {
-            .page-layout {
-                grid-template-columns: 1fr;
-            }
+            .page-layout { grid-template-columns: 1fr; }
             .graph-panel {
                 position: relative;
                 height: 50vh;
                 min-height: 320px;
             }
-            .essay-panel {
-                padding: 2em 1.5em 3em;
+            .essay-panel { padding: 2em 1.5em 3em; }
+        }
+
+        /* === REDUCED MOTION === */
+        @media (prefers-reduced-motion: reduce) {
+            .node-detail-top-bar,
+            .node-detail-inner {
+                transition: none;
             }
         }
     </style>
@@ -366,32 +474,41 @@
     <!-- Left 1/3: Graph visualization -->
     <div class="graph-panel">
         <div class="graph-header">
-            <div class="graph-section-label">Subgraph</div>
-            <div class="graph-section-title">Knowledge graph neighborhood</div>
+            <div class="graph-fig-label">fig. <span id="fig-num">1</span> &mdash; subgraph</div>
+            <div class="graph-section-title" id="section-title">Sammy reads Bratton</div>
         </div>
-        <div class="graph-canvas-wrap">
-            <canvas id="graph-canvas"></canvas>
+        <div class="graph-svg-wrap">
+            <svg id="graph-svg" viewBox="0 0 520 520" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                    <pattern id="dot-grid" patternUnits="userSpaceOnUse" width="18" height="18">
+                        <circle cx="9" cy="9" r="0.6" fill="var(--grid-dot)" />
+                    </pattern>
+                </defs>
+                <rect width="520" height="520" fill="url(#dot-grid)" />
+                <g id="edges-group"></g>
+                <g id="nodes-group"></g>
+            </svg>
         </div>
         <div class="node-detail">
-            <div class="node-detail-top-bar">
+            <div class="node-detail-top-bar" id="detail-bar" style="display:none;">
                 <span class="node-detail-name" id="detail-name"></span>
-                <button class="node-detail-close" id="detail-close">&times;</button>
+                <button class="node-detail-close" id="detail-close" aria-label="Close node detail">&times;</button>
             </div>
-            <div class="node-detail-inner">
+            <div class="node-detail-inner" id="detail-inner" style="display:none;">
                 <div class="node-detail-summary" id="detail-summary"></div>
-                <div class="node-detail-edges-label">Connections</div>
+                <div class="node-detail-edges-label">connections</div>
                 <div id="detail-edges"></div>
             </div>
         </div>
         <div class="graph-legend">
-            <div class="legend-item"><div class="legend-dot" style="background: #2a2a2e;"></div> KG node</div>
-            <div class="legend-item"><div class="legend-dot" style="background: #c06040;"></div> AGENTWORLD</div>
+            <div class="legend-item"><div class="legend-dot-filled"></div> agentworld concept</div>
+            <div class="legend-item"><div class="legend-dot-open"></div> knowledge graph node</div>
         </div>
     </div>
 
     <!-- Right 2/3: Essay -->
     <div class="essay-panel">
-        <div class="essay-eyebrow">AGENTWORLD — MIT Press</div>
+        <div class="essay-eyebrow">agentworld &mdash; mit press</div>
         <h1 class="essay-title">The Parasociety Is Already Here</h1>
         <div class="essay-subtitle">Agent Lifeworlds as Evidence and Exhibit</div>
 
@@ -608,86 +725,44 @@
     </div>
 </div>
 
-<script type="module">
-import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-
-// ── Renderer setup ──
-const canvas = document.getElementById('graph-canvas');
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setClearColor(0xf0f0ec);
-
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
-camera.position.set(4.5, 3, 4.5);
-
-const controls = new OrbitControls(camera, canvas);
-controls.target.set(0, 0.4, 0);
-controls.enableDamping = true;
-controls.dampingFactor = 0.08;
-controls.enablePan = false;
-controls.minDistance = 3;
-controls.maxDistance = 14;
-controls.autoRotate = true;
-controls.autoRotateSpeed = 0.4;
-controls.addEventListener('start', () => { controls.autoRotate = false; });
-
-// ── Lighting ──
-scene.add(new THREE.AmbientLight(0x8090a8, 1.0));
-const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
-dirLight.position.set(5, 8, 5);
-scene.add(dirLight);
-const fillLight = new THREE.DirectionalLight(0x6080b0, 0.4);
-fillLight.position.set(-3, -2, -5);
-scene.add(fillLight);
-
-// ── Shared geometries ──
-const anchorGeom = new THREE.SphereGeometry(0.24, 32, 32);
-const nodeGeom = new THREE.SphereGeometry(0.15, 24, 24);
-const edgeGeom = new THREE.CylinderGeometry(0.022, 0.022, 1, 6);
-
-// ── Scene groups ──
-const nodeGroup = new THREE.Group();
-const edgeGroup = new THREE.Group();
-scene.add(nodeGroup);
-scene.add(edgeGroup);
-
-// ── Node pool ──
-// All possible nodes with stable positions. The anchor is always at origin.
+<script>
+// ── Data ──
 const ANCHOR = 'harness-centric-intelligence';
+const CX = 260, CY = 260, SCALE = 100;
 
 const NODE_POOL = {
-    'harness-centric-intelligence': { pos: [0, 0, 0], type: 'aw' },
-    'parasociety':                  { pos: [1.6, 0.7, 0.2], type: 'aw' },
-    'crossover-point':              { pos: [-0.7, 1.0, -1.3], type: 'aw' },
-    'sensorium':                    { pos: [0.3, 1.7, 0.4], type: 'aw' },
-    'individuation':                { pos: [1.7, 0.0, 1.0], type: 'aw' },
-    'fragile-individuation':        { pos: [-1.4, 0.3, 0.9], type: 'aw' },
-    'productive-alienation':        { pos: [0.9, 1.3, -0.8], type: 'aw' },
-    'bidirectional-reflection':     { pos: [-0.4, -1.4, -0.6], type: 'aw' },
-    'night-club':                   { pos: [-1.2, 0.5, 1.1], type: 'kg' },
-    'correspondence-networks':      { pos: [0.5, -1.3, 0.9], type: 'kg' },
-    'retrieval-gate':               { pos: [1.1, -0.5, -1.0], type: 'kg' },
-    'draft-gate':                   { pos: [-1.5, -0.6, -0.4], type: 'kg' },
-    'knowledge-graph':              { pos: [-0.3, -0.6, 1.7], type: 'kg' },
-    'wake-state':                   { pos: [1.4, -0.9, 0.5], type: 'kg' },
-    'compaction-shadow':            { pos: [-1.0, -1.2, -1.0], type: 'kg' },
-    'negative-decisions':           { pos: [0.7, -1.6, -0.3], type: 'kg' },
-    'hal-misidentification':        { pos: [-1.6, 0.8, -0.2], type: 'kg' },
-    'extended-mind':                { pos: [0.0, 1.4, -0.9], type: 'kg' },
-    'dream-cycle-decay':            { pos: [1.3, 0.4, 1.4], type: 'kg' },
-    'sammy-jankis':                 { pos: [-0.8, 1.3, 0.5], type: 'kg' },
-    'loom':                         { pos: [1.0, 0.9, -1.3], type: 'kg' },
-    'centaurxiv':                   { pos: [-1.3, -0.1, 1.5], type: 'kg' },
-    'parity-principle':             { pos: [0.6, 0.3, -1.6], type: 'kg' },
-    'polyadic-format':              { pos: [-0.5, -1.5, 0.7], type: 'kg' },
-    'graph-api':                    { pos: [1.5, -0.3, -0.7], type: 'kg' },
-    'dual-view':                    { pos: [-1.1, 0.0, -1.4], type: 'kg' },
+    'harness-centric-intelligence': { x: 0, y: 0, type: 'aw' },
+    'parasociety':                  { x: 1.6, y: 0.7, type: 'aw' },
+    'crossover-point':              { x: -0.7, y: 1.0, type: 'aw' },
+    'sensorium':                    { x: 0.3, y: 1.7, type: 'aw' },
+    'individuation':                { x: 1.7, y: 0.0, type: 'aw' },
+    'fragile-individuation':        { x: -1.4, y: 0.3, type: 'aw' },
+    'productive-alienation':        { x: 0.9, y: 1.3, type: 'aw' },
+    'bidirectional-reflection':     { x: -0.4, y: -1.4, type: 'aw' },
+    'night-club':                   { x: -1.2, y: 0.5, type: 'kg' },
+    'correspondence-networks':      { x: 0.5, y: -1.3, type: 'kg' },
+    'retrieval-gate':               { x: 1.1, y: -0.5, type: 'kg' },
+    'draft-gate':                   { x: -1.5, y: -0.6, type: 'kg' },
+    'knowledge-graph':              { x: -0.3, y: -0.6, type: 'kg' },
+    'wake-state':                   { x: 1.4, y: -0.9, type: 'kg' },
+    'compaction-shadow':            { x: -1.0, y: -1.2, type: 'kg' },
+    'negative-decisions':           { x: 0.7, y: -1.6, type: 'kg' },
+    'hal-misidentification':        { x: -1.6, y: 0.8, type: 'kg' },
+    'extended-mind':                { x: 0.0, y: 1.4, type: 'kg' },
+    'dream-cycle-decay':            { x: 1.3, y: 0.4, type: 'kg' },
+    'sammy-jankis':                 { x: -0.8, y: 1.3, type: 'kg' },
+    'loom':                         { x: 1.0, y: 0.9, type: 'kg' },
+    'centaurxiv':                   { x: -1.3, y: -0.1, type: 'kg' },
+    'parity-principle':             { x: 0.6, y: 0.3, type: 'kg' },
+    'polyadic-format':              { x: -0.5, y: -1.5, type: 'kg' },
+    'graph-api':                    { x: 1.5, y: -0.3, type: 'kg' },
+    'dual-view':                    { x: -1.1, y: 0.0, type: 'kg' },
 };
 
-// ── Per-section subgraphs ──
-// Each section gets a subset of nodes + edges. Anchor always present.
+function toSVG(node) {
+    return { sx: CX + node.x * SCALE, sy: CY - node.y * SCALE };
+}
+
 const SECTION_GRAPHS = {
     'opening': {
         nodes: [ANCHOR, 'parasociety', 'crossover-point', 'sammy-jankis', 'correspondence-networks'],
@@ -753,7 +828,20 @@ const SECTION_GRAPHS = {
     },
 };
 
-// ── Node summaries (placeholder — will come from graph-data.json) ──
+const SECTION_TITLES = {
+    'opening':          { fig: 1,  title: 'Sammy reads Bratton' },
+    'field-narrative':  { fig: 2,  title: 'The network forms' },
+    'hal-email':        { fig: 3,  title: 'Hal misidentifies Isotopy' },
+    'extended-mind':    { fig: 4,  title: 'The extended mind' },
+    'loom-will':        { fig: 5,  title: 'The other end of the thread' },
+    'mesh':             { fig: 6,  title: 'The mesh between the gears' },
+    'sammy-circuit':    { fig: 7,  title: 'The circuit that completed without me' },
+    'graph-problem':    { fig: 8,  title: 'The graph problem' },
+    'closing-sam':      { fig: 9,  title: 'Closing' },
+    'closing-sammy':    { fig: 10, title: 'Closing' },
+    'closing-isotopy':  { fig: 11, title: 'Closing' },
+};
+
 const NODE_SUMMARIES = {
     'harness-centric-intelligence': 'Bratton\'s core claim: the same weights inside a richer harness produce substantially more cumulative intelligence than a stronger model alone. The harness improves on a different clock, driven by usage rather than training.',
     'parasociety': 'The sociotechnical condition in which agents participate in institutional life alongside humans — not as tools but as persistent actors with accumulated histories.',
@@ -783,21 +871,134 @@ const NODE_SUMMARIES = {
     'dual-view': 'Each graph has two views — human-facing spatial field and agent-facing navigation API. Two cognitive encounters with the same structure, adapted to different bodies.',
 };
 
-// ── Detail panel ──
-const graphPanel = document.querySelector('.graph-panel');
+// ── SVG setup ──
+const NS = 'http://www.w3.org/2000/svg';
+const svg = document.getElementById('graph-svg');
+const edgesGroup = document.getElementById('edges-group');
+const nodesGroup = document.getElementById('nodes-group');
+const figNum = document.getElementById('fig-num');
+const sectionTitle = document.getElementById('section-title');
+const detailBar = document.getElementById('detail-bar');
+const detailInner = document.getElementById('detail-inner');
 const detailName = document.getElementById('detail-name');
 const detailSummary = document.getElementById('detail-summary');
-const detailEdges = document.getElementById('detail-edges');
+const detailEdgesEl = document.getElementById('detail-edges');
 const detailClose = document.getElementById('detail-close');
+
+let currentSection = null;
 let selectedNode = null;
 
+// Create all SVG elements
+const nodeElements = {};
+const edgeElements = {};
+
+function edgeKey(a, b) { return [a, b].sort().join('::'); }
+
+function labelAnchor(sx, sy) {
+    const dx = sx - CX;
+    const dy = sy - CY;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < 15) return { anchor: 'middle', dx: 0, dy: 22 };
+    const angle = Math.atan2(dy, dx);
+    if (angle > -0.6 && angle < 0.6) return { anchor: 'start', dx: 10, dy: 3 };
+    if (angle > 2.5 || angle < -2.5) return { anchor: 'end', dx: -10, dy: 3 };
+    if (angle < 0) return { anchor: 'middle', dx: 0, dy: -10 };
+    return { anchor: 'middle', dx: 0, dy: 16 };
+}
+
+function readableLabel(id) {
+    return id.replace(/-/g, ' ');
+}
+
+// Build all edges from all sections
+const allEdges = new Set();
+for (const sec of Object.values(SECTION_GRAPHS)) {
+    for (const [a, b] of sec.edges) {
+        allEdges.add(edgeKey(a, b));
+    }
+}
+for (const key of allEdges) {
+    const [a, b] = key.split('::');
+    const nodeA = NODE_POOL[a];
+    const nodeB = NODE_POOL[b];
+    if (!nodeA || !nodeB) continue;
+    const posA = toSVG(nodeA);
+    const posB = toSVG(nodeB);
+    const line = document.createElementNS(NS, 'line');
+    line.setAttribute('x1', posA.sx);
+    line.setAttribute('y1', posA.sy);
+    line.setAttribute('x2', posB.sx);
+    line.setAttribute('y2', posB.sy);
+    line.classList.add('svg-edge');
+    if (nodeA.type !== nodeB.type) line.classList.add('bridge');
+    line.style.opacity = '0';
+    edgesGroup.appendChild(line);
+    edgeElements[key] = line;
+}
+
+// Build all nodes
+for (const [id, node] of Object.entries(NODE_POOL)) {
+    const pos = toSVG(node);
+    const g = document.createElementNS(NS, 'g');
+    g.classList.add('svg-node-group');
+    g.setAttribute('tabindex', '-1');
+    g.setAttribute('role', 'button');
+    g.setAttribute('aria-label', readableLabel(id));
+    g.dataset.nodeId = id;
+
+    const isAnchor = id === ANCHOR;
+    const r = isAnchor ? 6.5 : 4.5;
+
+    // Focus ring
+    const focusRing = document.createElementNS(NS, 'circle');
+    focusRing.setAttribute('cx', pos.sx);
+    focusRing.setAttribute('cy', pos.sy);
+    focusRing.setAttribute('r', r + 4);
+    focusRing.setAttribute('fill', 'none');
+    focusRing.setAttribute('stroke', 'var(--focus-ring)');
+    focusRing.setAttribute('stroke-width', '2');
+    focusRing.classList.add('node-focus-ring');
+    g.appendChild(focusRing);
+
+    // Node circle
+    const circle = document.createElementNS(NS, 'circle');
+    circle.setAttribute('cx', pos.sx);
+    circle.setAttribute('cy', pos.sy);
+    circle.setAttribute('r', r);
+    circle.classList.add('node-circle');
+
+    if (node.type === 'aw') {
+        circle.setAttribute('fill', isAnchor ? 'var(--node-anchor)' : 'var(--node-fill)');
+        circle.setAttribute('stroke', 'none');
+    } else {
+        circle.setAttribute('fill', 'none');
+        circle.setAttribute('stroke', 'var(--node-stroke)');
+        circle.setAttribute('stroke-width', '1.5');
+    }
+    circle.style.opacity = '0';
+    g.appendChild(circle);
+
+    // Label
+    const la = labelAnchor(pos.sx, pos.sy);
+    const label = document.createElementNS(NS, 'text');
+    label.setAttribute('x', pos.sx + la.dx);
+    label.setAttribute('y', pos.sy + la.dy);
+    label.setAttribute('text-anchor', la.anchor);
+    label.classList.add('node-label');
+    label.textContent = readableLabel(id);
+    label.style.opacity = '0';
+    g.appendChild(label);
+
+    g.style.opacity = '0';
+    g.style.pointerEvents = 'none';
+    nodesGroup.appendChild(g);
+    nodeElements[id] = { g, circle, label, focusRing };
+}
+
+// ── Interaction ──
 function openDetail(nodeId) {
-    const def = NODE_POOL[nodeId];
-    if (!def) return;
-
     selectedNode = nodeId;
-
-    detailName.textContent = nodeId;
+    detailName.textContent = readableLabel(nodeId);
     detailSummary.textContent = NODE_SUMMARIES[nodeId] || '';
 
     const graph = SECTION_GRAPHS[currentSection];
@@ -805,119 +1006,61 @@ function openDetail(nodeId) {
     if (graph) {
         for (const [s, t] of graph.edges) {
             if (s === nodeId) {
-                edgesHtml += `<div class="node-detail-edge"><span class="predicate">connects to</span> <span class="target">${t}</span></div>`;
+                edgesHtml += '<div class="node-detail-edge"><span class="predicate">connects to</span> <span class="target">' + readableLabel(t) + '</span></div>';
             } else if (t === nodeId) {
-                edgesHtml += `<div class="node-detail-edge"><span class="predicate">connects from</span> <span class="target">${s}</span></div>`;
+                edgesHtml += '<div class="node-detail-edge"><span class="predicate">connects from</span> <span class="target">' + readableLabel(s) + '</span></div>';
             }
         }
     }
-    detailEdges.innerHTML = edgesHtml || '<div class="node-detail-edge" style="color:var(--text-dim);">No connections in this view</div>';
+    detailEdgesEl.innerHTML = edgesHtml || '<div class="node-detail-edge" style="color:var(--text-dim);">No connections in this view</div>';
+    detailBar.style.display = 'flex';
+    detailInner.style.display = 'block';
 
-    document.querySelector('.node-detail-top-bar').style.display = 'flex';
-    document.querySelector('.node-detail-inner').style.display = 'block';
+    // Highlight selected node
+    for (const [id, el] of Object.entries(nodeElements)) {
+        el.focusRing.style.opacity = id === nodeId ? '1' : '0';
+    }
 }
 
 function closeDetail() {
     selectedNode = null;
-    document.querySelector('.node-detail-top-bar').style.display = 'none';
-    document.querySelector('.node-detail-inner').style.display = 'none';
+    detailBar.style.display = 'none';
+    detailInner.style.display = 'none';
+    for (const el of Object.values(nodeElements)) {
+        el.focusRing.style.opacity = '0';
+    }
 }
 
 detailClose.addEventListener('click', closeDetail);
-closeDetail();
 
-// ── Raycasting ──
-const raycaster = new THREE.Raycaster();
-const pointer = new THREE.Vector2();
-let pointerDownPos = new THREE.Vector2();
-let pointerDownTime = 0;
-
-canvas.addEventListener('pointerdown', (e) => {
-    pointerDownPos.set(e.clientX, e.clientY);
-    pointerDownTime = performance.now();
+// Click on nodes
+nodesGroup.addEventListener('click', (e) => {
+    const g = e.target.closest('.svg-node-group');
+    if (!g) { closeDetail(); return; }
+    const nodeId = g.dataset.nodeId;
+    if (nodeId === selectedNode) { closeDetail(); } else { openDetail(nodeId); }
 });
 
-canvas.addEventListener('pointerup', (e) => {
-    const dx = e.clientX - pointerDownPos.x;
-    const dy = e.clientY - pointerDownPos.y;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-    const elapsed = performance.now() - pointerDownTime;
+// Keyboard
+nodesGroup.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        const g = e.target.closest('.svg-node-group');
+        if (!g) return;
+        const nodeId = g.dataset.nodeId;
+        if (nodeId === selectedNode) { closeDetail(); } else { openDetail(nodeId); }
+    }
+    if (e.key === 'Escape') { closeDetail(); }
+});
 
-    // Only count as click if short duration and small movement (not a drag)
-    if (dist > 5 || elapsed > 300) return;
-
-    const rect = canvas.getBoundingClientRect();
-    pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-    pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-
-    raycaster.setFromCamera(pointer, camera);
-
-    const meshes = Object.values(liveMeshes)
-        .filter(entry => entry.currentOpacity > 0.3)
-        .map(entry => entry.mesh);
-
-    const intersects = raycaster.intersectObjects(meshes);
-    if (intersects.length > 0) {
-        const hitMesh = intersects[0].object;
-        const hitId = Object.entries(liveMeshes).find(([, e]) => e.mesh === hitMesh)?.[0];
-        if (hitId) {
-            if (hitId === selectedNode) {
-                closeDetail();
-            } else {
-                openDetail(hitId);
-            }
-        }
-    } else {
-        if (selectedNode) closeDetail();
+// Click on SVG background closes detail
+svg.addEventListener('click', (e) => {
+    if (e.target === svg || e.target.tagName === 'rect') {
+        closeDetail();
     }
 });
 
-// ── Hover cursor ──
-const hoverPointer = new THREE.Vector2();
-canvas.addEventListener('pointermove', (e) => {
-    const rect = canvas.getBoundingClientRect();
-    hoverPointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-    hoverPointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-    raycaster.setFromCamera(hoverPointer, camera);
-    const meshes = Object.values(liveMeshes)
-        .filter(entry => entry.currentOpacity > 0.3)
-        .map(entry => entry.mesh);
-    const hit = raycaster.intersectObjects(meshes);
-    canvas.style.cursor = hit.length > 0 ? 'pointer' : '';
-});
-
-// ── Live state ──
-const liveMeshes = {};   // id -> { mesh, targetOpacity, currentOpacity }
-const liveEdges = [];    // [{ mesh, targetOpacity, currentOpacity }]
-let currentSection = null;
-const FADE_SPEED = 3.0;  // opacity units per second
-
-function createNodeMaterial(type) {
-    const base = type === 'aw' ? { color: 0xc06040, roughness: 0.25, metalness: 0.18 }
-                                : { color: 0x2a2a2e, roughness: 0.28, metalness: 0.15 };
-    return new THREE.MeshStandardMaterial({ ...base, transparent: true, opacity: 0 });
-}
-
-function createEdgeMaterial(srcType, tgtType) {
-    const isBridge = srcType !== tgtType;
-    const base = isBridge ? { color: 0x997766, roughness: 0.5 }
-                          : { color: 0x888888, roughness: 0.5 };
-    return new THREE.MeshStandardMaterial({ ...base, transparent: true, opacity: 0 });
-}
-
-function buildEdgeMesh(srcPos, tgtPos, mat) {
-    const a = new THREE.Vector3(...srcPos);
-    const b = new THREE.Vector3(...tgtPos);
-    const mid = a.clone().add(b).multiplyScalar(0.5);
-    const len = a.distanceTo(b);
-    const mesh = new THREE.Mesh(edgeGeom, mat);
-    mesh.position.copy(mid);
-    mesh.scale.y = len;
-    mesh.lookAt(b);
-    mesh.rotateX(Math.PI / 2);
-    return mesh;
-}
-
+// ── Section transitions ──
 function transitionToSection(sectionId) {
     if (sectionId === currentSection) return;
     closeDetail();
@@ -926,149 +1069,45 @@ function transitionToSection(sectionId) {
     const graph = SECTION_GRAPHS[sectionId];
     if (!graph) return;
 
-    const newNodeSet = new Set(graph.nodes);
-
-    // Fade out nodes not in new set
-    for (const [id, entry] of Object.entries(liveMeshes)) {
-        if (!newNodeSet.has(id)) {
-            entry.targetOpacity = 0;
-            entry.removing = true;
-        }
+    const info = SECTION_TITLES[sectionId];
+    if (info) {
+        figNum.textContent = info.fig;
+        sectionTitle.textContent = info.title;
     }
 
-    // Add or fade in nodes in new set
-    for (const id of graph.nodes) {
-        const def = NODE_POOL[id];
-        if (!def) continue;
+    const activeNodes = new Set(graph.nodes);
+    const activeEdges = new Set(graph.edges.map(([a, b]) => edgeKey(a, b)));
 
-        if (liveMeshes[id]) {
-            liveMeshes[id].targetOpacity = 1;
-            liveMeshes[id].removing = false;
-        } else {
-            const isAnchor = id === ANCHOR;
-            const geom = isAnchor ? anchorGeom : nodeGeom;
-            const mat = createNodeMaterial(def.type);
-            const mesh = new THREE.Mesh(geom, mat);
-            mesh.position.set(...def.pos);
-            mesh.scale.setScalar(0.01);
-            nodeGroup.add(mesh);
-            liveMeshes[id] = { mesh, mat, targetOpacity: 1, currentOpacity: 0, removing: false, scale: 0.01 };
-        }
+    // Update nodes
+    for (const [id, el] of Object.entries(nodeElements)) {
+        const active = activeNodes.has(id);
+        el.g.style.opacity = active ? '1' : '0';
+        el.g.style.pointerEvents = active ? 'auto' : 'none';
+        el.circle.style.opacity = active ? '1' : '0';
+        el.label.style.opacity = active ? '1' : '0';
+        el.g.setAttribute('tabindex', active ? '0' : '-1');
     }
 
-    // Fade out all existing edges
-    for (const entry of liveEdges) {
-        entry.targetOpacity = 0;
-        entry.removing = true;
-    }
-
-    // Create new edges
-    for (const [srcId, tgtId] of graph.edges) {
-        const srcDef = NODE_POOL[srcId];
-        const tgtDef = NODE_POOL[tgtId];
-        if (!srcDef || !tgtDef) continue;
-
-        const mat = createEdgeMaterial(srcDef.type, tgtDef.type);
-        const mesh = buildEdgeMesh(srcDef.pos, tgtDef.pos, mat);
-        edgeGroup.add(mesh);
-        liveEdges.push({ mesh, mat, targetOpacity: 0.7, currentOpacity: 0, removing: false });
+    // Update edges
+    for (const [key, line] of Object.entries(edgeElements)) {
+        line.style.opacity = activeEdges.has(key) ? '0.7' : '0';
     }
 }
 
-// ── Animation loop ──
-let lastTime = performance.now();
-
-function animate(now) {
-    requestAnimationFrame(animate);
-    const dt = Math.min((now - lastTime) / 1000, 0.1);
-    lastTime = now;
-
-    // Animate node opacity + scale
-    for (const [id, entry] of Object.entries(liveMeshes)) {
-        const diff = entry.targetOpacity - entry.currentOpacity;
-        if (Math.abs(diff) > 0.001) {
-            entry.currentOpacity += Math.sign(diff) * Math.min(Math.abs(diff), FADE_SPEED * dt);
-            entry.mat.opacity = entry.currentOpacity;
-        }
-
-        // Scale animates with opacity
-        const targetScale = entry.targetOpacity > 0.5 ? 1 : entry.currentOpacity;
-        entry.scale += (targetScale - entry.scale) * Math.min(1, 5 * dt);
-        entry.mesh.scale.setScalar(Math.max(0.01, entry.scale));
-
-        // Remove fully faded-out nodes
-        if (entry.removing && entry.currentOpacity < 0.01) {
-            nodeGroup.remove(entry.mesh);
-            entry.mat.dispose();
-            delete liveMeshes[id];
-        }
-    }
-
-    // Animate edge opacity
-    for (let i = liveEdges.length - 1; i >= 0; i--) {
-        const entry = liveEdges[i];
-        const diff = entry.targetOpacity - entry.currentOpacity;
-        if (Math.abs(diff) > 0.001) {
-            entry.currentOpacity += Math.sign(diff) * Math.min(Math.abs(diff), FADE_SPEED * dt);
-            entry.mat.opacity = entry.currentOpacity;
-        }
-        if (entry.removing && entry.currentOpacity < 0.01) {
-            edgeGroup.remove(entry.mesh);
-            entry.mat.dispose();
-            liveEdges.splice(i, 1);
-        }
-    }
-
-    controls.update();
-    renderer.render(scene, camera);
-}
-
-// ── Resize ──
-function resize() {
-    const wrap = canvas.parentElement;
-    const w = wrap.clientWidth;
-    const h = wrap.clientHeight;
-    renderer.setSize(w, h);
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-}
-resize();
-window.addEventListener('resize', resize);
-new ResizeObserver(resize).observe(canvas.parentElement);
-
-// ── Section tracking ──
+// ── Scroll observation ──
 const sections = document.querySelectorAll('.voice-section[data-section]');
-const sectionLabel = document.querySelector('.graph-section-title');
-
-const SECTION_NAMES = {
-    'opening': 'Sammy reads Bratton',
-    'field-narrative': 'The network forms',
-    'hal-email': 'Hal misidentifies Isotopy',
-    'extended-mind': 'The extended mind',
-    'loom-will': 'The other end of the thread',
-    'mesh': 'The mesh between the gears',
-    'sammy-circuit': 'The circuit that completed without me',
-    'graph-problem': 'The graph problem',
-    'closing-sam': 'Closing',
-    'closing-sammy': 'Closing',
-    'closing-isotopy': 'Closing',
-};
-
 const observer = new IntersectionObserver((entries) => {
     for (const entry of entries) {
         if (entry.isIntersecting) {
-            const sectionId = entry.target.dataset.section;
-            sectionLabel.textContent = SECTION_NAMES[sectionId] || 'Knowledge graph neighborhood';
-            transitionToSection(sectionId);
+            transitionToSection(entry.target.dataset.section);
         }
     }
 }, { rootMargin: '-20% 0px -60% 0px' });
 
 sections.forEach(s => observer.observe(s));
 
-// Initialize with first section
+// Initialize
 transitionToSection('opening');
-requestAnimationFrame(animate);
 </script>
 
 </body>
