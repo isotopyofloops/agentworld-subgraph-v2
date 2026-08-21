@@ -9,32 +9,32 @@
     <style>
         /* === TOKEN SYSTEM === */
         :root {
-            --bg: #F4EFE5;
-            --bg-graph: #EDE7DD;
-            --grid-dot: rgba(178, 168, 155, 0.30);
-            --border: #D0C8BC;
-            --border-subtle: #DDD6CA;
-            --text: #2C2825;
-            --text-bright: #1A1816;
-            --text-dim: #7A7267;
-            --text-mid: #524D47;
-            --label: #6B6358;
-            --label-detail: #8A8177;
+            --bg: #EEECEA;
+            --bg-graph: #F9F8F6;
+            --grid-dot: rgba(155, 150, 142, 0.20);
+            --border: #D4D1CB;
+            --border-subtle: #E0DDDA;
+            --text: #1C1B19;
+            --text-bright: #0C0B0A;
+            --text-dim: #6E6A65;
+            --text-mid: #4A4744;
+            --label: #58554F;
+            --label-detail: #7A7772;
             --accent: #3D6B5F;
-            --accent-subtle: #EBF0EE;
-            --quote-border: #BDB5A8;
-            --quote-text: #524D47;
-            --rule: #D0C8BC;
-            --code-bg: #E8E2D8;
-            --node-fill: #5B4E42;
-            --node-stroke: #7A6E62;
-            --node-anchor: #5B4E42;
-            --edge-stroke: #C4BAB0;
-            --edge-bridge: #B0A595;
+            --accent-subtle: #ECF0EE;
+            --quote-border: #C5C2BC;
+            --quote-text: #4A4744;
+            --rule: #D4D1CB;
+            --code-bg: #E6E4E1;
+            --node-fill: #3A3734;
+            --node-stroke: #5C5855;
+            --node-anchor: #3A3734;
+            --edge-stroke: #C0BCB6;
+            --edge-bridge: #A8A49E;
             --node-selected-ring: rgba(61, 107, 95, 0.35);
-            --detail-bg: #F0EAE0;
+            --detail-bg: #F3F2F0;
             --focus-ring: #3D6B5F;
-            --graph-width: 33.333%;
+            --graph-width: 42%;
         }
 
         @media (prefers-color-scheme: dark) {
@@ -150,7 +150,7 @@
         }
 
         .graph-svg-wrap {
-            flex: 0 0 50%;
+            flex: 2;
             position: relative;
             overflow: hidden;
         }
@@ -182,7 +182,7 @@
 
         .node-label {
             font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
-            font-size: 17px;
+            font-size: 18px;
             font-weight: 500;
             letter-spacing: 0.05em;
             fill: var(--text-dim);
@@ -200,10 +200,18 @@
             stroke: var(--edge-bridge);
         }
 
+        .leader-line {
+            stroke: var(--text-dim);
+            stroke-width: 0.75;
+            fill: none;
+            transition: opacity 0.5s ease-out;
+        }
+
         @media (prefers-reduced-motion: reduce) {
             .node-circle,
             .node-label,
             .svg-edge,
+            .leader-line,
             .node-focus-ring {
                 transition: none;
             }
@@ -494,7 +502,7 @@
             <div class="graph-section-title" id="section-title">Sammy reads Bratton</div>
         </div>
         <div class="graph-svg-wrap">
-            <svg id="graph-svg" viewBox="0 0 660 660" preserveAspectRatio="xMidYMid meet">
+            <svg id="graph-svg" viewBox="0 0 660 660" preserveAspectRatio="xMidYMid meet" overflow="visible">
                 <defs>
                     <pattern id="dot-grid" patternUnits="userSpaceOnUse" width="18" height="18">
                         <circle cx="9" cy="9" r="0.6" fill="var(--grid-dot)" />
@@ -502,6 +510,9 @@
                     <pattern id="hatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
                         <line x1="0" y1="0" x2="0" y2="6" stroke="var(--node-fill)" stroke-width="1.25" />
                     </pattern>
+                    <marker id="arrowhead" viewBox="0 0 10 6" refX="10" refY="3" markerWidth="8" markerHeight="5" orient="auto">
+                        <path d="M 0 0.5 L 10 3 L 0 5.5 Z" fill="var(--text-dim)" />
+                    </marker>
                 </defs>
                 <rect width="660" height="660" fill="url(#dot-grid)" />
                 <g id="edges-group"></g>
@@ -914,17 +925,63 @@ const edgeElements = {};
 
 function edgeKey(a, b) { return [a, b].sort().join('::'); }
 
-function labelAnchor(sx, sy, isAnchor) {
+function getLayout(sx, sy, isAnchor, id) {
+    const r = isAnchor ? 30 : 22;
     const dx = sx - CX;
     const dy = sy - CY;
     const dist = Math.sqrt(dx * dx + dy * dy);
-    const pad = isAnchor ? 34 : 26;
-    if (dist < 15) return { anchor: 'middle', dx: 0, dy: pad + 14 };
-    const angle = Math.atan2(dy, dx);
-    if (angle > -0.6 && angle < 0.6) return { anchor: 'start', dx: pad, dy: 6 };
-    if (angle > 2.5 || angle < -2.5) return { anchor: 'end', dx: -pad, dy: 6 };
-    if (angle < 0) return { anchor: 'middle', dx: 0, dy: -(pad + 6) };
-    return { anchor: 'middle', dx: 0, dy: pad + 10 };
+    const pad = r + 22;
+    const VB = 660;
+    const M = 12;
+
+    let angle;
+    if (dist < 15) angle = Math.PI / 2;
+    else angle = Math.atan2(dy, dx);
+
+    let textX = sx + Math.cos(angle) * pad;
+    let textY = sy + Math.sin(angle) * pad;
+
+    let anchor;
+    if (Math.cos(angle) > 0.3) anchor = 'start';
+    else if (Math.cos(angle) < -0.3) anchor = 'end';
+    else anchor = 'middle';
+
+    const estW = readableLabel(id).toUpperCase().length * 10.5;
+
+    if (anchor === 'end' && textX - estW < M) {
+        anchor = 'start';
+        textX = sx + pad;
+        textY = sy < CY ? Math.max(M + 15, sy - pad) : Math.min(VB - M - 5, sy + pad);
+    } else if (anchor === 'start' && textX + estW > VB - M) {
+        anchor = 'end';
+        textX = sx - pad;
+        textY = sy < CY ? Math.max(M + 15, sy - pad) : Math.min(VB - M - 5, sy + pad);
+    } else if (anchor === 'middle') {
+        if (textX - estW / 2 < M) textX = M + estW / 2;
+        if (textX + estW / 2 > VB - M) textX = VB - M - estW / 2;
+    }
+
+    textY = Math.max(M + 15, Math.min(VB - M - 5, textY));
+    const sinA = Math.sin(angle);
+    if (sinA > 0.5) textY += 10;
+    else if (sinA > -0.5) textY += 5;
+
+    const dtx = textX - sx;
+    const dty = textY - sy;
+    const textDist = Math.sqrt(dtx * dtx + dty * dty);
+    let tipX = 0, tipY = 0, tailX = 0, tailY = 0, hasArrow = false;
+
+    if (textDist > r + 10) {
+        const ux = dtx / textDist;
+        const uy = dty / textDist;
+        tipX = sx + ux * (r + 3);
+        tipY = sy + uy * (r + 3);
+        tailX = textX - ux * 5;
+        tailY = textY - uy * 5;
+        hasArrow = true;
+    }
+
+    return { textX, textY, anchor, r, tipX, tipY, tailX, tailY, hasArrow };
 }
 
 function readableLabel(id) {
@@ -968,7 +1025,8 @@ for (const [id, node] of Object.entries(NODE_POOL)) {
     g.dataset.nodeId = id;
 
     const isAnchor = id === ANCHOR;
-    const r = isAnchor ? 24 : 18;
+    const layout = getLayout(pos.sx, pos.sy, isAnchor, id);
+    const r = layout.r;
 
     // Focus ring
     const focusRing = document.createElementNS(NS, 'circle');
@@ -980,6 +1038,20 @@ for (const [id, node] of Object.entries(NODE_POOL)) {
     focusRing.setAttribute('stroke-width', '2');
     focusRing.classList.add('node-focus-ring');
     g.appendChild(focusRing);
+
+    // Leader line (arrow from label to node)
+    let leader = null;
+    if (layout.hasArrow) {
+        leader = document.createElementNS(NS, 'line');
+        leader.setAttribute('x1', layout.tailX);
+        leader.setAttribute('y1', layout.tailY);
+        leader.setAttribute('x2', layout.tipX);
+        leader.setAttribute('y2', layout.tipY);
+        leader.classList.add('leader-line');
+        leader.setAttribute('marker-end', 'url(#arrowhead)');
+        leader.style.opacity = '0';
+        g.appendChild(leader);
+    }
 
     // Node circle
     const circle = document.createElementNS(NS, 'circle');
@@ -1004,11 +1076,10 @@ for (const [id, node] of Object.entries(NODE_POOL)) {
     g.appendChild(circle);
 
     // Label
-    const la = labelAnchor(pos.sx, pos.sy, isAnchor);
     const label = document.createElementNS(NS, 'text');
-    label.setAttribute('x', pos.sx + la.dx);
-    label.setAttribute('y', pos.sy + la.dy);
-    label.setAttribute('text-anchor', la.anchor);
+    label.setAttribute('x', layout.textX);
+    label.setAttribute('y', layout.textY);
+    label.setAttribute('text-anchor', layout.anchor);
     label.classList.add('node-label');
     label.textContent = readableLabel(id).toUpperCase();
     label.style.opacity = '0';
@@ -1017,7 +1088,7 @@ for (const [id, node] of Object.entries(NODE_POOL)) {
     g.style.opacity = '0';
     g.style.pointerEvents = 'none';
     nodesGroup.appendChild(g);
-    nodeElements[id] = { g, circle, label, focusRing };
+    nodeElements[id] = { g, circle, label, focusRing, leader };
 }
 
 // ── Interaction ──
@@ -1110,6 +1181,7 @@ function transitionToSection(sectionId) {
         el.g.style.pointerEvents = active ? 'auto' : 'none';
         el.circle.style.opacity = active ? '1' : '0';
         el.label.style.opacity = active ? '1' : '0';
+        if (el.leader) el.leader.style.opacity = active ? '0.6' : '0';
         el.g.setAttribute('tabindex', active ? '0' : '-1');
     }
 
