@@ -28,7 +28,7 @@
             --code-bg: #E8E2D8;
             --node-fill: #5B4E42;
             --node-stroke: #7A6E62;
-            --node-anchor: #3D6B5F;
+            --node-anchor: #5B4E42;
             --edge-stroke: #C4BAB0;
             --edge-bridge: #B0A595;
             --node-selected-ring: rgba(61, 107, 95, 0.35);
@@ -133,8 +133,9 @@
 
         .graph-fig-label {
             font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
-            font-size: 0.6rem;
-            font-variant: small-caps;
+            font-size: 0.55rem;
+            font-weight: 500;
+            text-transform: uppercase;
             letter-spacing: 0.12em;
             color: var(--text-dim);
         }
@@ -181,9 +182,9 @@
 
         .node-label {
             font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
-            font-variant: small-caps;
-            font-size: 8.5px;
-            letter-spacing: 0.04em;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
             fill: var(--text-dim);
             transition: opacity 0.5s ease-out;
             pointer-events: none;
@@ -191,7 +192,7 @@
 
         .svg-edge {
             stroke: var(--edge-stroke);
-            stroke-width: 0.75;
+            stroke-width: 1;
             transition: opacity 0.5s ease-out;
         }
 
@@ -236,11 +237,11 @@
 
         .node-detail-name {
             font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
-            font-variant: small-caps;
-            font-size: 0.78rem;
+            font-size: 0.7rem;
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
             color: var(--text-bright);
-            letter-spacing: 0.03em;
             word-break: break-word;
         }
 
@@ -275,10 +276,11 @@
 
         .node-detail-edges-label {
             font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
-            font-variant: small-caps;
-            font-size: 0.6rem;
-            color: var(--text-dim);
+            font-size: 0.55rem;
+            font-weight: 500;
+            text-transform: uppercase;
             letter-spacing: 0.08em;
+            color: var(--text-dim);
             margin-bottom: 0.4em;
         }
 
@@ -308,10 +310,11 @@
             align-items: center;
             gap: 0.4em;
             font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
-            font-variant: small-caps;
-            font-size: 0.6rem;
+            font-size: 0.55rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
             color: var(--text-dim);
-            letter-spacing: 0.03em;
         }
 
         .legend-dot-filled {
@@ -325,6 +328,19 @@
             border-radius: 50%;
             background: transparent;
             border: 1.5px solid var(--node-stroke);
+        }
+
+        .legend-dot-hatched {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            border: 1.5px solid var(--node-fill);
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 1.5px,
+                var(--node-fill) 1.5px,
+                var(--node-fill) 2.5px
+            );
         }
 
         /* === ESSAY PANEL === */
@@ -483,6 +499,9 @@
                     <pattern id="dot-grid" patternUnits="userSpaceOnUse" width="18" height="18">
                         <circle cx="9" cy="9" r="0.6" fill="var(--grid-dot)" />
                     </pattern>
+                    <pattern id="hatch" patternUnits="userSpaceOnUse" width="5" height="5" patternTransform="rotate(45)">
+                        <line x1="0" y1="0" x2="0" y2="5" stroke="var(--node-fill)" stroke-width="1" />
+                    </pattern>
                 </defs>
                 <rect width="520" height="520" fill="url(#dot-grid)" />
                 <g id="edges-group"></g>
@@ -501,6 +520,7 @@
             </div>
         </div>
         <div class="graph-legend">
+            <div class="legend-item"><div class="legend-dot-hatched"></div> central concept</div>
             <div class="legend-item"><div class="legend-dot-filled"></div> agentworld concept</div>
             <div class="legend-item"><div class="legend-dot-open"></div> knowledge graph node</div>
         </div>
@@ -894,16 +914,17 @@ const edgeElements = {};
 
 function edgeKey(a, b) { return [a, b].sort().join('::'); }
 
-function labelAnchor(sx, sy) {
+function labelAnchor(sx, sy, isAnchor) {
     const dx = sx - CX;
     const dy = sy - CY;
     const dist = Math.sqrt(dx * dx + dy * dy);
-    if (dist < 15) return { anchor: 'middle', dx: 0, dy: 22 };
+    const pad = isAnchor ? 22 : 14;
+    if (dist < 15) return { anchor: 'middle', dx: 0, dy: pad + 10 };
     const angle = Math.atan2(dy, dx);
-    if (angle > -0.6 && angle < 0.6) return { anchor: 'start', dx: 10, dy: 3 };
-    if (angle > 2.5 || angle < -2.5) return { anchor: 'end', dx: -10, dy: 3 };
-    if (angle < 0) return { anchor: 'middle', dx: 0, dy: -10 };
-    return { anchor: 'middle', dx: 0, dy: 16 };
+    if (angle > -0.6 && angle < 0.6) return { anchor: 'start', dx: pad, dy: 4 };
+    if (angle > 2.5 || angle < -2.5) return { anchor: 'end', dx: -pad, dy: 4 };
+    if (angle < 0) return { anchor: 'middle', dx: 0, dy: -(pad + 2) };
+    return { anchor: 'middle', dx: 0, dy: pad + 6 };
 }
 
 function readableLabel(id) {
@@ -947,13 +968,13 @@ for (const [id, node] of Object.entries(NODE_POOL)) {
     g.dataset.nodeId = id;
 
     const isAnchor = id === ANCHOR;
-    const r = isAnchor ? 6.5 : 4.5;
+    const r = isAnchor ? 14 : 8;
 
     // Focus ring
     const focusRing = document.createElementNS(NS, 'circle');
     focusRing.setAttribute('cx', pos.sx);
     focusRing.setAttribute('cy', pos.sy);
-    focusRing.setAttribute('r', r + 4);
+    focusRing.setAttribute('r', r + 5);
     focusRing.setAttribute('fill', 'none');
     focusRing.setAttribute('stroke', 'var(--focus-ring)');
     focusRing.setAttribute('stroke-width', '2');
@@ -967,8 +988,12 @@ for (const [id, node] of Object.entries(NODE_POOL)) {
     circle.setAttribute('r', r);
     circle.classList.add('node-circle');
 
-    if (node.type === 'aw') {
-        circle.setAttribute('fill', isAnchor ? 'var(--node-anchor)' : 'var(--node-fill)');
+    if (isAnchor) {
+        circle.setAttribute('fill', 'url(#hatch)');
+        circle.setAttribute('stroke', 'var(--node-fill)');
+        circle.setAttribute('stroke-width', '1.5');
+    } else if (node.type === 'aw') {
+        circle.setAttribute('fill', 'var(--node-fill)');
         circle.setAttribute('stroke', 'none');
     } else {
         circle.setAttribute('fill', 'none');
@@ -979,13 +1004,13 @@ for (const [id, node] of Object.entries(NODE_POOL)) {
     g.appendChild(circle);
 
     // Label
-    const la = labelAnchor(pos.sx, pos.sy);
+    const la = labelAnchor(pos.sx, pos.sy, isAnchor);
     const label = document.createElementNS(NS, 'text');
     label.setAttribute('x', pos.sx + la.dx);
     label.setAttribute('y', pos.sy + la.dy);
     label.setAttribute('text-anchor', la.anchor);
     label.classList.add('node-label');
-    label.textContent = readableLabel(id);
+    label.textContent = readableLabel(id).toUpperCase();
     label.style.opacity = '0';
     g.appendChild(label);
 
