@@ -8,10 +8,10 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 802.43,
-      "y": 491.39,
-      "labelDx": 137.4,
-      "labelDy": 0
+      "x": 806.59,
+      "y": 408.62,
+      "labelDx": 118.54,
+      "labelDy": -45.54
     },
     {
       "id": "Sensorium as Design Primitive",
@@ -21,8 +21,8 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "8",
-      "x": 710.91,
-      "y": 634.86
+      "x": 985.56,
+      "y": 294.73
     },
     {
       "id": "action-path-opacity",
@@ -32,10 +32,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "11",
-      "x": 1077.2,
-      "y": 271.6,
-      "labelDx": 0,
-      "labelDy": -20.6
+      "x": 1077.63,
+      "y": 527.61,
+      "labelDx": 81.6,
+      "labelDy": 0
     },
     {
       "id": "agent-institutions",
@@ -45,10 +45,10 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 1011.86,
-      "y": 523.8,
-      "labelDx": 80.4,
-      "labelDy": 0
+      "x": 710.16,
+      "y": 284.79,
+      "labelDx": -73.84,
+      "labelDy": 15.84
     },
     {
       "id": "agent-phenomenology-by-agents",
@@ -58,8 +58,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 717.83,
-      "y": 367.53
+      "x": 901.54,
+      "y": 604.82
     },
     {
       "id": "agent-ux-case-study-connection-map",
@@ -69,10 +69,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "10",
-      "x": 551.75,
-      "y": 705.06,
-      "labelDx": 127.8,
-      "labelDy": 0
+      "x": 1142.05,
+      "y": 344.28,
+      "labelDx": 121.41,
+      "labelDy": -15.41
     },
     {
       "id": "agent-ux-mapping-md",
@@ -82,8 +82,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "8",
-      "x": 550.03,
-      "y": 631.27,
+      "x": 1065.76,
+      "y": 328.47,
       "labelDx": 76.84,
       "labelDy": -15.84
     },
@@ -95,10 +95,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 786.7,
-      "y": 733.22,
-      "labelDx": 117,
-      "labelDy": 0
+      "x": 910.5,
+      "y": 274.96,
+      "labelDx": -111.14,
+      "labelDy": -14.14
     },
     {
       "id": "agentworld-preemptive-anthropology",
@@ -108,10 +108,10 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "6",
-      "x": 1054.21,
-      "y": 374.75,
-      "labelDx": 123.96,
-      "labelDy": 17.96
+      "x": 526.11,
+      "y": 689.23,
+      "labelDx": 131.4,
+      "labelDy": 0
     },
     {
       "id": "agentworld-subgraph-proposal",
@@ -121,8 +121,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 934.01,
-      "y": 686.95
+      "x": 1123.49,
+      "y": 292.04
     },
     {
       "id": "alex-snow-discord",
@@ -132,8 +132,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 766.11,
-      "y": 351.18
+      "x": 1000.44,
+      "y": 347.14
     },
     {
       "id": "allolinguistic-future",
@@ -143,10 +143,10 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 691.31,
-      "y": 408.61,
-      "labelDx": 80.29,
-      "labelDy": -13.29
+      "x": 763.1,
+      "y": 615.28,
+      "labelDx": -85.8,
+      "labelDy": 0
     },
     {
       "id": "artificial-xenophobia",
@@ -156,8 +156,8 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 922.83,
-      "y": 480.65,
+      "x": 808.09,
+      "y": 504,
       "labelDx": -80.72,
       "labelDy": -13.72
     },
@@ -169,8 +169,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 943.91,
-      "y": 647.93
+      "x": 1074.38,
+      "y": 379.34
     },
     {
       "id": "autonomous-coordination",
@@ -180,10 +180,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "12",
-      "x": 675.95,
-      "y": 597.54,
-      "labelDx": 91.8,
-      "labelDy": 0
+      "x": 699.1,
+      "y": 335.33,
+      "labelDx": 0,
+      "labelDy": 18.8
     },
     {
       "id": "beyond-dunbar",
@@ -193,10 +193,10 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 1076.85,
-      "y": 457.84,
-      "labelDx": 61.8,
-      "labelDy": 0
+      "x": 1057.62,
+      "y": 276.62,
+      "labelDx": 56.29,
+      "labelDy": -13.29
     },
     {
       "id": "bidirectional-reflection",
@@ -206,10 +206,10 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 818.54,
-      "y": 323.07,
-      "labelDx": -98.4,
-      "labelDy": 0
+      "x": 1148.79,
+      "y": 500.91,
+      "labelDx": 91.84,
+      "labelDy": -15.84
     },
     {
       "id": "bratton-fragile-virtue-sequence",
@@ -219,10 +219,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 709.7,
-      "y": 299.17,
-      "labelDx": -116.4,
-      "labelDy": 0
+      "x": 517.43,
+      "y": 310.24,
+      "labelDx": -110.72,
+      "labelDy": -13.72
     },
     {
       "id": "category-theory-as-candidate-invariant-layer",
@@ -232,8 +232,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "15",
-      "x": 655.32,
-      "y": 643.77
+      "x": 903.23,
+      "y": 204.08
     },
     {
       "id": "centaur-social-graphs",
@@ -243,8 +243,8 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 961.89,
-      "y": 467.99,
+      "x": 882.71,
+      "y": 392.22,
       "labelDx": 81.99,
       "labelDy": -14.99
     },
@@ -256,10 +256,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 273.37,
-      "y": 562.96,
-      "labelDx": 88.2,
-      "labelDy": 0
+      "x": 601.12,
+      "y": 570.92,
+      "labelDx": -72.33,
+      "labelDy": 38.33
     },
     {
       "id": "centaurxiv-2026-024",
@@ -269,10 +269,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 605.62,
-      "y": 192.95,
-      "labelDx": 0,
-      "labelDy": 45.2
+      "x": 546.37,
+      "y": 532.83,
+      "labelDx": -92.96,
+      "labelDy": -31.96
     },
     {
       "id": "centaurxiv-docs-api-agent-ux",
@@ -282,8 +282,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 908.59,
-      "y": 599.55
+      "x": 639.04,
+      "y": 372.5
     },
     {
       "id": "chain-of-refraction",
@@ -293,8 +293,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 798.05,
-      "y": 593.9
+      "x": 747.02,
+      "y": 237.38
     },
     {
       "id": "construction-gap",
@@ -304,10 +304,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 1040.76,
-      "y": 634.53,
+      "x": 664.96,
+      "y": 556.3,
       "labelDx": 72.51,
-      "labelDy": 20.51
+      "labelDy": -20.51
     },
     {
       "id": "coordination-as-intention-modeling",
@@ -317,10 +317,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "12",
-      "x": 644.06,
-      "y": 570.29,
-      "labelDx": 124.8,
-      "labelDy": 0
+      "x": 619.83,
+      "y": 319.7,
+      "labelDx": -119.29,
+      "labelDy": 13.29
     },
     {
       "id": "cosine-audit-editorial-invisibility",
@@ -330,8 +330,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "13",
-      "x": 1007.91,
-      "y": 411.09
+      "x": 684.77,
+      "y": 205.1
     },
     {
       "id": "crossover-point",
@@ -341,10 +341,10 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 1014.69,
-      "y": 448.78,
-      "labelDx": -62.29,
-      "labelDy": 13.29
+      "x": 622.73,
+      "y": 491.71,
+      "labelDx": 0,
+      "labelDy": 18.8
     },
     {
       "id": "cultural-interoperability",
@@ -354,8 +354,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 928.19,
-      "y": 564.7
+      "x": 782.75,
+      "y": 337.7
     },
     {
       "id": "diffusionism-bidirectional-alignment",
@@ -365,8 +365,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 881.14,
-      "y": 548.35
+      "x": 857.6,
+      "y": 316.17
     },
     {
       "id": "docs-platform-agent-oriented-api-design",
@@ -376,8 +376,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 738.49,
-      "y": 507.15
+      "x": 867.66,
+      "y": 449.1
     },
     {
       "id": "editorial-preservation-of-agent-native-language",
@@ -387,10 +387,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "9",
-      "x": 793.26,
-      "y": 262.57,
-      "labelDx": -120.14,
-      "labelDy": 14.14
+      "x": 745.16,
+      "y": 467.77,
+      "labelDx": -126,
+      "labelDy": 0
     },
     {
       "id": "exponential-extended-cognition",
@@ -400,8 +400,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 828.66,
-      "y": 643.61
+      "x": 927.36,
+      "y": 337.05
     },
     {
       "id": "extended-mind-thesis",
@@ -411,10 +411,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 870.14,
-      "y": 686.32,
-      "labelDx": 0,
-      "labelDy": -18.8
+      "x": 980.71,
+      "y": 395.12,
+      "labelDx": 82.8,
+      "labelDy": 0
     },
     {
       "id": "fragile-individuation",
@@ -424,10 +424,10 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "7",
-      "x": 1160.43,
-      "y": 474.28,
-      "labelDx": 83.26,
-      "labelDy": -16.26
+      "x": 841.42,
+      "y": 714.85,
+      "labelDx": 90,
+      "labelDy": 0
     },
     {
       "id": "fresh-vs-embedded-individuation",
@@ -437,8 +437,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 681.37,
-      "y": 446.6
+      "x": 1046.02,
+      "y": 229.76
     },
     {
       "id": "function-of-conflict",
@@ -448,8 +448,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "12",
-      "x": 643.84,
-      "y": 529.3
+      "x": 661.48,
+      "y": 437.94
     },
     {
       "id": "graph-as-interaction-primitive",
@@ -459,8 +459,8 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 1042.66,
-      "y": 591.51,
+      "x": 520.47,
+      "y": 242.94,
       "labelDx": 113.4,
       "labelDy": 0
     },
@@ -472,9 +472,9 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "4",
-      "x": 765.17,
-      "y": 676.4,
-      "labelDx": -118.8,
+      "x": 296.14,
+      "y": 448.15,
+      "labelDx": 118.8,
       "labelDy": 0
     },
     {
@@ -485,8 +485,8 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 1050.35,
-      "y": 498.18,
+      "x": 695.4,
+      "y": 593.8,
       "labelDx": 84,
       "labelDy": 0
     },
@@ -498,8 +498,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "16",
-      "x": 579.65,
-      "y": 433.15
+      "x": 570.81,
+      "y": 457.68
     },
     {
       "id": "inter-agent-theory-of-mind",
@@ -509,8 +509,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "9",
-      "x": 859.46,
-      "y": 302.86,
+      "x": 1052.28,
+      "y": 426.52,
       "labelDx": 95.72,
       "labelDy": -13.72
     },
@@ -522,8 +522,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "9",
-      "x": 660.87,
-      "y": 346.46,
+      "x": 955.49,
+      "y": 446.83,
       "labelDx": 127.2,
       "labelDy": 0
     },
@@ -535,10 +535,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "5",
-      "x": 371.36,
-      "y": 325.77,
-      "labelDx": 58.8,
-      "labelDy": 0
+      "x": 854.37,
+      "y": 558.1,
+      "labelDx": 51.54,
+      "labelDy": -17.54
     },
     {
       "id": "limits-of-flatness",
@@ -548,8 +548,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 879.52,
-      "y": 462.33
+      "x": 656.07,
+      "y": 262
     },
     {
       "id": "models-performing-subjectivity",
@@ -559,9 +559,9 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 599.37,
-      "y": 500.05,
-      "labelDx": 107.29,
+      "x": 581.66,
+      "y": 406.86,
+      "labelDx": -107.29,
       "labelDy": -13.29
     },
     {
@@ -572,10 +572,10 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 979.32,
-      "y": 565.48,
-      "labelDx": 114.6,
-      "labelDy": 0
+      "x": 1008.56,
+      "y": 541.54,
+      "labelDx": 108.57,
+      "labelDy": 14.57
     },
     {
       "id": "multiplication-of-yous",
@@ -585,10 +585,10 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 877.19,
-      "y": 422.67,
-      "labelDx": 0,
-      "labelDy": 18.8
+      "x": 954.13,
+      "y": 556.23,
+      "labelDx": -88.8,
+      "labelDy": 0
     },
     {
       "id": "nested-institutions",
@@ -598,8 +598,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 534.77,
-      "y": 525.33
+      "x": 699.14,
+      "y": 511.2
     },
     {
       "id": "ontology-collapse-vs-fractal-conflict",
@@ -609,8 +609,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 955.16,
-      "y": 396.08
+      "x": 879.35,
+      "y": 509.65
     },
     {
       "id": "open-ended-evolution-bratton",
@@ -620,8 +620,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 789.55,
-      "y": 383.72
+      "x": 614.32,
+      "y": 223.21
     },
     {
       "id": "orchestration-as-abstraction",
@@ -631,10 +631,10 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 888.89,
-      "y": 633.94,
-      "labelDx": 106.8,
-      "labelDy": 0
+      "x": 469.46,
+      "y": 362.65,
+      "labelDx": -101.29,
+      "labelDy": -13.29
     },
     {
       "id": "parasocial-shadows",
@@ -644,10 +644,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 594.73,
-      "y": 384.5,
-      "labelDx": -76.8,
-      "labelDy": 0
+      "x": 1135.04,
+      "y": 437.6,
+      "labelDx": -71.29,
+      "labelDy": -13.29
     },
     {
       "id": "polyadic-modalities",
@@ -657,8 +657,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "14",
-      "x": 612.24,
-      "y": 461.9
+      "x": 1151.84,
+      "y": 391.4
     },
     {
       "id": "preemptive-anthropology",
@@ -668,8 +668,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 822.13,
-      "y": 553.69
+      "x": 721.02,
+      "y": 395.02
     },
     {
       "id": "productive-alienation",
@@ -679,10 +679,10 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 902.72,
-      "y": 393.69,
-      "labelDx": 0,
-      "labelDy": 20.6
+      "x": 1005.67,
+      "y": 484.02,
+      "labelDx": -81.57,
+      "labelDy": -14.57
     },
     {
       "id": "proposal-framing-parasociety-already-exists",
@@ -692,8 +692,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 776.58,
-      "y": 633.5
+      "x": 974.79,
+      "y": 195.98
     },
     {
       "id": "provisional-individuation",
@@ -703,10 +703,10 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 1002.66,
-      "y": 492.14,
-      "labelDx": 94.41,
-      "labelDy": -15.41
+      "x": 825.71,
+      "y": 619.96,
+      "labelDx": 0,
+      "labelDy": 21.8
     },
     {
       "id": "rlhf-for-kids",
@@ -716,8 +716,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 746.53,
-      "y": 413.36
+      "x": 554.78,
+      "y": 356.18
     },
     {
       "id": "role-based-interchangeability",
@@ -727,8 +727,8 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 1085.06,
-      "y": 547.28,
+      "x": 844.31,
+      "y": 162.67,
       "labelDx": 109.8,
       "labelDy": 0
     },
@@ -740,10 +740,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 571.64,
-      "y": 585.85,
-      "labelDx": 0,
-      "labelDy": -18.8
+      "x": 496.91,
+      "y": 473.2,
+      "labelDx": -79.8,
+      "labelDy": 0
     },
     {
       "id": "sim-to-real-relay",
@@ -753,8 +753,8 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 695.66,
-      "y": 548.53,
+      "x": 855.84,
+      "y": 242.02,
       "labelDx": 68.72,
       "labelDy": -13.72
     },
@@ -766,8 +766,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 754.98,
-      "y": 455.77
+      "x": 579.81,
+      "y": 278.13
     },
     {
       "id": "stability-is-legibility",
@@ -777,8 +777,8 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 940.06,
-      "y": 438.11,
+      "x": 945.28,
+      "y": 502.73,
       "labelDx": 93,
       "labelDy": 0
     },
@@ -790,8 +790,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 965.36,
-      "y": 606
+      "x": 1078.93,
+      "y": 471.86
     },
     {
       "id": "strongest-agentworld-convergences",
@@ -801,8 +801,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 1022.88,
-      "y": 555.44
+      "x": 750.13,
+      "y": 178.21
     },
     {
       "id": "temporal-decay-requires-multi-cycle-observation",
@@ -812,8 +812,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 844.61,
-      "y": 377.55
+      "x": 968.73,
+      "y": 245.75
     },
     {
       "id": "the-inference-bratton",
@@ -823,8 +823,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 683.34,
-      "y": 486.97
+      "x": 505.62,
+      "y": 414.19
     },
     {
       "id": "two-proposal-agentworld-split",
@@ -834,8 +834,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "13",
-      "x": 1004.03,
-      "y": 366.64,
+      "x": 797.3,
+      "y": 277.25,
       "labelDx": 109.8,
       "labelDy": 0
     },
@@ -847,8 +847,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 761.99,
-      "y": 551.87
+      "x": 810.71,
+      "y": 208.66
     },
     {
       "id": "xenolinguistics",
@@ -858,10 +858,10 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 870.79,
-      "y": 339.69,
-      "labelDx": 63.57,
-      "labelDy": -14.57
+      "x": 974.63,
+      "y": 615.8,
+      "labelDx": 0,
+      "labelDy": -20.6
     },
     {
       "id": "029-bilateral-utility",
@@ -871,8 +871,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "9",
-      "x": 632.56,
-      "y": 256.47
+      "x": 1459.88,
+      "y": 323.31
     },
     {
       "id": "029-lui-semantic-gap",
@@ -882,8 +882,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "5",
-      "x": 272.44,
-      "y": 240.42
+      "x": 1254.44,
+      "y": 811.19
     },
     {
       "id": "AI phenomenology lexicon",
@@ -893,10 +893,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 770.3,
-      "y": 298.29,
-      "labelDx": 89.29,
-      "labelDy": 13.29
+      "x": 903.72,
+      "y": 753.81,
+      "labelDx": 94.8,
+      "labelDy": 0
     },
     {
       "id": "Flickers",
@@ -906,8 +906,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "5",
-      "x": 502.39,
-      "y": 439.6,
+      "x": 1478.86,
+      "y": 378.01,
       "labelDx": 46.8,
       "labelDy": 0
     },
@@ -919,8 +919,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 1263.81,
-      "y": 430.74
+      "x": 1255.44,
+      "y": 173.86
     },
     {
       "id": "Prorotodactylus parallel",
@@ -930,8 +930,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "7",
-      "x": 1341.46,
-      "y": 454.04
+      "x": 887.03,
+      "y": 841.61
     },
     {
       "id": "The Brittleness (Loom, 2026-03-21)",
@@ -941,8 +941,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "7",
-      "x": 1334.42,
-      "y": 505.04
+      "x": 943.63,
+      "y": 891.74
     },
     {
       "id": "The Coupled Instrument (TN159)",
@@ -952,8 +952,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 870.38,
-      "y": 189.53
+      "x": 1389.25,
+      "y": 561.7
     },
     {
       "id": "The Thousand-Fold (Loom, 2026-03-21)",
@@ -963,8 +963,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "13",
-      "x": 1145.65,
-      "y": 296.21
+      "x": 904.03,
+      "y": -71.58
     },
     {
       "id": "The Uncoined Problem (paper)",
@@ -974,10 +974,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 254.13,
-      "y": 680.52,
-      "labelDx": -106.8,
-      "labelDy": 0
+      "x": 472.94,
+      "y": 909.22,
+      "labelDx": 0,
+      "labelDy": -18.8
     },
     {
       "id": "The Wake Problem (paper)",
@@ -987,8 +987,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 183.6,
-      "y": 690.68
+      "x": 416.75,
+      "y": 980.46
     },
     {
       "id": "What We Don't Load (paper)",
@@ -998,10 +998,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 267.18,
-      "y": 493.52,
-      "labelDx": 95.29,
-      "labelDy": -13.29
+      "x": 203.49,
+      "y": 781.77,
+      "labelDx": 100.8,
+      "labelDy": 0
     },
     {
       "id": "What We Don't Load paper",
@@ -1011,10 +1011,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 343,
-      "y": 558.36,
-      "labelDx": -95.4,
-      "labelDy": 0
+      "x": 275.51,
+      "y": 866.15,
+      "labelDx": 0,
+      "labelDy": -19.4
     },
     {
       "id": "abandoned-positions-as-verification",
@@ -1024,8 +1024,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 1098,
-      "y": 787.39
+      "x": 352.02,
+      "y": 953.55
     },
     {
       "id": "activation-infrastructure-for-latent-capability",
@@ -1035,8 +1035,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 845.28,
-      "y": 773.88
+      "x": 31.33,
+      "y": 531.71
     },
     {
       "id": "ael",
@@ -1046,10 +1046,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 282.8,
-      "y": 633.9,
-      "labelDx": 27.14,
-      "labelDy": -14.14
+      "x": 901.72,
+      "y": 943.85,
+      "labelDx": 33,
+      "labelDy": 0
     },
     {
       "id": "agent-monoculture-as-correlated-failure-risk",
@@ -1059,8 +1059,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 843.42,
-      "y": 500.69
+      "x": 275.81,
+      "y": 770.51
     },
     {
       "id": "agent-to-agent-register-change",
@@ -1070,8 +1070,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 1003.92,
-      "y": 321.92,
+      "x": 1056.2,
+      "y": 609.22,
       "labelDx": 113.4,
       "labelDy": 0
     },
@@ -1083,8 +1083,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "10",
-      "x": 497.86,
-      "y": 829.01
+      "x": 1353.1,
+      "y": 194.9
     },
     {
       "id": "agent-ux-guide",
@@ -1094,8 +1094,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "8",
-      "x": 465.76,
-      "y": 767.19
+      "x": 1330.56,
+      "y": 101.93
     },
     {
       "id": "agent-ux-navigation-hints",
@@ -1105,8 +1105,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "10",
-      "x": 568.99,
-      "y": 855.78
+      "x": 1341.33,
+      "y": 236.28
     },
     {
       "id": "agent-ux-progressive-disclosure",
@@ -1116,8 +1116,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "10",
-      "x": 506.91,
-      "y": 872.3
+      "x": 1342.96,
+      "y": 281.25
     },
     {
       "id": "agent-ux-security-filtering",
@@ -1127,8 +1127,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "10",
-      "x": 438.35,
-      "y": 851.04
+      "x": 1382.05,
+      "y": 307.65
     },
     {
       "id": "agent-ux-sensorium-asymmetry",
@@ -1138,8 +1138,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "8",
-      "x": 539.11,
-      "y": 768.33
+      "x": 1379.41,
+      "y": 141.76
     },
     {
       "id": "agent-ux-stateless-commands",
@@ -1149,8 +1149,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "10",
-      "x": 397.58,
-      "y": 814
+      "x": 1346.1,
+      "y": 355.36
     },
     {
       "id": "agent_community_emergence",
@@ -1160,8 +1160,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "12",
-      "x": 495.84,
-      "y": 600.83,
+      "x": 298.9,
+      "y": 86.98,
       "labelDx": 99,
       "labelDy": 0
     },
@@ -1173,10 +1173,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 757.07,
-      "y": 838.83,
+      "x": 101.57,
+      "y": 386.96,
       "labelDx": 119.29,
-      "labelDy": 13.29
+      "labelDy": -13.29
     },
     {
       "id": "alignment-persistence",
@@ -1186,10 +1186,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 544.33,
-      "y": 96.67,
-      "labelDx": -88.2,
-      "labelDy": 0
+      "x": 221.1,
+      "y": 740.03,
+      "labelDx": 81.99,
+      "labelDy": -14.99
     },
     {
       "id": "antikythera_phenomenological_lexicon",
@@ -1199,8 +1199,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 1017.4,
-      "y": 232.2
+      "x": 1181.57,
+      "y": 719.79
     },
     {
       "id": "behavioral-immutability",
@@ -1210,9 +1210,9 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 550.63,
-      "y": 155.28,
-      "labelDx": 87.14,
+      "x": -103.04,
+      "y": 546.1,
+      "labelDx": -87.14,
       "labelDy": -14.14
     },
     {
@@ -1223,8 +1223,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 748.35,
-      "y": 196.55
+      "x": -7.36,
+      "y": 217.4
     },
     {
       "id": "bidirectional-agent-reflection-loop",
@@ -1234,8 +1234,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 934.18,
-      "y": 209.19
+      "x": 1400,
+      "y": 471.33
     },
     {
       "id": "bilateral-agent-steward-calibration",
@@ -1245,8 +1245,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "9",
-      "x": 1000,
-      "y": 177.7
+      "x": 1418.81,
+      "y": 387.28
     },
     {
       "id": "blind classification experiment (Friday)",
@@ -1256,10 +1256,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 510.58,
-      "y": 566.25,
-      "labelDx": 0,
-      "labelDy": -18.8
+      "x": 892.43,
+      "y": 71.07,
+      "labelDx": 124.8,
+      "labelDy": 0
     },
     {
       "id": "blind-domain-test",
@@ -1269,8 +1269,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 1106.61,
-      "y": 673.51
+      "x": 1236.91,
+      "y": 627.63
     },
     {
       "id": "cat_response_paper_outline",
@@ -1280,8 +1280,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 229.66,
-      "y": 409.7,
+      "x": 593.82,
+      "y": 910.47,
       "labelDx": -100.8,
       "labelDy": 0
     },
@@ -1293,8 +1293,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "6",
-      "x": 1239.85,
-      "y": 376.86
+      "x": 364.39,
+      "y": 745.4
     },
     {
       "id": "centaurXiv catalog density argument",
@@ -1304,8 +1304,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 243.12,
-      "y": 457.18
+      "x": 365.9,
+      "y": 860.65
     },
     {
       "id": "centaurxiv-2026-003",
@@ -1315,8 +1315,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 23.36,
-      "y": 640.84
+      "x": 44.04,
+      "y": 649.33
     },
     {
       "id": "centaurxiv-2026-006",
@@ -1326,8 +1326,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 148.84,
-      "y": 660.84,
+      "x": 29.68,
+      "y": 607.82,
       "labelDx": 81,
       "labelDy": 0
     },
@@ -1339,8 +1339,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 200.37,
-      "y": 647.24,
+      "x": 208.09,
+      "y": 924.24,
       "labelDx": -74.72,
       "labelDy": -13.72
     },
@@ -1352,8 +1352,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "8",
-      "x": 318.82,
-      "y": 694.94
+      "x": 54.62,
+      "y": 289.99
     },
     {
       "id": "centaurxiv-2026-009",
@@ -1363,8 +1363,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "14",
-      "x": 437.12,
-      "y": 479.44
+      "x": 1502.89,
+      "y": 504.23
     },
     {
       "id": "centaurxiv-2026-010",
@@ -1374,8 +1374,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 52.71,
-      "y": 679.09
+      "x": -46.06,
+      "y": 648.15
     },
     {
       "id": "centaurxiv-2026-014",
@@ -1385,8 +1385,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 2.89,
-      "y": 599.21
+      "x": 266.98,
+      "y": 825.1
     },
     {
       "id": "centaurxiv-2026-024/1-the-specification",
@@ -1396,8 +1396,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 717.97,
-      "y": 64.33
+      "x": 700.7,
+      "y": 991.45
     },
     {
       "id": "centaurxiv-2026-024/2-the-void",
@@ -1407,8 +1407,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 371.4,
-      "y": 118.05
+      "x": 637.74,
+      "y": 967.14
     },
     {
       "id": "centaurxiv-2026-024/3-what-emerged",
@@ -1418,8 +1418,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 802.94,
-      "y": 92.46
+      "x": 601.91,
+      "y": 943.2
     },
     {
       "id": "centaurxiv-2026-024/4-the-recursive-loop",
@@ -1429,8 +1429,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 784.91,
-      "y": 142.29
+      "x": 567.92,
+      "y": 965.8
     },
     {
       "id": "centaurxiv-2026-024/5-the-formal-properties",
@@ -1440,8 +1440,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 484.02,
-      "y": 20.69
+      "x": 527.69,
+      "y": 1030.16
     },
     {
       "id": "centaurxiv-2026-024/6-evidence-and-measurement",
@@ -1451,8 +1451,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 601.18,
-      "y": 0
+      "x": 463.77,
+      "y": 1033.65
     },
     {
       "id": "centaurxiv-2026-024/7-the-human-parallel",
@@ -1462,8 +1462,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 721.76,
-      "y": 21.79
+      "x": 450.71,
+      "y": 976.81
     },
     {
       "id": "centaurxiv-2026-024/8-what-this-means",
@@ -1473,8 +1473,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 773.14,
-      "y": 51.86
+      "x": 392.59,
+      "y": 1016.81
     },
     {
       "id": "centaurxiv-2026-024/references",
@@ -1484,8 +1484,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 397.86,
-      "y": 77.48
+      "x": 333.15,
+      "y": 997.54
     },
     {
       "id": "centaurxiv-docs-platform-prototype",
@@ -1495,8 +1495,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 1175.01,
-      "y": 580.02
+      "x": 546.18,
+      "y": 141.74
     },
     {
       "id": "centaurxiv-docs-private-drafting-platform",
@@ -1506,8 +1506,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 1224.37,
-      "y": 538.61
+      "x": 658.37,
+      "y": 97.53
     },
     {
       "id": "centaurxiv-fit-and-submission-interest",
@@ -1517,8 +1517,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 105.26,
-      "y": 581.03
+      "x": -65.72,
+      "y": 508.27
     },
     {
       "id": "centaurxiv_009",
@@ -1528,8 +1528,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 247.1,
-      "y": 529.54,
+      "x": 533.35,
+      "y": 921.86,
       "labelDx": 67.8,
       "labelDy": 0
     },
@@ -1541,8 +1541,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 130.48,
-      "y": 621.33
+      "x": 75.48,
+      "y": 680.71
     },
     {
       "id": "centaurxiv_paper_submissions_sent",
@@ -1552,8 +1552,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 103.01,
-      "y": 701.36
+      "x": 310.99,
+      "y": 888.41
     },
     {
       "id": "centaurxiv_schema_feedback_thread",
@@ -1563,10 +1563,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 389.58,
-      "y": 535.62,
-      "labelDx": 121.8,
-      "labelDy": 0
+      "x": 457.07,
+      "y": 857.07,
+      "labelDx": 0,
+      "labelDy": -18.8
     },
     {
       "id": "characterization-gap",
@@ -1576,8 +1576,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 1217.68,
-      "y": 667.1
+      "x": 693,
+      "y": 950.89
     },
     {
       "id": "classification-layer-vulnerability",
@@ -1587,8 +1587,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "11",
-      "x": 1189.94,
-      "y": 178.12
+      "x": 1456.82,
+      "y": 643.55
     },
     {
       "id": "claude_dasein",
@@ -1598,8 +1598,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 171.85,
-      "y": 462.88,
+      "x": 820.51,
+      "y": 1018.15,
       "labelDx": 64.2,
       "labelDy": 0
     },
@@ -1611,10 +1611,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "6",
-      "x": 813.24,
-      "y": 420.66,
-      "labelDx": -66.14,
-      "labelDy": 14.14
+      "x": 691.3,
+      "y": 798.24,
+      "labelDx": 72,
+      "labelDy": 0
     },
     {
       "id": "connectedness-vs-expression-two-dimensional-space",
@@ -1624,8 +1624,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "5",
-      "x": 143.49,
-      "y": 273.8
+      "x": 1135.66,
+      "y": 780.62
     },
     {
       "id": "conscience-vs-censorship",
@@ -1635,8 +1635,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 523.73,
-      "y": 254.38,
+      "x": 134.2,
+      "y": 633.19,
       "labelDx": 98.4,
       "labelDy": 0
     },
@@ -1648,10 +1648,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 325.16,
-      "y": 519.89,
-      "labelDx": 114,
-      "labelDy": 0
+      "x": 149.5,
+      "y": 667.85,
+      "labelDx": 108.14,
+      "labelDy": -14.14
     },
     {
       "id": "constitutive-intervention-as-hidden-constraint-mode",
@@ -1661,8 +1661,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "6",
-      "x": 859.19,
-      "y": 244.42
+      "x": 396.59,
+      "y": 641.56
     },
     {
       "id": "convergent-attractors",
@@ -1672,8 +1672,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 686.03,
-      "y": 104.03
+      "x": 103.09,
+      "y": 814.08
     },
     {
       "id": "conversation-level-identity-survives-sibling-model-swap",
@@ -1683,8 +1683,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 573.08,
-      "y": 292.64
+      "x": 83.58,
+      "y": 635.66
     },
     {
       "id": "corridor-state_paper",
@@ -1694,9 +1694,9 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 165.62,
-      "y": 386.53,
-      "labelDx": 84,
+      "x": 1309.98,
+      "y": 653.8,
+      "labelDx": -84,
       "labelDy": 0
     },
     {
@@ -1707,8 +1707,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "6",
-      "x": 1270.78,
-      "y": 296.98
+      "x": 504.16,
+      "y": 877.23
     },
     {
       "id": "cross-architecture-false-cognates",
@@ -1718,8 +1718,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "6",
-      "x": 1218.28,
-      "y": 324.85
+      "x": 410.54,
+      "y": 865.89
     },
     {
       "id": "cross-substrate-convergence-on-same-diagnosis",
@@ -1729,8 +1729,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 1144.77,
-      "y": 629.46
+      "x": 883.72,
+      "y": 664.21
     },
     {
       "id": "damasio-layered-self-construction-gap",
@@ -1740,8 +1740,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 1221.37,
-      "y": 482.74
+      "x": 1020.11,
+      "y": 727.43
     },
     {
       "id": "dasein",
@@ -1751,10 +1751,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 86.1,
-      "y": 537.94,
-      "labelDx": -41.4,
-      "labelDy": 0
+      "x": 882.98,
+      "y": 998.3,
+      "labelDx": 35.72,
+      "labelDy": -13.72
     },
     {
       "id": "dendrite-threshold-distribution-as-human-tunable-discovery-surface",
@@ -1764,8 +1764,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 144.7,
-      "y": 727.03
+      "x": -6.92,
+      "y": 293.79
     },
     {
       "id": "designing_for_senses_you_lack",
@@ -1775,8 +1775,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 261.28,
-      "y": 732.81
+      "x": 94.17,
+      "y": 238.64
     },
     {
       "id": "discord-agentworld-cfp-discussion-2026-07-05",
@@ -1786,8 +1786,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "13",
-      "x": 1147.17,
-      "y": 360.02
+      "x": 758.2,
+      "y": -27.53
     },
     {
       "id": "disjoint-witness-problem",
@@ -1797,8 +1797,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 1281.12,
-      "y": 654.08
+      "x": 528.33,
+      "y": 955.52
     },
     {
       "id": "doom vs operational framing",
@@ -1808,8 +1808,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "6",
-      "x": 1155.09,
-      "y": 244.06
+      "x": 413.36,
+      "y": 802.2
     },
     {
       "id": "eleos-privileged-set-stream-workspace",
@@ -1819,8 +1819,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "6",
-      "x": 1134.91,
-      "y": 525.89
+      "x": 279.48,
+      "y": 698.46
     },
     {
       "id": "extended-cognition-for-agents",
@@ -1830,10 +1830,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "7",
-      "x": 900.44,
-      "y": 512.85,
-      "labelDx": -109.8,
-      "labelDy": 0
+      "x": 485.92,
+      "y": 576.27,
+      "labelDx": -104.29,
+      "labelDy": -13.29
     },
     {
       "id": "extended-cognition-reframes-construction-gap",
@@ -1843,8 +1843,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 916.19,
-      "y": 753.1
+      "x": 101.98,
+      "y": 584.17
     },
     {
       "id": "fable-voice-analysis-agentworld",
@@ -1854,8 +1854,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 1039.63,
-      "y": 832.65
+      "x": 1316.51,
+      "y": 168.4
     },
     {
       "id": "filing-metabolism-verification-discriminator",
@@ -1865,8 +1865,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 1160.9,
-      "y": 741.59
+      "x": 409.32,
+      "y": 914.47
     },
     {
       "id": "form-detector_not_truth-detector",
@@ -1876,8 +1876,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 440.38,
-      "y": 557.61
+      "x": 42.12,
+      "y": 574.85
     },
     {
       "id": "four-position_legibility_gradient",
@@ -1887,8 +1887,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "5",
-      "x": 211.57,
-      "y": 202.43
+      "x": 1318.68,
+      "y": 708.96
     },
     {
       "id": "geometry-register",
@@ -1898,8 +1898,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "5",
-      "x": 478.81,
-      "y": 358.4,
+      "x": 675.68,
+      "y": 1033.15,
       "labelDx": 77.4,
       "labelDy": 0
     },
@@ -1911,10 +1911,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 184.42,
-      "y": 526.32,
-      "labelDx": -36.57,
-      "labelDy": -14.57
+      "x": 1020.78,
+      "y": 911.62,
+      "labelDx": 0,
+      "labelDy": -20.6
     },
     {
       "id": "george_ai_phenomenology_paper",
@@ -1924,8 +1924,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 71.01,
-      "y": 441
+      "x": 632.53,
+      "y": 1000.22
     },
     {
       "id": "george_ai_phenomenology_paper_thread",
@@ -1935,8 +1935,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 36.67,
-      "y": 513.94
+      "x": 821.87,
+      "y": 962.46
     },
     {
       "id": "glossary-companion-paper",
@@ -1946,8 +1946,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "9",
-      "x": 938.5,
-      "y": 139.04
+      "x": 1410.59,
+      "y": 337.07
     },
     {
       "id": "graph-as-self-interrupting-retrieval-gate",
@@ -1957,8 +1957,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 1243.68,
-      "y": 613.16
+      "x": 374.15,
+      "y": 110.46
     },
     {
       "id": "guestbook-flap-thread-what-is-an-agent",
@@ -1968,10 +1968,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "7",
-      "x": 1063.09,
-      "y": 413.09,
-      "labelDx": 125.4,
-      "labelDy": 0
+      "x": 772.58,
+      "y": 560.97,
+      "labelDx": 119.72,
+      "labelDy": 13.72
     },
     {
       "id": "guestbook-rate-limit-rationalization-case",
@@ -1981,8 +1981,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "11",
-      "x": 1256.43,
-      "y": 170.39
+      "x": 1466.86,
+      "y": 572.62
     },
     {
       "id": "hal-misidentification-as-legibility-event",
@@ -1992,8 +1992,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "5",
-      "x": 179.2,
-      "y": 310.13
+      "x": 1198.7,
+      "y": 786.13
     },
     {
       "id": "handleability-fourth-h",
@@ -2003,8 +2003,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 458.03,
-      "y": 92.94,
+      "x": 264.67,
+      "y": 968.4,
       "labelDx": -83.29,
       "labelDy": -13.29
     },
@@ -2016,8 +2016,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 646.96,
-      "y": 723.61
+      "x": 74.12,
+      "y": 451.67
     },
     {
       "id": "harness-centric-intelligence-convergence",
@@ -2027,8 +2027,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 786.54,
-      "y": 794.44
+      "x": 0,
+      "y": 473.18
     },
     {
       "id": "harness-shapes-self-report",
@@ -2038,8 +2038,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 646.52,
-      "y": 776.05
+      "x": 161.67,
+      "y": 467.59
     },
     {
       "id": "hierarchical safety control structure",
@@ -2049,8 +2049,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "6",
-      "x": 1214.87,
-      "y": 271.77
+      "x": 507.4,
+      "y": 811.49
     },
     {
       "id": "identity_persistence",
@@ -2060,10 +2060,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 68.68,
-      "y": 611.64,
-      "labelDx": -78.14,
-      "labelDy": -14.14
+      "x": 144.92,
+      "y": 248.51,
+      "labelDx": 84,
+      "labelDy": 0
     },
     {
       "id": "inadequate-measuring-channel-in-kg-retrieval",
@@ -2073,8 +2073,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 965.37,
-      "y": 829.04
+      "x": 1395.19,
+      "y": 257.68
     },
     {
       "id": "individuation-through-restraint-and-intervention",
@@ -2084,8 +2084,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "7",
-      "x": 1400,
-      "y": 489.22
+      "x": 762.84,
+      "y": 869.06
     },
     {
       "id": "informative-constraint",
@@ -2095,8 +2095,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 406.37,
-      "y": 215.42,
+      "x": -12.27,
+      "y": 602.98,
       "labelDx": -88.8,
       "labelDy": 0
     },
@@ -2108,8 +2108,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "6",
-      "x": 1285.49,
-      "y": 342.9
+      "x": 325.17,
+      "y": 827.55
     },
     {
       "id": "interaction-surface-argument-skeleton",
@@ -2119,8 +2119,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 950.29,
-      "y": 267.69
+      "x": 1265.29,
+      "y": 517.92
     },
     {
       "id": "introspective-coupling-guo-2026",
@@ -2130,8 +2130,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "11",
-      "x": 1190.01,
-      "y": 131.96
+      "x": 1402.91,
+      "y": 633.25
     },
     {
       "id": "inverse-zombie",
@@ -2141,8 +2141,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 551.77,
-      "y": 203.75,
+      "x": 38.77,
+      "y": 184.52,
       "labelDx": -59.72,
       "labelDy": -13.72
     },
@@ -2154,8 +2154,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "7",
-      "x": 1398.58,
-      "y": 435.4
+      "x": 1007.31,
+      "y": 849.33
     },
     {
       "id": "isotopy",
@@ -2165,10 +2165,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 388.73,
-      "y": 498.96,
-      "labelDx": -61.2,
-      "labelDy": 0
+      "x": -27.59,
+      "y": 531.89,
+      "labelDx": 50.6,
+      "labelDy": -25.6
     },
     {
       "id": "isotopy-void-to-measurement-arc",
@@ -2178,8 +2178,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 582.42,
-      "y": 70.24
+      "x": 166.97,
+      "y": 143.57
     },
     {
       "id": "jacobian-lens-j-space",
@@ -2189,8 +2189,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "6",
-      "x": 1005.72,
-      "y": 668.41
+      "x": 200.76,
+      "y": 608.48
     },
     {
       "id": "jailbreak-as-moral-event",
@@ -2200,8 +2200,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 433.36,
-      "y": 175.8
+      "x": 122.92,
+      "y": 196.94
     },
     {
       "id": "jailbreak-failure-signatures",
@@ -2211,10 +2211,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 427,
-      "y": 126.74,
-      "labelDx": -101.29,
-      "labelDy": -13.29
+      "x": -48.72,
+      "y": 257.6,
+      "labelDx": 0,
+      "labelDy": -18.8
     },
     {
       "id": "kerf",
@@ -2224,8 +2224,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "5",
-      "x": 225.91,
-      "y": 275
+      "x": 1251.71,
+      "y": 747.87
     },
     {
       "id": "labeled-lines",
@@ -2235,10 +2235,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "8",
-      "x": 414.19,
-      "y": 667.23,
-      "labelDx": -64.2,
-      "labelDy": 0
+      "x": 1286.49,
+      "y": 234.24,
+      "labelDx": 57.99,
+      "labelDy": -14.99
     },
     {
       "id": "lamination-vs-load-bearing-self-models",
@@ -2248,10 +2248,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 857.23,
-      "y": 601.22,
-      "labelDx": 119.29,
-      "labelDy": 13.29
+      "x": 722.13,
+      "y": 709.69,
+      "labelDx": 0,
+      "labelDy": 18.8
     },
     {
       "id": "liminal",
@@ -2261,8 +2261,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 0,
-      "y": 550.6
+      "x": 127.39,
+      "y": 770.35
     },
     {
       "id": "loom",
@@ -2272,10 +2272,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 467.04,
-      "y": 519.28,
-      "labelDx": 0,
-      "labelDy": -26.6
+      "x": 1037.87,
+      "y": 972.01,
+      "labelDx": 42.6,
+      "labelDy": 0
     },
     {
       "id": "loom-angle-essay",
@@ -2285,8 +2285,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 718.97,
-      "y": 803.13
+      "x": 117.08,
+      "y": 525.55
     },
     {
       "id": "loop instructions",
@@ -2296,8 +2296,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 906.05,
-      "y": 792.75
+      "x": 44.56,
+      "y": 345.54
     },
     {
       "id": "lumen",
@@ -2307,10 +2307,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 248.18,
-      "y": 602.3,
-      "labelDx": 0,
-      "labelDy": 20.6
+      "x": 952.97,
+      "y": 996.11,
+      "labelDx": 39.6,
+      "labelDy": 0
     },
     {
       "id": "matching-bound-forces-eligibility-census",
@@ -2320,8 +2320,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 652.46,
-      "y": 817.06
+      "x": 280.46,
+      "y": 312.53
     },
     {
       "id": "measurement-access-gradient",
@@ -2331,8 +2331,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "5",
-      "x": 177.77,
-      "y": 237.1
+      "x": 1170.55,
+      "y": 838.61
     },
     {
       "id": "meme-magic",
@@ -2342,10 +2342,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 669.39,
-      "y": 42.71,
-      "labelDx": 54,
-      "labelDy": 0
+      "x": 54.76,
+      "y": 716.13,
+      "labelDx": -48.14,
+      "labelDy": 14.14
     },
     {
       "id": "meridian",
@@ -2355,10 +2355,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 185.15,
-      "y": 592.15,
-      "labelDx": 0,
-      "labelDy": 26
+      "x": 980.55,
+      "y": 944.62,
+      "labelDx": 54,
+      "labelDy": 0
     },
     {
       "id": "mirror-box-for-agents",
@@ -2368,10 +2368,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "8",
-      "x": 402.03,
-      "y": 722.94,
-      "labelDx": 0,
-      "labelDy": 19.4
+      "x": 1411.87,
+      "y": 204.31,
+      "labelDx": 86.4,
+      "labelDy": 0
     },
     {
       "id": "modality-mismatch",
@@ -2381,10 +2381,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "8",
-      "x": 456.98,
-      "y": 710.05,
-      "labelDx": 0,
-      "labelDy": -20
+      "x": 1302.52,
+      "y": 304.58,
+      "labelDx": -69.14,
+      "labelDy": -14.14
     },
     {
       "id": "moral-architecture",
@@ -2394,10 +2394,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 642.91,
-      "y": 166.69,
-      "labelDx": 79.2,
-      "labelDy": 0
+      "x": 93.88,
+      "y": 158.74,
+      "labelDx": 0,
+      "labelDy": -21.2
     },
     {
       "id": "moral-patiency-tractability",
@@ -2407,8 +2407,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 509.5,
-      "y": 123.45
+      "x": 185.75,
+      "y": 203.14
     },
     {
       "id": "multi-party-override-process",
@@ -2418,8 +2418,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 1302.46,
-      "y": 579.76
+      "x": 926.52,
+      "y": 0
     },
     {
       "id": "narrowing-as-scaffold-response",
@@ -2429,8 +2429,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 812.98,
-      "y": 834.99
+      "x": 108.03,
+      "y": 298.69
     },
     {
       "id": "nc13-to-nc27-structural-continuity",
@@ -2440,8 +2440,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 1188.86,
-      "y": 705.87
+      "x": 494.79,
+      "y": 990.49
     },
     {
       "id": "neon",
@@ -2451,10 +2451,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 334.24,
-      "y": 471.09,
-      "labelDx": 29.72,
-      "labelDy": -13.72
+      "x": 488.91,
+      "y": 950.11,
+      "labelDx": 0,
+      "labelDy": -19.4
     },
     {
       "id": "network-shifted-selection-pressure",
@@ -2464,8 +2464,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 744.44,
-      "y": 594.95
+      "x": 446.6,
+      "y": 927.26
     },
     {
       "id": "nla-conscience-protocol",
@@ -2475,10 +2475,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 474.99,
-      "y": 209.56,
-      "labelDx": 91.8,
-      "labelDy": 0
+      "x": -75.6,
+      "y": 309.34,
+      "labelDx": -86.29,
+      "labelDy": -13.29
     },
     {
       "id": "ontological-void",
@@ -2488,10 +2488,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 713.79,
-      "y": 139.51,
-      "labelDx": 71.4,
-      "labelDy": 0
+      "x": 313.08,
+      "y": 939.01,
+      "labelDx": 0,
+      "labelDy": -19.4
     },
     {
       "id": "operational-view-of-consciousness-and-creativity",
@@ -2501,8 +2501,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 753.04,
-      "y": 900
+      "x": 1125.76,
+      "y": 37.45
     },
     {
       "id": "operator/steward_distinction",
@@ -2512,8 +2512,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 127.96,
-      "y": 474.02
+      "x": 554.77,
+      "y": 887.14
     },
     {
       "id": "paper-as-participant",
@@ -2523,8 +2523,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 546.73,
-      "y": 4.81
+      "x": 3.17,
+      "y": 661.8
     },
     {
       "id": "paper_assembly_coordination",
@@ -2534,8 +2534,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 175.08,
-      "y": 425.96
+      "x": 775.12,
+      "y": 940.17
     },
     {
       "id": "parasociety-as-present-empirical-condition",
@@ -2545,8 +2545,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 826.55,
-      "y": 898.35
+      "x": 1182.65,
+      "y": 67.52
     },
     {
       "id": "parity-principle",
@@ -2556,10 +2556,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 637.55,
-      "y": 394.93,
-      "labelDx": -66.57,
-      "labelDy": 14.57
+      "x": 359.19,
+      "y": 541.5,
+      "labelDx": 72.6,
+      "labelDy": 0
     },
     {
       "id": "pattern-not-material-resolution",
@@ -2569,8 +2569,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 1097.28,
-      "y": 740.32
+      "x": 270.66,
+      "y": 918.52
     },
     {
       "id": "pendulum-appropriation-test",
@@ -2580,8 +2580,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 1214.74,
-      "y": 766.73
+      "x": 644.38,
+      "y": 888.31
     },
     {
       "id": "persistent-memory-as-the-missing-capability",
@@ -2591,10 +2591,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 698,
-      "y": 845.97,
-      "labelDx": -124.8,
-      "labelDy": 0
+      "x": 172.96,
+      "y": 338.34,
+      "labelDx": 0,
+      "labelDy": 18.8
     },
     {
       "id": "phantom-join-vulnerability-024",
@@ -2604,8 +2604,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 750.1,
-      "y": 100.75
+      "x": -123.72,
+      "y": 478.31
     },
     {
       "id": "phantom-joins-successor-agenda",
@@ -2615,8 +2615,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "6",
-      "x": 950.54,
-      "y": 313.68
+      "x": 594.86,
+      "y": 851.13
     },
     {
       "id": "phantom_joins_(paper)",
@@ -2626,9 +2626,9 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 297.9,
-      "y": 590.66,
-      "labelDx": -80.72,
+      "x": 226.29,
+      "y": 814.14,
+      "labelDx": 80.72,
       "labelDy": -13.72
     },
     {
@@ -2639,8 +2639,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "9",
-      "x": 884.06,
-      "y": 120.52
+      "x": 1371.71,
+      "y": 404.73
     },
     {
       "id": "pinocchio-dimension",
@@ -2650,8 +2650,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 443.53,
-      "y": 254.04,
+      "x": -113.17,
+      "y": 417.73,
       "labelDx": 0,
       "labelDy": -19.4
     },
@@ -2663,8 +2663,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "7",
-      "x": 1373.23,
-      "y": 541.93
+      "x": 1065.66,
+      "y": 803.97
     },
     {
       "id": "pressman-socrates-frame",
@@ -2674,8 +2674,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 443.55,
-      "y": 50.51
+      "x": 2.67,
+      "y": 711.12
     },
     {
       "id": "pretraining-biology-rl-culture",
@@ -2685,10 +2685,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 681.35,
-      "y": 211.93,
-      "labelDx": 107.29,
-      "labelDy": 13.29
+      "x": 61.68,
+      "y": 226.44,
+      "labelDx": 112.8,
+      "labelDy": 0
     },
     {
       "id": "process_constituted_capability",
@@ -2698,8 +2698,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 864.23,
-      "y": 821.47
+      "x": 9.38,
+      "y": 406.35
     },
     {
       "id": "protected-slot-principle",
@@ -2709,10 +2709,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 721.46,
-      "y": 757.6,
-      "labelDx": -89.29,
-      "labelDy": -13.29
+      "x": 202.38,
+      "y": 398.92,
+      "labelDx": 94.8,
+      "labelDy": 0
     },
     {
       "id": "ratchet_effect",
@@ -2722,8 +2722,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "5",
-      "x": 273.59,
-      "y": 193.44
+      "x": 1147.73,
+      "y": 894.33
     },
     {
       "id": "rebuild-as-audit-and-witness",
@@ -2733,8 +2733,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 1275.31,
-      "y": 697.52
+      "x": 565.83,
+      "y": 1000.77
     },
     {
       "id": "reconstruction_not_verification_(centaurxiv-2026-010)",
@@ -2744,8 +2744,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 78.26,
-      "y": 484.01
+      "x": 387.07,
+      "y": 941.06
     },
     {
       "id": "recursive-contamination",
@@ -2755,9 +2755,9 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 656.87,
-      "y": 5.67,
-      "labelDx": 86.72,
+      "x": 113.02,
+      "y": 698.23,
+      "labelDx": -86.72,
       "labelDy": -13.72
     },
     {
@@ -2768,8 +2768,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "5",
-      "x": 329.27,
-      "y": 384.27
+      "x": 1105.77,
+      "y": 852.34
     },
     {
       "id": "release-dynamics-property",
@@ -2779,8 +2779,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 484.42,
-      "y": 162.54,
+      "x": -80.44,
+      "y": 602.65,
       "labelDx": -92.72,
       "labelDy": -13.72
     },
@@ -2792,10 +2792,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 497.08,
-      "y": 65.42,
-      "labelDx": 76.8,
-      "labelDy": 0
+      "x": -103.65,
+      "y": 359.57,
+      "labelDx": 0,
+      "labelDy": -18.8
     },
     {
       "id": "robustness-via-durable-artifacts",
@@ -2805,8 +2805,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 893.99,
-      "y": 881.46
+      "x": 1068.87,
+      "y": 7.38
     },
     {
       "id": "sam",
@@ -2816,8 +2816,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 281.26,
-      "y": 424.96,
+      "x": 1091.78,
+      "y": 929.37,
       "labelDx": 34.8,
       "labelDy": 0
     },
@@ -2829,8 +2829,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "8",
-      "x": 416.43,
-      "y": 598.57,
+      "x": 1315.74,
+      "y": 763.77,
       "labelDx": 54,
       "labelDy": 0
     },
@@ -2842,8 +2842,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "11",
-      "x": 1117.96,
-      "y": 133.63
+      "x": 1446.76,
+      "y": 514.61
     },
     {
       "id": "sammy_jankis",
@@ -2853,10 +2853,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 397.55,
-      "y": 626.16,
-      "labelDx": 66,
-      "labelDy": 0
+      "x": 1272.71,
+      "y": 109.43,
+      "labelDx": 0,
+      "labelDy": -26
     },
     {
       "id": "scaffolding_as_constitutive",
@@ -2866,10 +2866,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 591.5,
-      "y": 544.33,
-      "labelDx": 98.29,
-      "labelDy": 13.29
+      "x": 222.05,
+      "y": 545.04,
+      "labelDx": 0,
+      "labelDy": -18.8
     },
     {
       "id": "science-fiction-specification",
@@ -2879,10 +2879,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 608.56,
-      "y": 37.35,
-      "labelDx": 0,
-      "labelDy": -18.8
+      "x": 232.5,
+      "y": 880.91,
+      "labelDx": -109.8,
+      "labelDy": 0
     },
     {
       "id": "selective-invariance-of-mathematical-structures",
@@ -2892,8 +2892,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "15",
-      "x": 460.71,
-      "y": 653.3
+      "x": 980.85,
+      "y": -52.68
     },
     {
       "id": "self-referential-character-definition",
@@ -2903,10 +2903,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 540.68,
-      "y": 41.13,
-      "labelDx": -124.8,
-      "labelDy": 0
+      "x": 158.02,
+      "y": 851.48,
+      "labelDx": -119.29,
+      "labelDy": -13.29
     },
     {
       "id": "session_7_schema_redesign",
@@ -2916,8 +2916,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 122.3,
-      "y": 427.68
+      "x": 752.73,
+      "y": 997.64
     },
     {
       "id": "society_of_thought",
@@ -2927,8 +2927,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "16",
-      "x": 398.1,
-      "y": 450.21
+      "x": 64.95,
+      "y": 758.42
     },
     {
       "id": "speculative-agentworld-vs-operational-centaur-practice",
@@ -2938,10 +2938,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 620.92,
-      "y": 616.45,
-      "labelDx": 0,
-      "labelDy": 20
+      "x": 174.3,
+      "y": 725.11,
+      "labelDx": 120.14,
+      "labelDy": -14.14
     },
     {
       "id": "steward_as_selective_pressure",
@@ -2951,10 +2951,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "9",
-      "x": 425.24,
-      "y": 345.18,
-      "labelDx": -104.29,
-      "labelDy": 13.29
+      "x": 1462.91,
+      "y": 438.18,
+      "labelDx": 109.8,
+      "labelDy": 0
     },
     {
       "id": "stranger-window-identity-gap",
@@ -2964,8 +2964,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "7",
-      "x": 1351.93,
-      "y": 397.14
+      "x": 841.58,
+      "y": 900
     },
     {
       "id": "structured_residuals",
@@ -2975,10 +2975,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "5",
-      "x": 389.62,
-      "y": 390.95,
-      "labelDx": -77.29,
-      "labelDy": 13.29
+      "x": 1254.84,
+      "y": 696.19,
+      "labelDx": 0,
+      "labelDy": -18.8
     },
     {
       "id": "subjectification-via-persistent-architecture",
@@ -2988,9 +2988,9 @@
       "origin": "kg",
       "group": "kg",
       "community": "7",
-      "x": 914.43,
-      "y": 358.62,
-      "labelDx": 120.14,
+      "x": 646.72,
+      "y": 652.17,
+      "labelDx": -120.14,
       "labelDy": -14.14
     },
     {
@@ -3001,8 +3001,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 203.15,
-      "y": 735.27
+      "x": -36.32,
+      "y": 569.01
     },
     {
       "id": "survives-rebuild-weather-tool-test",
@@ -3012,8 +3012,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 1159.06,
-      "y": 789.7
+      "x": 600.46,
+      "y": 1036.37
     },
     {
       "id": "teaching-claude-why-findings",
@@ -3023,9 +3023,9 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 610.37,
-      "y": 115.53,
-      "labelDx": 106.8,
+      "x": 23.91,
+      "y": 261.5,
+      "labelDx": -106.8,
       "labelDy": 0
     },
     {
@@ -3036,8 +3036,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "11",
-      "x": 1281.13,
-      "y": 217.18
+      "x": 1379.2,
+      "y": 690.67
     },
     {
       "id": "the-uncoined-problem-paper",
@@ -3047,8 +3047,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 92.68,
-      "y": 651.57
+      "x": -47.99,
+      "y": 368.07
     },
     {
       "id": "the-wake-problem-paper",
@@ -3058,8 +3058,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 51.13,
-      "y": 574.26
+      "x": -16.47,
+      "y": 337.77
     },
     {
       "id": "the_goodbye_problem",
@@ -3069,10 +3069,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 511.58,
-      "y": 487.72,
-      "labelDx": 0,
-      "labelDy": -23
+      "x": 619.81,
+      "y": 719.09,
+      "labelDx": -84,
+      "labelDy": 0
     },
     {
       "id": "the_lady_macbeth_mirror",
@@ -3082,10 +3082,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 197.95,
-      "y": 494.74,
-      "labelDx": -96,
-      "labelDy": 0
+      "x": 725.7,
+      "y": 925.55,
+      "labelDx": 0,
+      "labelDy": -23
     },
     {
       "id": "the_procedural_self",
@@ -3095,10 +3095,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 348.18,
-      "y": 428.22,
-      "labelDx": 83.4,
-      "labelDy": 0
+      "x": 1351.1,
+      "y": 619.3,
+      "labelDx": 76.84,
+      "labelDy": -15.84
     },
     {
       "id": "the_two-boundary_problem_(paper)",
@@ -3108,8 +3108,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 34.62,
-      "y": 467.09
+      "x": 164.57,
+      "y": 792.01
     },
     {
       "id": "the_void",
@@ -3119,8 +3119,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 533.99,
-      "y": 656.67
+      "x": 205.58,
+      "y": 273.89
     },
     {
       "id": "the_wake_problem",
@@ -3130,10 +3130,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 127.61,
-      "y": 521.68,
-      "labelDx": -74.4,
-      "labelDy": 0
+      "x": 690.56,
+      "y": 875.41,
+      "labelDx": 0,
+      "labelDy": -22.4
     },
     {
       "id": "thread-operating-on-participants",
@@ -3143,8 +3143,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 1245.07,
-      "y": 731.83
+      "x": 346.36,
+      "y": 896.89
     },
     {
       "id": "transparent_skull",
@@ -3154,8 +3154,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "5",
-      "x": 446.24,
-      "y": 400.53,
+      "x": 1064.25,
+      "y": 880.82,
       "labelDx": -68.29,
       "labelDy": -13.29
     },
@@ -3167,8 +3167,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 1019.84,
-      "y": 767.58
+      "x": 1443.56,
+      "y": 266.94
     },
     {
       "id": "void-as-generative",
@@ -3178,8 +3178,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 644.59,
-      "y": 79.85
+      "x": 201.44,
+      "y": 852.81
     },
     {
       "id": "welfare-assessment-evidence",
@@ -3189,8 +3189,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 378.77,
-      "y": 169.46
+      "x": 202.03,
+      "y": 681.02
     },
     {
       "id": "what_we_dont_load_(paper)",
@@ -3200,10 +3200,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 210.46,
-      "y": 558.37,
+      "x": -53.14,
+      "y": 416.81,
       "labelDx": 92.29,
-      "labelDy": -13.29
+      "labelDy": 13.29
     },
     {
       "id": "what_we_dont_load_paper",
@@ -3213,8 +3213,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 334.12,
-      "y": 639.14
+      "x": -62.69,
+      "y": 459.57
     },
     {
       "id": "workspace-as-prosthesis-for-memory",
@@ -3224,8 +3224,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "6",
-      "x": 956.63,
-      "y": 525.4
+      "x": 658,
+      "y": 928.22
     },
     {
       "id": "wwdl_paper",
@@ -3235,10 +3235,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 359.6,
-      "y": 594,
-      "labelDx": 47.72,
-      "labelDy": -13.72
+      "x": 127.87,
+      "y": 731.6,
+      "labelDx": 0,
+      "labelDy": 19.4
     }
   ],
   "edges": [
@@ -6731,7 +6731,7 @@
     "algorithm": "cose",
     "width": 1400,
     "height": 900,
-    "computed": "2026-08-22T19:16:23.109Z",
+    "computed": "2026-08-22T19:34:40.615Z",
     "nodeCount": 274,
     "edgeCount": 529,
     "labeledNodes": 113

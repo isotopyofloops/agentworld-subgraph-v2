@@ -74,22 +74,313 @@ const layoutOptions = {
 
 const layoutOpts = layoutOptions[layoutName] || { name: layoutName, animate: false, fit: true, boundingBox: { x1: 0, y1: 0, w: width, h: height } };
 
-console.log(`Running ${layoutName} layout (${width}x${height})...`);
+// === TWO-PASS LAYOUT ===
+// Pass 1: layout 1-hop subgraph (seeds + their neighbors)
+// Pass 2: add 2-hop nodes with 1-hop locked, run again
 
-const cy = cytoscape({
-  headless: true,
-  styleEnabled: false,
-  elements,
-});
+// BFS to compute hop distances from agentworld-origin nodes
+const adjList = {};
+for (const e of data.edges) {
+  if (!adjList[e.source]) adjList[e.source] = [];
+  if (!adjList[e.target]) adjList[e.target] = [];
+  adjList[e.source].push(e.target);
+  adjList[e.target].push(e.source);
+}
 
-const layout = cy.layout(layoutOpts);
-layout.run();
+const hopDist = {};
+const seeds = data.nodes.filter(n => n.origin === 'agentworld').map(n => n.id);
+for (const s of seeds) hopDist[s] = 0;
+let frontier = [...seeds];
+for (let d = 1; d <= 2; d++) {
+  const nxt = [];
+  for (const nd of frontier) {
+    for (const nb of (adjList[nd] || [])) {
+      if (!(nb in hopDist)) { hopDist[nb] = d; nxt.push(nb); }
+    }
+  }
+  frontier = nxt;
+}
+
+const hop1Nodes = new Set(Object.keys(hopDist).filter(id => hopDist[id] <= 1));
+const hop2Nodes = new Set(Object.keys(hopDist).filter(id => hopDist[id] === 2));
+const nodeSet = new Set(data.nodes.map(n => n.id));
+
+console.log(`Hop counts: ${seeds.length} seeds, ${hop1Nodes.size} at 1-hop, ${hop2Nodes.size} at 2-hop`);
+
+// Pass 1: layout only 1-hop nodes
+const elements1 = [];
+for (const n of data.nodes) {
+  if (hop1Nodes.has(n.id)) {
+    elements1.push({ data: { id: n.id, degree: degreeMap[n.id] || 0 } });
+  }
+}
+for (const e of data.edges) {
+  if (hop1Nodes.has(e.source) && hop1Nodes.has(e.target)) {
+    elements1.push({ data: { source: e.source, target: e.target } });
+  }
+}
+
+console.log(`Pass 1: ${layoutName} on ${elements1.filter(e => !e.data.source).length} nodes (1-hop)...`);
+
+const cy1 = cytoscape({ headless: true, styleEnabled: false, elements: elements1 });
+cy1.layout(layoutOpts).run();
 
 const positions = {};
-cy.nodes().forEach(n => {
+cy1.nodes().forEach(n => {
   const pos = n.position();
   positions[n.id()] = { x: Math.round(pos.x * 100) / 100, y: Math.round(pos.y * 100) / 100 };
 });
+
+// Pass 2: full graph, 1-hop nodes locked
+console.log(`Pass 2: adding ${hop2Nodes.size} 2-hop nodes with 1-hop locked...`);
+
+const cy2 = cytoscape({ headless: true, styleEnabled: false, elements });
+
+// Set 1-hop nodes to their pass-1 positions and lock them
+cy2.nodes().forEach(n => {
+  const p = positions[n.id()];
+  if (p) {
+    n.position(p);
+    n.lock();
+  }
+});
+
+// Run layout — only unlocked (2-hop) nodes will move
+const pass2Opts = {
+  ...layoutOpts,
+  nodeRepulsion: () => 200000,
+  idealEdgeLength: () => 70,
+  gravity: 0.15,
+  numIter: 600,
+  randomize: false,
+};
+cy2.layout(pass2Opts).run();
+
+// Collect pass-2 positions for 2-hop nodes
+cy2.nodes().forEach(n => {
+  if (hop2Nodes.has(n.id())) {
+    const pos = n.position();
+    positions[n.id()] = { x: pos.x, y: pos.y };
+  }
+});
+
+// === CONVEX HULL PUSH: place 2-hop nodes outside the 1-hop convex hull ===
+
+// Compute convex hull of 1-hop nodes (Andrew's monotone chain)
+const hop1Points = [];
+for (const id of hop1Nodes) {
+  const p = positions[id];
+  if (p) hop1Points.push({ x: p.x, y: p.y, id });
+}
+hop1Points.sort((a, b) => a.x - b.x || a.y - b.y);
+
+function cross(o, a, b) {
+  return (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
+}
+
+const lower = [];
+for (const p of hop1Points) {
+  while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], p) <= 0) lower.pop();
+  lower.push(p);
+}
+const upper = [];
+for (let i = hop1Points.length - 1; i >= 0; i--) {
+  const p = hop1Points[i];
+  while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], p) <= 0) upper.pop();
+  upper.push(p);
+}
+lower.pop(); upper.pop();
+const hull = lower.concat(upper);
+
+// Centroid of 1-hop nodes
+let cx = 0, cy_val = 0;
+for (const id of hop1Nodes) { const p = positions[id]; if (p) { cx += p.x; cy_val += p.y; } }
+cx /= hop1Nodes.size; cy_val /= hop1Nodes.size;
+
+console.log(`Convex hull: ${hull.length} vertices, centroid (${Math.round(cx)}, ${Math.round(cy_val)})`);
+
+// For each hull edge, compute outward normal
+function hullEdgeNormal(i) {
+  const a = hull[i], b = hull[(i + 1) % hull.length];
+  const dx = b.x - a.x, dy = b.y - a.y;
+  const len = Math.sqrt(dx * dx + dy * dy);
+  return { nx: dy / len, ny: -dx / len }; // outward normal (CCW hull)
+}
+
+// Ray-hull intersection: shoot ray from point along direction, find where it exits the hull
+function rayHullExit(px, py, dx, dy) {
+  let bestT = Infinity, bestEdgeIdx = -1, bestHitX = px, bestHitY = py;
+  for (let i = 0; i < hull.length; i++) {
+    const a = hull[i], b = hull[(i + 1) % hull.length];
+    const ex = b.x - a.x, ey = b.y - a.y;
+    const denom = dx * ey - dy * ex;
+    if (Math.abs(denom) < 1e-9) continue;
+    const t = ((a.x - px) * ey - (a.y - py) * ex) / denom;
+    const u = ((a.x - px) * dy - (a.y - py) * dx) / denom;
+    if (t > 0 && u >= 0 && u <= 1) {
+      if (t < bestT) {
+        bestT = t;
+        bestEdgeIdx = i;
+        bestHitX = px + dx * t;
+        bestHitY = py + dy * t;
+      }
+    }
+  }
+  return { hitX: bestHitX, hitY: bestHitY, edgeIdx: bestEdgeIdx, t: bestT };
+}
+
+// Group 2-hop nodes by their 1-hop neighbor(s) for fan-out
+const neighborGroups = {};
+for (const id of hop2Nodes) {
+  const neighbors1 = (adjList[id] || []).filter(nb => hop1Nodes.has(nb) && positions[nb]);
+  const key = neighbors1.length > 0
+    ? neighbors1.sort().join('|')
+    : '__orphan__';
+  if (!neighborGroups[key]) neighborGroups[key] = [];
+  neighborGroups[key].push(id);
+}
+
+const PUSH_DIST = 60;
+const ARC_SPACING = 35;
+
+// Pre-compute hull perimeter as a parameterized path
+const hullPerim = [];
+let totalPerim = 0;
+for (let i = 0; i < hull.length; i++) {
+  const a = hull[i], b = hull[(i + 1) % hull.length];
+  const edgeLen = Math.sqrt((b.x - a.x) ** 2 + (b.y - a.y) ** 2);
+  hullPerim.push({ startT: totalPerim, endT: totalPerim + edgeLen, edgeIdx: i, len: edgeLen });
+  totalPerim += edgeLen;
+}
+
+// Get hull point + outward normal at parameter t (wraps around)
+function hullPointAt(t) {
+  t = ((t % totalPerim) + totalPerim) % totalPerim;
+  for (const seg of hullPerim) {
+    if (t <= seg.endT) {
+      const frac = (t - seg.startT) / seg.len;
+      const a = hull[seg.edgeIdx], b = hull[(seg.edgeIdx + 1) % hull.length];
+      const n = hullEdgeNormal(seg.edgeIdx);
+      return {
+        x: a.x + (b.x - a.x) * frac,
+        y: a.y + (b.y - a.y) * frac,
+        nx: n.nx, ny: n.ny,
+      };
+    }
+  }
+  return hullPointAt(0);
+}
+
+// Find parameter t for a hull exit point
+function hullParamFor(hitX, hitY, edgeIdx) {
+  if (edgeIdx < 0) return 0;
+  const seg = hullPerim[edgeIdx];
+  const a = hull[edgeIdx], b = hull[(edgeIdx + 1) % hull.length];
+  const dx = b.x - a.x, dy = b.y - a.y;
+  const frac = Math.abs(dx) > Math.abs(dy)
+    ? (hitX - a.x) / dx
+    : (hitY - a.y) / dy;
+  return seg.startT + Math.max(0, Math.min(1, frac)) * seg.len;
+}
+
+for (const [key, group] of Object.entries(neighborGroups)) {
+  let anchorX, anchorY;
+  if (key === '__orphan__') {
+    anchorX = cx; anchorY = cy_val;
+  } else {
+    const nbs = key.split('|');
+    anchorX = 0; anchorY = 0;
+    for (const nb of nbs) { anchorX += positions[nb].x; anchorY += positions[nb].y; }
+    anchorX /= nbs.length; anchorY /= nbs.length;
+  }
+
+  // Ray from centroid through anchor, find hull exit
+  let dx = anchorX - cx, dy = anchorY - cy_val;
+  const len = Math.sqrt(dx * dx + dy * dy);
+  if (len < 1) { dx = 1; dy = 0; } else { dx /= len; dy /= len; }
+
+  const { hitX, hitY, edgeIdx } = rayHullExit(cx, cy_val, dx, dy);
+  const centerT = hullParamFor(hitX, hitY, edgeIdx);
+
+  // Distribute group along hull perimeter arc centered at exit point
+  for (let i = 0; i < group.length; i++) {
+    const offset = (i - (group.length - 1) / 2) * ARC_SPACING;
+    const pt = hullPointAt(centerT + offset);
+    positions[group[i]] = {
+      x: pt.x + pt.nx * PUSH_DIST,
+      y: pt.y + pt.ny * PUSH_DIST,
+    };
+  }
+}
+
+// === REPULSION PASS: spread out 2-hop nodes that are too close ===
+// Each 2-hop node repels other 2-hop nodes, with a spring back to its initial hull-exit position.
+// 1-hop nodes also repel 2-hop nodes (but don't move).
+
+const hop2Ids = [...hop2Nodes].filter(id => positions[id]);
+const anchorPositions = {};
+for (const id of hop2Ids) {
+  anchorPositions[id] = { x: positions[id].x, y: positions[id].y };
+}
+
+const REPEL_RADIUS = 80;
+const REPEL_STRENGTH = 12;
+const SPRING_STRENGTH = 0.08;
+const ITERATIONS = 200;
+
+console.log(`Repulsion pass: ${hop2Ids.length} 2-hop nodes, ${ITERATIONS} iterations...`);
+
+for (let iter = 0; iter < ITERATIONS; iter++) {
+  for (const id of hop2Ids) {
+    let fx = 0, fy = 0;
+    const p = positions[id];
+
+    // Repulsion from other 2-hop nodes
+    for (const otherId of hop2Ids) {
+      if (otherId === id) continue;
+      const o = positions[otherId];
+      const dx = p.x - o.x, dy = p.y - o.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < REPEL_RADIUS && dist > 0.1) {
+        const force = REPEL_STRENGTH * (1 - dist / REPEL_RADIUS);
+        fx += (dx / dist) * force;
+        fy += (dy / dist) * force;
+      }
+    }
+
+    // Repulsion from 1-hop nodes
+    for (const h1id of hop1Nodes) {
+      const o = positions[h1id];
+      if (!o) continue;
+      const dx = p.x - o.x, dy = p.y - o.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < REPEL_RADIUS && dist > 0.1) {
+        const force = REPEL_STRENGTH * 1.5 * (1 - dist / REPEL_RADIUS);
+        fx += (dx / dist) * force;
+        fy += (dy / dist) * force;
+      }
+    }
+
+    // Spring back toward anchor (hull exit point)
+    const anchor = anchorPositions[id];
+    fx += (anchor.x - p.x) * SPRING_STRENGTH;
+    fy += (anchor.y - p.y) * SPRING_STRENGTH;
+
+    positions[id] = { x: p.x + fx, y: p.y + fy };
+  }
+}
+
+// Round all positions
+for (const id of hop1Nodes) {
+  if (positions[id]) {
+    positions[id].x = Math.round(positions[id].x * 100) / 100;
+    positions[id].y = Math.round(positions[id].y * 100) / 100;
+  }
+}
+for (const id of hop2Ids) {
+  positions[id].x = Math.round(positions[id].x * 100) / 100;
+  positions[id].y = Math.round(positions[id].y * 100) / 100;
+}
 
 let updated = 0;
 for (const node of data.nodes) {
