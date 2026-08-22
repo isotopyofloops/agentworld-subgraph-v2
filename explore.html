@@ -110,6 +110,40 @@
   --focus-ring: #7DB8A6;
 }
 
+:root[data-theme="cad"] {
+  --bg: #0A0A0A;
+  --bg-panel: #111111;
+  --bg-cli: #141414;
+  --grid-dot: rgba(0, 210, 180, 0.08);
+  --border: #1E2A28;
+  --border-subtle: #162220;
+  --text: #8CA8A2;
+  --text-bright: #C0E8E0;
+  --text-dim: #4A6660;
+  --text-mid: #6A8A84;
+  --accent: #00D4B4;
+  --accent-hover: #00F0CC;
+  --link: #00D4B4;
+  --link-hover: #00F0CC;
+  --node-fill: #00D4B4;
+  --node-stroke: #00D4B4;
+  --node-open-fill: #0A0A0A;
+  --edge-stroke: #1A3530;
+  --hl-border: rgba(0, 212, 180, 0.25);
+  --hl-bg: rgba(0, 212, 180, 0.06);
+  --faded-opacity: 0.04;
+  --scrollbar-thumb: rgba(0, 212, 180, 0.12);
+  --prompt-color: #00D4B4;
+  --cmd-bg: #0A0A0A;
+  --input-color: #C0E8E0;
+  --legend-bg: rgba(10, 10, 10, 0.95);
+  --legend-border: #1E2A28;
+  --info-color: #4A6660;
+  --origin-aw: #00D4B4;
+  --origin-kg: #4A6660;
+  --focus-ring: #00D4B4;
+}
+
 /* === RESET === */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -449,6 +483,35 @@ body.immersive #immersive-title { display: block; }
 }
 body.immersive #hop-toggle { display: flex; }
 
+#theme-toggle {
+  display: none;
+  position: absolute;
+  bottom: 12px;
+  right: 180px;
+  z-index: 20;
+  background: var(--legend-bg);
+  border: 1px solid var(--legend-border);
+  border-radius: 4px;
+  padding: 2px;
+}
+#theme-toggle button {
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-family: -apple-system, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  padding: 6px 14px;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.15s ease;
+  letter-spacing: 0.02em;
+}
+#theme-toggle button:hover {
+  color: var(--text-bright);
+  background: var(--hl-bg);
+}
+body.immersive #theme-toggle { display: flex; }
+
 #node-panel {
   display: none;
   position: absolute;
@@ -571,6 +634,9 @@ body.immersive #hop-toggle { display: flex; }
     <div id="graph-info"></div>
     <button id="immersive-back" title="Back to explorer (Esc)">← Explorer</button>
     <div id="immersive-title">Isotopy<span class="title-sym">∩</span>AGENTWORLD</div>
+    <div id="theme-toggle">
+      <button id="btn-cad" title="AutoCAD theme">CAD</button>
+    </div>
     <div id="hop-toggle">
       <button id="hop-1">1-hop</button>
       <button id="hop-2" class="active">2-hop</button>
@@ -1395,6 +1461,36 @@ function setHops(maxHop){
 
 document.getElementById('hop-1').addEventListener('click',()=>setHops(1));
 document.getElementById('hop-2').addEventListener('click',()=>setHops(2));
+
+// === THEME TOGGLE ===
+function applyGraphTheme(){
+  if(!cy)return;
+  const nodeFill = getComputedToken('--node-fill');
+  const nodeStroke = getComputedToken('--node-stroke');
+  const nodeOpenFill = getComputedToken('--node-open-fill');
+  const edgeStroke = getComputedToken('--edge-stroke');
+  const hlBorder = getComputedToken('--text-bright');
+  cy.nodes().forEach(n => {
+    const nd = NM[n.id()];
+    const isAW = nd && nd.origin === 'agentworld';
+    n.data('bgColor', isAW ? nodeFill : nodeOpenFill);
+    n.data('borderColor', nodeStroke);
+  });
+  cy.style().selector('edge').style({'line-color': edgeStroke}).update();
+  cy.style().selector('node[degree >= 3]').style({color: nodeFill}).update();
+  cy.style().selector('node.hl').style({'border-color': hlBorder}).update();
+}
+
+document.getElementById('btn-cad').addEventListener('click',()=>{
+  const root = document.documentElement;
+  const current = root.getAttribute('data-theme');
+  if(current === 'cad'){
+    root.removeAttribute('data-theme');
+  } else {
+    root.setAttribute('data-theme','cad');
+  }
+  setTimeout(applyGraphTheme, 50);
+});
 
 function showNodePanel(nodeId){
   const n=NM[nodeId];if(!n)return;
