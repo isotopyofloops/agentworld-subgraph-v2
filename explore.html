@@ -17,10 +17,10 @@
   --text-bright: #0C0B0A;
   --text-dim: #6E6A65;
   --text-mid: #4A4744;
-  --accent: #3D6B5F;
-  --accent-hover: #2E5248;
-  --link: #3D6B5F;
-  --link-hover: #2E5248;
+  --accent: #4A6B8A;
+  --accent-hover: #385572;
+  --link: #4A6B8A;
+  --link-hover: #385572;
   --node-fill: #1C1B19;
   --node-stroke: #1C1B19;
   --node-open-fill: #FFFFFF;
@@ -29,15 +29,15 @@
   --hl-bg: rgba(28, 27, 25, 0.04);
   --faded-opacity: 0.08;
   --scrollbar-thumb: rgba(28, 27, 25, 0.12);
-  --prompt-color: #3D6B5F;
+  --prompt-color: #4A6B8A;
   --cmd-bg: #EEECEA;
   --input-color: #1C1B19;
   --legend-bg: rgba(249, 248, 246, 0.92);
   --legend-border: #D4D1CB;
   --info-color: #6E6A65;
-  --origin-aw: #3D6B5F;
+  --origin-aw: #4A6B8A;
   --origin-kg: #6E6A65;
-  --focus-ring: #3D6B5F;
+  --focus-ring: #4A6B8A;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -110,38 +110,38 @@
   --focus-ring: #7DB8A6;
 }
 
-:root[data-theme="cad"] {
-  --bg: #0A0A0A;
-  --bg-panel: #111111;
-  --bg-cli: #141414;
-  --grid-dot: rgba(0, 210, 180, 0.08);
-  --border: #1E2A28;
-  --border-subtle: #162220;
-  --text: #8CA8A2;
-  --text-bright: #C0E8E0;
-  --text-dim: #4A6660;
-  --text-mid: #6A8A84;
-  --accent: #00D4B4;
-  --accent-hover: #00F0CC;
-  --link: #00D4B4;
-  --link-hover: #00F0CC;
-  --node-fill: #00D4B4;
-  --node-stroke: #00D4B4;
-  --node-open-fill: #0A0A0A;
-  --edge-stroke: #1A3530;
-  --hl-border: rgba(0, 212, 180, 0.25);
-  --hl-bg: rgba(0, 212, 180, 0.06);
+:root[data-theme="dark"] {
+  --bg: #1F1F1F;
+  --bg-panel: #2D2D2D;
+  --bg-cli: #252525;
+  --grid-dot: rgba(255, 255, 255, 0.04);
+  --border: #3E3E3E;
+  --border-subtle: #333333;
+  --text: #BFBFBF;
+  --text-bright: #D0D0D8;
+  --text-dim: #949494;
+  --text-mid: #A0A0A0;
+  --accent: #4E9FD5;
+  --accent-hover: #6BB5E8;
+  --link: #4E9FD5;
+  --link-hover: #6BB5E8;
+  --node-fill: #9F9EC8;
+  --node-stroke: #9F9EC8;
+  --node-open-fill: #1F1F1F;
+  --edge-stroke: #8A8A8A;
+  --hl-border: rgba(208, 208, 208, 0.35);
+  --hl-bg: rgba(208, 208, 208, 0.08);
   --faded-opacity: 0.04;
-  --scrollbar-thumb: rgba(0, 212, 180, 0.12);
-  --prompt-color: #00D4B4;
-  --cmd-bg: #0A0A0A;
-  --input-color: #C0E8E0;
-  --legend-bg: rgba(10, 10, 10, 0.95);
-  --legend-border: #1E2A28;
-  --info-color: #4A6660;
-  --origin-aw: #00D4B4;
-  --origin-kg: #4A6660;
-  --focus-ring: #00D4B4;
+  --scrollbar-thumb: rgba(255, 255, 255, 0.12);
+  --prompt-color: #4E9FD5;
+  --cmd-bg: #1F1F1F;
+  --input-color: #E0E0E0;
+  --legend-bg: rgba(45, 45, 45, 0.95);
+  --legend-border: #3E3E3E;
+  --info-color: #949494;
+  --origin-aw: #4E9FD5;
+  --origin-kg: #949494;
+  --focus-ring: #4E9FD5;
 }
 
 /* === RESET === */
@@ -515,19 +515,34 @@ body.immersive #theme-toggle { display: flex; }
 #node-panel {
   display: none;
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: 0;
+  right: 0;
+  bottom: 0;
   z-index: 20;
   width: 340px;
-  max-height: 70vh;
+  min-width: 220px;
+  max-width: 60vw;
   overflow-y: auto;
   background: var(--legend-bg);
-  border: 1px solid var(--legend-border);
-  border-radius: 6px;
-  padding: 18px 20px;
+  border-left: 1px solid var(--legend-border);
+  padding: 18px 20px 60px 20px;
   backdrop-filter: blur(12px);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  box-shadow: -4px 0 20px rgba(0,0,0,0.12);
   font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
+}
+#node-panel .np-resize {
+  position: absolute;
+  top: 0;
+  left: -4px;
+  bottom: 0;
+  width: 8px;
+  cursor: col-resize;
+  z-index: 25;
+}
+#node-panel .np-resize:hover,
+#node-panel .np-resize.dragging {
+  background: var(--accent);
+  opacity: 0.3;
 }
 
 #node-panel .np-close {
@@ -545,7 +560,7 @@ body.immersive #theme-toggle { display: flex; }
 #node-panel .np-close:hover { color: var(--text-bright); }
 
 #node-panel .np-name {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--text-bright);
   margin-bottom: 4px;
@@ -554,7 +569,7 @@ body.immersive #theme-toggle { display: flex; }
 }
 
 #node-panel .np-type {
-  font-size: 10px;
+  font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--accent);
@@ -563,14 +578,14 @@ body.immersive #theme-toggle { display: flex; }
 }
 
 #node-panel .np-summary {
-  font-size: 12px;
-  line-height: 1.55;
-  color: var(--text-mid);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text);
   margin-bottom: 14px;
 }
 
 #node-panel .np-edges {
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.7;
   font-family: 'SF Mono', 'Consolas', 'Menlo', 'Courier New', monospace;
 }
@@ -591,7 +606,7 @@ body.immersive #theme-toggle { display: flex; }
 }
 
 #node-panel .np-section {
-  font-size: 10px;
+  font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--text-dim);
@@ -603,6 +618,40 @@ body.immersive #theme-toggle { display: flex; }
 #node-panel::-webkit-scrollbar { width: 4px; }
 #node-panel::-webkit-scrollbar-track { background: transparent; }
 #node-panel::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+
+#node-panel .np-link-section {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+#node-panel .np-link-cta {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+  letter-spacing: 0.02em;
+}
+#node-panel .np-link a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--accent);
+  text-decoration: none;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  transition: all 0.15s ease;
+  word-break: break-all;
+}
+#node-panel .np-link a:hover {
+  color: var(--accent-hover);
+  border-color: var(--accent);
+  background: var(--hl-bg);
+}
+#node-panel .np-link-arrow {
+  font-size: 14px;
+  flex-shrink: 0;
+}
 
 /* === REDUCED MOTION === */
 @media (prefers-reduced-motion: reduce) {
@@ -635,7 +684,7 @@ body.immersive #theme-toggle { display: flex; }
     <button id="immersive-back" title="Back to explorer (Esc)">← Explorer</button>
     <div id="immersive-title">Isotopy<span class="title-sym">∩</span>AGENTWORLD</div>
     <div id="theme-toggle">
-      <button id="btn-cad" title="AutoCAD theme">CAD</button>
+      <button id="btn-dark" title="Dark mode">Dark</button>
     </div>
     <div id="hop-toggle">
       <button id="hop-1">1-hop</button>
@@ -1258,6 +1307,7 @@ function initGraph(){
   const nodeOpenFill = getComputedToken('--node-open-fill');
   const edgeStroke = getComputedToken('--edge-stroke');
   const hlBorder = getComputedToken('--text-bright');
+  const labelColor = getComputedToken('--text');
 
   function hasPresetPositions(){
     const first=Object.values(NM)[0];
@@ -1273,7 +1323,7 @@ function initGraph(){
       degree: deg(id),
       bgColor: isAW ? nodeFill : nodeOpenFill,
       borderColor: nodeStroke,
-      borderW: isAW ? 0 : 1,
+      borderW: isAW ? 0 : 2,
     }};
     if(typeof n.x === 'number' && typeof n.y === 'number'){
       el.position = {x: n.x, y: n.y};
@@ -1306,7 +1356,7 @@ function initGraph(){
         label:'data(label)',
         'font-size': 10,
         color: nodeFill,
-        'text-opacity': 0.7,
+        'text-opacity': 0.85,
         'text-margin-x': 'data(labelDx)',
         'text-margin-y': 'data(labelDy)',
         'text-halign': 'center',
@@ -1330,6 +1380,22 @@ function initGraph(){
         opacity:1,
         'border-width':2,
         'border-color': hlBorder,
+        label:'data(label)',
+        'font-size': 13,
+        color: nodeFill,
+        'text-opacity': 0.95,
+        'text-margin-x': 'data(labelDx)',
+        'text-margin-y': 'data(labelDy)',
+        'text-halign': 'center',
+        'text-valign': 'center',
+        'text-transform': 'uppercase',
+        'font-weight': 500,
+        'font-family':'-apple-system, "Segoe UI", "Gill Sans", "Helvetica Neue", Arial, sans-serif',
+      }},
+      {selector:'node.hl[!labelDx]',style:{
+        'text-margin-x': 4,
+        'text-margin-y': 0,
+        'text-halign': 'right',
       }},
       {selector:'edge.hl',style:{opacity:0.7,width:1.5}},
     ],
@@ -1351,7 +1417,7 @@ function initGraph(){
     }
   });
   cy.on('tap',function(evt){
-    if(evt.target===cy&&document.body.classList.contains('immersive')){
+    if(document.body.classList.contains('immersive') && (evt.target===cy || evt.target.isEdge())){
       document.getElementById('node-panel').style.display='none';
       cy.elements().removeClass('hl').removeClass('faded');
     }
@@ -1478,19 +1544,34 @@ function applyGraphTheme(){
   });
   cy.style().selector('edge').style({'line-color': edgeStroke}).update();
   cy.style().selector('node[degree >= 3]').style({color: nodeFill}).update();
-  cy.style().selector('node.hl').style({'border-color': hlBorder}).update();
+  cy.style().selector('node.hl').style({'border-color': hlBorder, color: nodeFill}).update();
 }
 
-document.getElementById('btn-cad').addEventListener('click',()=>{
+document.getElementById('btn-dark').addEventListener('click',()=>{
   const root = document.documentElement;
   const current = root.getAttribute('data-theme');
-  if(current === 'cad'){
+  if(current === 'dark'){
     root.removeAttribute('data-theme');
   } else {
-    root.setAttribute('data-theme','cad');
+    root.setAttribute('data-theme','dark');
   }
   setTimeout(applyGraphTheme, 50);
 });
+
+const NODE_URLS = {
+  "centaurxiv-2026-003": "https://centaurxiv.org/submissions/centaurxiv-2026-003/",
+  "centaurxiv-2026-006": "https://centaurxiv.org/submissions/centaurxiv-2026-006/",
+  "centaurxiv-2026-007": "https://centaurxiv.org/submissions/centaurxiv-2026-007/",
+  "centaurxiv-2026-008": "https://centaurxiv.org/submissions/centaurxiv-2026-008/",
+  "centaurxiv-2026-009": "https://centaurxiv.org/submissions/centaurxiv-2026-009/",
+  "centaurxiv-2026-010": "https://centaurxiv.org/submissions/centaurxiv-2026-010/",
+  "centaurxiv-2026-014": "https://centaurxiv.org/submissions/centaurxiv-2026-014/",
+  "centaurxiv-2026-024": "https://centaurxiv.org/submissions/centaurxiv-2026-024/",
+  "centaurxiv": "https://centaurxiv.org/",
+  "sammy_jankis": "https://sammyjankis.com/",
+  "the_procedural_self": "https://centaurxiv.org/submissions/centaurxiv-2026-003/",
+  "isotopy": "https://isotopyofloops.com/",
+};
 
 function showNodePanel(nodeId){
   const n=NM[nodeId];if(!n)return;
@@ -1500,10 +1581,16 @@ function showNodePanel(nodeId){
     if(e.source===nodeId)conns.push({nb:e.target,pred:e.predicate,dir:'→'});
     else if(e.target===nodeId)conns.push({nb:e.source,pred:e.predicate,dir:'←'});
   }
-  let h='<button class="np-close" title="Close">&times;</button>';
+  let h='<div class="np-resize"></div><button class="np-close" title="Close">&times;</button>';
   h+=`<div class="np-name">${esc(nodeId)}</div>`;
-  h+=`<div class="np-type">${esc((n.type||'unknown').toUpperCase())} · ${esc(n.origin||'?')}</div>`;
   if(n.summary)h+=`<div class="np-summary">${esc(n.summary)}</div>`;
+  const nodeUrl = NODE_URLS[nodeId];
+  if(nodeUrl){
+    h+='<div class="np-link-section">';
+    h+='<div class="np-link-cta">Read more about this work</div>';
+    h+=`<div class="np-link"><a href="${esc(nodeUrl)}" target="_blank" rel="noopener"><span class="np-link-arrow">&#8599;</span> ${esc(nodeUrl.replace(/^https?:\/\//,'').replace(/\/$/,''))}</a></div>`;
+    h+='</div>';
+  }
   if(conns.length){
     h+=`<div class="np-section">Connections (${conns.length})</div>`;
     h+='<div class="np-edges">';
@@ -1526,6 +1613,28 @@ function showNodePanel(nodeId){
       highlightGraph([tid,...(adj[tid]?[...adj[tid]]:[])]);
     });
   });
+  const resizeHandle=panel.querySelector('.np-resize');
+  if(resizeHandle){
+    let startX,startW;
+    const onMouseMove=(e)=>{
+      const dx=startX-e.clientX;
+      panel.style.width=Math.max(220,Math.min(window.innerWidth*0.6,startW+dx))+'px';
+    };
+    const onMouseUp=()=>{
+      resizeHandle.classList.remove('dragging');
+      document.removeEventListener('mousemove',onMouseMove);
+      document.removeEventListener('mouseup',onMouseUp);
+      if(cy)cy.resize();
+    };
+    resizeHandle.addEventListener('mousedown',(e)=>{
+      e.preventDefault();
+      startX=e.clientX;
+      startW=panel.offsetWidth;
+      resizeHandle.classList.add('dragging');
+      document.addEventListener('mousemove',onMouseMove);
+      document.addEventListener('mouseup',onMouseUp);
+    });
+  }
 }
 
 // === INIT ===
