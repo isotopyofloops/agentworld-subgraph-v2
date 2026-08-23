@@ -1308,6 +1308,7 @@ function initGraph(){
   const edgeStroke = getComputedToken('--edge-stroke');
   const hlBorder = getComputedToken('--text-bright');
   const labelColor = getComputedToken('--text');
+  const bgColor = getComputedToken('--bg');
 
   function hasPresetPositions(){
     const first=Object.values(NM)[0];
@@ -1357,6 +1358,9 @@ function initGraph(){
         'font-size': 12,
         color: nodeFill,
         'text-opacity': 1,
+        'text-outline-color': bgColor,
+        'text-outline-width': 3,
+        'text-outline-opacity': 0.85,
         'text-margin-x': 'data(labelDx)',
         'text-margin-y': 'data(labelDy)',
         'text-halign': 'center',
@@ -1372,7 +1376,7 @@ function initGraph(){
       {selector:'edge',style:{
         'line-color': nodeStroke,
         'width': 1.2,
-        'opacity': 0.4,
+        'opacity': 0.3,
         'curve-style': 'bezier',
       }},
       {selector:'.faded',style:{opacity:0.06}},
@@ -1384,6 +1388,9 @@ function initGraph(){
         'font-size': 14,
         color: nodeFill,
         'text-opacity': 1,
+        'text-outline-color': bgColor,
+        'text-outline-width': 3,
+        'text-outline-opacity': 0.9,
         'text-margin-x': 'data(labelDx)',
         'text-margin-y': 'data(labelDy)',
         'text-halign': 'center',
@@ -1536,6 +1543,7 @@ function applyGraphTheme(){
   const nodeOpenFill = getComputedToken('--node-open-fill');
   const edgeStroke = getComputedToken('--edge-stroke');
   const hlBorder = getComputedToken('--text-bright');
+  const bgColor = getComputedToken('--bg');
   cy.nodes().forEach(n => {
     const nd = NM[n.id()];
     const isAW = nd && nd.origin === 'agentworld';
@@ -1543,8 +1551,8 @@ function applyGraphTheme(){
     n.data('borderColor', nodeStroke);
   });
   cy.style().selector('edge').style({'line-color': edgeStroke}).update();
-  cy.style().selector('node[degree >= 3]').style({color: nodeFill}).update();
-  cy.style().selector('node.hl').style({'border-color': hlBorder, color: nodeFill}).update();
+  cy.style().selector('node[degree >= 3]').style({color: nodeFill, 'text-outline-color': bgColor}).update();
+  cy.style().selector('node.hl').style({'border-color': hlBorder, color: nodeFill, 'text-outline-color': bgColor}).update();
 }
 
 document.getElementById('btn-dark').addEventListener('click',()=>{
