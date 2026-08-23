@@ -1371,8 +1371,8 @@ function initGraph(){
       }},
       {selector:'edge',style:{
         'line-color': nodeStroke,
-        'width': 0.8,
-        'opacity': 0.25,
+        'width': 1.2,
+        'opacity': 0.4,
         'curve-style': 'bezier',
       }},
       {selector:'.faded',style:{opacity:0.06}},
@@ -1397,7 +1397,7 @@ function initGraph(){
         'text-margin-y': 0,
         'text-halign': 'right',
       }},
-      {selector:'edge.hl',style:{opacity:0.7,width:1.5}},
+      {selector:'edge.hl',style:{opacity:0.8,width:2}},
     ],
     layout: hasPresetPositions() ?
       {name:'preset',fit:true,padding:20} :
