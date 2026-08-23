@@ -266,9 +266,23 @@ body {
   flex: 1;
   overflow-y: auto;
   padding: 16px 20px;
-  min-width: 0;
+  min-width: 120px;
   background: var(--bg-cli);
 }
+
+#splitter {
+  width: 5px;
+  cursor: col-resize;
+  background: var(--border);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+  transition: background 0.15s;
+}
+#splitter:hover, #splitter.dragging {
+  background: var(--accent);
+}
+#splitter.hidden { display: none; }
 
 #output {
   font-family: 'SF Mono', 'Consolas', 'Menlo', 'Courier New', monospace;
@@ -307,8 +321,8 @@ body {
 
 /* === GRAPH PANEL === */
 #graph-panel {
-  width: 45%;
-  border-left: 1px solid var(--border);
+  width: var(--graph-width, 45%);
+  min-width: 200px;
   position: relative;
   flex-shrink: 0;
   background: var(--bg-panel);
@@ -677,6 +691,7 @@ body.immersive #theme-toggle { display: flex; }
 </div>
 <div id="main">
   <div id="text-panel"><div id="output"><span class="dim">Loading...</span></div></div>
+  <div id="splitter"></div>
   <div id="graph-panel">
     <div id="cy"></div>
     <div id="graph-legend"></div>
@@ -1453,20 +1468,24 @@ function setView(mode){
   const bb=document.getElementById('vb-both');
   const bt=document.getElementById('vb-text');
   const bg=document.getElementById('vb-graph');
+  const sp=document.getElementById('splitter');
   [bb,bt,bg].forEach(b=>b.classList.remove('active'));
   document.body.classList.remove('immersive');
   document.getElementById('node-panel').style.display='none';
   if(mode==='text'){
     gp.classList.add('hidden');
+    sp.classList.add('hidden');
     bt.classList.add('active');
   } else if(mode==='graph'){
     gp.classList.remove('hidden');
+    sp.classList.add('hidden');
     document.body.classList.add('immersive');
     bg.classList.add('active');
     if(!cy)initGraph();
     setTimeout(()=>{if(cy)cy.resize();cy.fit(undefined,30);},50);
   } else {
     gp.classList.remove('hidden');
+    sp.classList.remove('hidden');
     bb.classList.add('active');
     if(!cy)initGraph();
     setTimeout(()=>{if(cy)cy.resize();},50);
@@ -1491,6 +1510,37 @@ document.getElementById('vb-both').addEventListener('click',()=>setView('both'))
 document.getElementById('vb-text').addEventListener('click',()=>setView('text'));
 document.getElementById('vb-graph').addEventListener('click',()=>setView('graph'));
 document.getElementById('immersive-back').addEventListener('click',()=>setView('both'));
+
+// Draggable splitter
+(function(){
+  const splitter=document.getElementById('splitter');
+  const main=document.getElementById('main');
+  const gp=document.getElementById('graph-panel');
+  let dragging=false;
+  splitter.addEventListener('mousedown',function(e){
+    e.preventDefault();
+    dragging=true;
+    splitter.classList.add('dragging');
+    document.body.style.cursor='col-resize';
+    document.body.style.userSelect='none';
+  });
+  document.addEventListener('mousemove',function(e){
+    if(!dragging)return;
+    const rect=main.getBoundingClientRect();
+    const graphW=rect.right-e.clientX;
+    const pct=Math.min(80,Math.max(15,(graphW/rect.width)*100));
+    gp.style.setProperty('width',pct+'%');
+    if(typeof cy!=='undefined'&&cy)cy.resize();
+  });
+  document.addEventListener('mouseup',function(){
+    if(!dragging)return;
+    dragging=false;
+    splitter.classList.remove('dragging');
+    document.body.style.cursor='';
+    document.body.style.userSelect='';
+    if(typeof cy!=='undefined'&&cy)cy.resize();
+  });
+})();
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape'&&document.body.classList.contains('immersive'))setView('both');
 });
