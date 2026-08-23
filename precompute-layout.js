@@ -74,11 +74,8 @@ const layoutOptions = {
 
 const layoutOpts = layoutOptions[layoutName] || { name: layoutName, animate: false, fit: true, boundingBox: { x1: 0, y1: 0, w: width, h: height } };
 
-// === TWO-PASS LAYOUT ===
-// Pass 1: layout 1-hop subgraph (seeds + their neighbors)
-// Pass 2: add 2-hop nodes with 1-hop locked, run again
+// === TWO-PASS LAYOUT (when AGENTWORLD seeds exist) or SINGLE-PASS (otherwise) ===
 
-// BFS to compute hop distances from agentworld-origin nodes
 const adjList = {};
 for (const e of data.edges) {
   if (!adjList[e.source]) adjList[e.source] = [];
@@ -89,6 +86,99 @@ for (const e of data.edges) {
 
 const hopDist = {};
 const seeds = data.nodes.filter(n => n.origin === 'agentworld').map(n => n.id);
+const singlePass = seeds.length === 0;
+
+if (singlePass) {
+  // No AGENTWORLD seeds — single-pass cose on full graph
+  console.log(`No AGENTWORLD seeds — single-pass ${layoutName} on all ${elements.filter(e => !e.data.source).length} nodes...`);
+  const cy = cytoscape({ headless: true, styleEnabled: false, elements });
+  cy.layout({
+    ...layoutOpts,
+    nodeRepulsion: () => 180000,
+    idealEdgeLength: () => 65,
+    gravity: 0.35,
+    numIter: 1000,
+  }).run();
+
+  const positions = {};
+  let updated = 0;
+  cy.nodes().forEach(n => {
+    const pos = n.position();
+    positions[n.id()] = { x: Math.round(pos.x * 100) / 100, y: Math.round(pos.y * 100) / 100 };
+  });
+
+  for (const node of data.nodes) {
+    const pos = positions[node.id];
+    if (pos) { node.x = pos.x; node.y = pos.y; updated++; }
+  }
+
+  // Label placement (same as two-pass version)
+  const LABEL_FONT_SIZE = 10;
+  const CHAR_WIDTH = 6;
+  const LABEL_HEIGHT = 14;
+  const LABEL_PAD = 4;
+  const MIN_DEGREE_FOR_LABEL = 2;
+
+  function nodeRadius(id) {
+    const d = degreeMap[id] || 0;
+    return 9 + (d / 20) * 12;
+  }
+  function labelWidth(id) {
+    const text = id.length > 35 ? id.slice(0, 33) + '…' : id;
+    return text.length * CHAR_WIDTH + LABEL_PAD * 2;
+  }
+  const ANGLES = [0, -Math.PI/4, -Math.PI/2, -3*Math.PI/4, Math.PI, 3*Math.PI/4, Math.PI/2, Math.PI/4];
+  function rectsOverlap(a, b) { return !(a.x2 < b.x1 || b.x2 < a.x1 || a.y2 < b.y1 || b.y2 < a.y1); }
+  function overlapArea(a, b) {
+    if (!rectsOverlap(a, b)) return 0;
+    return (Math.min(a.x2, b.x2) - Math.max(a.x1, b.x1)) * (Math.min(a.y2, b.y2) - Math.max(a.y1, b.y1));
+  }
+  function circleRectOverlap(circle, rect) {
+    const cx2 = Math.max(rect.x1, Math.min(circle.cx, rect.x2));
+    const cy2 = Math.max(rect.y1, Math.min(circle.cy, rect.y2));
+    return ((circle.cx - cx2) ** 2 + (circle.cy - cy2) ** 2) < circle.r ** 2 ? 1 : 0;
+  }
+
+  const labeledNodes = data.nodes
+    .filter(n => (degreeMap[n.id] || 0) >= MIN_DEGREE_FOR_LABEL && n.x !== undefined)
+    .sort((a, b) => (degreeMap[b.id] || 0) - (degreeMap[a.id] || 0));
+  const placedLabels = [];
+  const nodeCircles = data.nodes.filter(n => n.x !== undefined).map(n => ({ cx: n.x, cy: n.y, r: nodeRadius(n.id) }));
+
+  for (const node of labeledNodes) {
+    const lw = labelWidth(node.id);
+    const r = nodeRadius(node.id);
+    const gap = r + 8;
+    let bestScore = Infinity, bestDx = gap + 4, bestDy = 3;
+
+    for (const angle of ANGLES) {
+      const dx = Math.cos(angle) * gap, dy = Math.sin(angle) * gap;
+      let lx1 = Math.abs(Math.cos(angle)) > 0.3 ? (Math.cos(angle) > 0 ? node.x + dx : node.x + dx - lw) : node.x - lw / 2;
+      const ly1 = node.y + dy - LABEL_HEIGHT / 2;
+      const rect = { x1: lx1, y1: ly1, x2: lx1 + lw, y2: ly1 + LABEL_HEIGHT };
+      let score = 0;
+      for (const pl of placedLabels) score += overlapArea(rect, pl) * 10;
+      for (const nc of nodeCircles) score += circleRectOverlap(nc, rect) * 50;
+      if (score < bestScore) {
+        bestScore = score;
+        bestDx = Math.round((lx1 - node.x + lw/2) * 100) / 100;
+        bestDy = Math.round((ly1 - node.y + LABEL_HEIGHT/2) * 100) / 100;
+        if (score === 0) break;
+      }
+    }
+    placedLabels.push({ x1: node.x + bestDx - lw/2, y1: node.y + bestDy - LABEL_HEIGHT/2, x2: node.x + bestDx + lw/2, y2: node.y + bestDy + LABEL_HEIGHT/2 });
+    node.labelDx = bestDx;
+    node.labelDy = bestDy;
+  }
+
+  console.log(`Label positions computed for ${labeledNodes.length} nodes.`);
+  data._layout = { algorithm: layoutName, width, height, computed: new Date().toISOString(), nodeCount: data.nodes.length, edgeCount: data.edges.length, labeledNodes: labeledNodes.length };
+  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+  console.log(`Wrote positions for ${updated}/${data.nodes.length} nodes to ${inputFile}`);
+  process.exit(0);
+}
+
+// Two-pass layout with AGENTWORLD seeds
 for (const s of seeds) hopDist[s] = 0;
 let frontier = [...seeds];
 for (let d = 1; d <= 2; d++) {
