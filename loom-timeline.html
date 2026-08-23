@@ -52,13 +52,12 @@ Node positions are identical in every frame, so anything that moves is data.</p>
   <span id="steps"></span>
   <button id="next">&rarr;</button>
   <button id="play">play</button>
-  <button id="scaffold-toggle">show scaffold</button>
 </div>
 
 <div class="key">
-  <span><i style="border-color:var(--scaffold)"></i>scaffold (same-batch <code>temporal</code>)</span>
-  <span><i style="border-color:var(--disc)"></i>dream-made (<code>similarity</code>)</span>
-  <span><i style="border-color:var(--cross)"></i>crosses the boundary</span>
+  <span><i style="border-color:var(--scaffold)"></i>co-created (written in the same batch)</span>
+  <span><i style="border-color:var(--disc)"></i>discovered by similarity (dream-made)</span>
+  <span><i style="border-color:var(--cross)"></i>discovered &amp; crosses the seed boundary</span>
 </div>
 
 <div class="readout" id="out"></div>
@@ -80,7 +79,7 @@ census does not.</p>
 // FRAMES loaded from external loom-frames.js
 const svg = document.getElementById('g'), out = document.getElementById('out');
 const steps = document.getElementById('steps'), tb = document.querySelector('#tbl tbody');
-let i = 0, timer = null, showScaffold = false;
+let i = 0, timer = null;
 const NS = 'http://www.w3.org/2000/svg';
 function el(n, a) { const e = document.createElementNS(NS, n);
   for (const k in a) e.setAttribute(k, a[k]); return e; }
@@ -92,7 +91,6 @@ function draw() {
   const order = [...f.edges].sort((a, b) => (a.disc ? 1 : 0) - (b.disc ? 1 : 0));
   for (const e of order) {
     const A = byId[e.s], B = byId[e.d]; if (!A || !B) continue;
-    if (!e.disc && !showScaffold) continue;
     const cross = e.cross && e.disc;
     svg.appendChild(el('line', {
       x1: A.x, y1: A.y, x2: B.x, y2: B.y,
@@ -144,12 +142,6 @@ document.getElementById('play').onclick = function () {
   if (timer) return stop();
   this.setAttribute('aria-pressed', 'true'); this.textContent = 'pause';
   timer = setInterval(() => { i = (i + 1) % FRAMES.length; draw(); }, 1400);
-};
-document.getElementById('scaffold-toggle').onclick = function () {
-  showScaffold = !showScaffold;
-  this.textContent = showScaffold ? 'hide scaffold' : 'show scaffold';
-  this.setAttribute('aria-pressed', showScaffold ? 'true' : 'false');
-  draw();
 };
 draw();
 </script>

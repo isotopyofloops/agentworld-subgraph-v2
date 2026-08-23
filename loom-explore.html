@@ -521,9 +521,9 @@ body {
       <div class="legend-item"><span class="ldot" style="background:var(--node-fill);"></span> AGENTWORLD seed</div>
       <div class="legend-item"><span class="ldot" style="background:var(--edge-discovery);"></span> Dream-discovered node</div>
       <div class="legend-sep"></div>
-      <div class="legend-item"><span class="lline" style="border-top:1px solid var(--edge-scaffold);"></span> Scaffold (temporal/batch)</div>
-      <div class="legend-item"><span class="lline" style="border-top:2px solid var(--edge-discovery);"></span> Dream-made</div>
-      <div class="legend-item"><span class="lline" style="border-top:3px solid var(--edge-crossing);"></span> Boundary-crossing</div>
+      <div class="legend-item"><span class="lline" style="border-top:1px solid var(--edge-scaffold);"></span> Co-created (same batch)</div>
+      <div class="legend-item"><span class="lline" style="border-top:2px solid var(--edge-discovery);"></span> Discovered by similarity</div>
+      <div class="legend-item"><span class="lline" style="border-top:3px solid var(--edge-crossing);"></span> Discovered &amp; crosses seed boundary</div>
     </div>
     <div id="svg-tooltip"></div>
     <div id="node-panel"></div>
@@ -534,7 +534,6 @@ body {
     <span id="step-label">t=0 of 10</span>
     <button id="btn-next" title="Next frame">Next &rarr;</button>
     <button id="btn-play" title="Auto-play">Play</button>
-    <button id="btn-scaffold" title="Toggle scaffold edges">Show scaffold</button>
   </div>
 </div>
 
@@ -556,7 +555,6 @@ body {
 let currentFrame = 0;
 let selectedNodeId = null;
 let playInterval = null;
-let showScaffold = false;
 
 const svg = document.getElementById('graph-svg');
 const tooltip = document.getElementById('svg-tooltip');
@@ -625,7 +623,7 @@ function draw() {
       data-src="${e.s}" data-dst="${e.d}" data-cls="${cls}" />`;
   }
 
-  if (showScaffold) scaffoldEdges.forEach(e => { svgContent += drawEdge(e); });
+  scaffoldEdges.forEach(e => { svgContent += drawEdge(e); });
   discoveryEdges.forEach(e => { svgContent += drawEdge(e); });
   crossingEdges.forEach(e => { svgContent += drawEdge(e); });
 
@@ -835,14 +833,6 @@ document.getElementById('btn-play').addEventListener('click', function() {
       }
     }, 1200);
   }
-});
-
-// Scaffold toggle
-document.getElementById('btn-scaffold').addEventListener('click', function() {
-  showScaffold = !showScaffold;
-  this.textContent = showScaffold ? 'Hide scaffold' : 'Show scaffold';
-  this.classList.toggle('active', showScaffold);
-  draw();
 });
 
 // Dark mode toggle
