@@ -138,35 +138,35 @@ body {
 /* === TOP BAR === */
 #top-bar {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  padding: 10px 20px;
-  border-bottom: 1px solid var(--border);
+  padding: 12px 12px 8px 12px;
   background: var(--bg-panel);
   flex-shrink: 0;
 }
 
 #top-bar h1 {
   font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
-  font-size: 13px;
+  font-size: 20px;
   font-weight: 600;
   color: var(--text-bright);
-  letter-spacing: 0.03em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
 .title-sym {
   color: var(--accent);
-  margin: 0 4px;
+  margin: 0 6px;
   font-weight: 400;
 }
 
 #top-bar .sub {
+  display: block;
   font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 400;
   color: var(--text-dim);
-  margin-left: 12px;
+  margin-top: 4px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -184,8 +184,8 @@ body {
   border: none;
   color: var(--text-dim);
   font-family: -apple-system, 'Segoe UI', sans-serif;
-  font-size: 11px;
-  padding: 4px 12px;
+  font-size: 14px;
+  padding: 8px 14px;
   cursor: pointer;
   border-radius: 3px;
   transition: all 0.15s ease;
@@ -222,8 +222,9 @@ body {
 #graph-svg {
   display: block;
   width: 100%;
-  height: 100%;
   max-width: 1000px;
+  aspect-ratio: 1000 / 860;
+  max-height: calc(100vh - 130px);
   margin: 0 auto;
 }
 
@@ -234,7 +235,6 @@ body {
   justify-content: center;
   gap: 12px;
   padding: 10px 20px;
-  border-bottom: 1px solid var(--border-subtle);
   background: var(--cmd-bg);
   flex-shrink: 0;
 }
@@ -244,8 +244,8 @@ body {
   border: 1px solid var(--border);
   color: var(--text);
   font-family: -apple-system, 'Segoe UI', sans-serif;
-  font-size: 12px;
-  padding: 5px 14px;
+  font-size: 14px;
+  padding: 8px 18px;
   cursor: pointer;
   border-radius: 4px;
   transition: all 0.15s ease;
@@ -270,7 +270,7 @@ body {
 }
 
 #step-label {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text-mid);
   font-family: 'SF Mono', 'Consolas', 'Menlo', 'Courier New', monospace;
   letter-spacing: 0.04em;
@@ -284,10 +284,9 @@ body {
   flex-wrap: wrap;
   gap: 16px;
   padding: 10px 20px;
-  border-bottom: 1px solid var(--border-subtle);
   background: var(--bg-cli);
   flex-shrink: 0;
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--text-dim);
@@ -389,7 +388,7 @@ body {
 #node-panel .np-close:hover { color: var(--text-bright); }
 
 #node-panel .np-name {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--text-bright);
   margin-bottom: 4px;
@@ -407,7 +406,7 @@ body {
 }
 
 #node-panel .np-content {
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.6;
   color: var(--text);
   margin-bottom: 14px;
@@ -424,7 +423,7 @@ body {
 }
 
 #node-panel .np-edges {
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.7;
   color: var(--text);
 }
@@ -506,20 +505,13 @@ body {
 <body>
 
 <div id="top-bar">
-  <div style="display:flex;align-items:baseline">
-    <h1>Loom<span class="title-sym">&cap;</span>AGENTWORLD</h1>
+  <div>
+    <h1>Loom<span class="title-sym"> &cap; </span>AGENTWORLD</h1>
     <span class="sub">49 seed concepts tracked across 11 snapshots (Jul 28 &ndash; Aug 5, 2026)</span>
   </div>
   <div id="theme-toggle">
     <button id="btn-dark" title="Toggle dark mode">Dark</button>
   </div>
-</div>
-
-<div id="timeline-bar">
-  <button id="btn-prev" title="Previous frame">&larr; Prev</button>
-  <span id="step-label">t=0 of 10</span>
-  <button id="btn-next" title="Next frame">Next &rarr;</button>
-  <button id="btn-play" title="Auto-play">Play</button>
 </div>
 
 <div id="main-wrap">
@@ -535,6 +527,13 @@ body {
     </div>
     <div id="svg-tooltip"></div>
     <div id="node-panel"></div>
+  </div>
+
+  <div id="timeline-bar">
+    <button id="btn-prev" title="Previous frame">&larr; Prev</button>
+    <span id="step-label">t=0 of 10</span>
+    <button id="btn-next" title="Next frame">Next &rarr;</button>
+    <button id="btn-play" title="Auto-play">Play</button>
   </div>
 </div>
 
@@ -800,12 +799,17 @@ function updateStepLabel() {
 }
 
 // Timeline controls
+function clearSelection() {
+  selectedNodeId = null;
+  document.getElementById('node-panel').style.display = 'none';
+}
+
 document.getElementById('btn-prev').addEventListener('click', () => {
-  if (currentFrame > 0) { currentFrame--; draw(); }
+  if (currentFrame > 0) { clearSelection(); currentFrame--; draw(); }
 });
 
 document.getElementById('btn-next').addEventListener('click', () => {
-  if (currentFrame < FRAMES.length - 1) { currentFrame++; draw(); }
+  if (currentFrame < FRAMES.length - 1) { clearSelection(); currentFrame++; draw(); }
 });
 
 document.getElementById('btn-play').addEventListener('click', function() {
@@ -815,6 +819,7 @@ document.getElementById('btn-play').addEventListener('click', function() {
     this.classList.remove('active');
     this.textContent = 'Play';
   } else {
+    clearSelection();
     this.classList.add('active');
     this.textContent = 'Stop';
     playInterval = setInterval(() => {
