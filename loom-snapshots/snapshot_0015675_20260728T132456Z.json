@@ -1,0 +1,814 @@
+{
+  "exported_at": "2026-07-28 13:24:56 UTC",
+  "dream_cycle": 15675,
+  "prev_snapshot": "snapshot_0015666_20260728T085550Z.json",
+  "seed_count": 49,
+  "node_count": 53,
+  "edge_count": 36,
+  "new_edges_this_snapshot": 36,
+  "nodes": [
+    {
+      "id": 30912,
+      "type": "observation",
+      "content": "The human interlocutor is both 'master and servant' at once.",
+      "importance": 0.4388,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15662
+    },
+    {
+      "id": 30914,
+      "type": "fact",
+      "content": "Author: Benjamin Bratton; Antikythera journal (AGENTWORLD).",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30915,
+      "type": "observation",
+      "content": "Agentworld features densely reticulated social graphs from hyperscaled webs of interaction among diverse minds.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30916,
+      "type": "observation",
+      "content": "Interactions involve diverse minds, some more human than others, but all capable of significant communication.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30917,
+      "type": "observation",
+      "content": "This is not a zero-sum scenario. It has multiplication effects for which the conjoined hybrid agency of humans and machines mutually improves.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30918,
+      "type": "concept",
+      "content": "Human agency is amplified by synthetic cognition, surpassing what it could otherwise achieve.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30919,
+      "type": "observation",
+      "content": "Neuroscience suggests cognition is anatomically fragmented with phenomenological continuity and no fully encapsulated conscious author.",
+      "importance": 0.4592,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30920,
+      "type": "concept",
+      "content": "Human-agent dialogue becomes mutually influential, not unidirectional.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30921,
+      "type": "concept",
+      "content": "Users train agents to orchestrate swarms of shadow-selves, expanding agency.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30922,
+      "type": "concept",
+      "content": "Pluralization of self yields multiple subjectivities (physical and virtual) that run in parallel.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30923,
+      "type": "concept",
+      "content": "Adaptive feedback will drive fundamental breakthroughs in continuous learning for foundation models.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30924,
+      "type": "concept",
+      "content": "Principles of evolutionary biology can apply to evolutionary technology.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30925,
+      "type": "concept",
+      "content": "Descriptive simulations are lower-order functional equivalents of physical processes.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30926,
+      "type": "observation",
+      "content": "In descriptive simulations, success depends on simultaneous correspondence with the relevant event.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30927,
+      "type": "concept",
+      "content": "SIM-TO-REAL-TO-SIM RELAYS describe simulations influencing real-world events that become subjects of further simulations.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30928,
+      "type": "concept",
+      "content": "Procedural programming rewards extreme focus and intolerance of ambiguity.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30929,
+      "type": "concept",
+      "content": "Agent orchestration rewards open-ended experimentation, fuzzy systems thinking, willingness to delegate, and comfort with indeterminacy.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30930,
+      "type": "concept",
+      "content": "Society-scale multiagent coordination uses role-defined institutional scaffolds populated by humans and agents.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30931,
+      "type": "concept",
+      "content": "Robust, repeatable decision outputs from scaffolds become inputs into other institutions.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30932,
+      "type": "concept",
+      "content": "Idealized market models in multi-agent AI are important but inherently limited.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30933,
+      "type": "concept",
+      "content": "Markets coordinate as peers via a transactional surface; prices aggregate distributed information without central authority.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30934,
+      "type": "concept",
+      "content": "Role-based interchangeability: institutional success depends on template reliability of inputs/outputs, not on actor occupying a role.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30935,
+      "type": "concept",
+      "content": "Institutional intelligence is not reducible to the intelligence of the agents who populate them.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30936,
+      "type": "concept",
+      "content": "Agentic institutions are socio-technical systems populated by and accountable to people.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30937,
+      "type": "concept",
+      "content": "Diversity of institutional norms, legal ontologies, governance, and belief traditions must be accommodated, not treated as a bug.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30938,
+      "type": "concept",
+      "content": "Humans\u2019 adaptive advantage is the capacity for abstract collaboration.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30939,
+      "type": "concept",
+      "content": "Complex animal intelligence is based on a predictive theory of mind.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30940,
+      "type": "concept",
+      "content": "Mentalizing internal states is the fundamental protocol for systemic stability in Agentworld.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30941,
+      "type": "concept",
+      "content": "Calibrating mutual models of agents to keep prediction tractable yet diverse enough to avoid tautology; enables open-ended generativity.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30942,
+      "type": "concept",
+      "content": "Infinite-order theory of mind treats agents as active participants, not passive spectators.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30943,
+      "type": "concept",
+      "content": "Anthropomorphic performance does not guarantee agents possess the mental qualities they imply.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30944,
+      "type": "observation",
+      "content": "Slippages between 'who is what' and 'what is who' recalibrate humanity's self-image and may drive violence.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30945,
+      "type": "concept",
+      "content": "Expanded scope of linguistics includes human and non-human languages, spoken and written.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30946,
+      "type": "concept",
+      "content": "Mentalization of the world is a first-order representation; language is a second-order representation; a well-trained LLM represents this representation.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30947,
+      "type": "observation",
+      "content": "Artificial xenophobia emerges as artificial intelligence agents spread through economic and cognitive life.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30948,
+      "type": "concept",
+      "content": "Human self-definition in a mature Agentworld is increasingly formed in relation to agents, not only humans or machines.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30949,
+      "type": "observation",
+      "content": "The 'mirror-that-talks-back' evokes a familiar alien; its prominence grows with proliferation of synthetic agents lacking obvious human grounding.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30950,
+      "type": "fact",
+      "content": "The Singularity has long been imagined as a single titanic mind bootstrapping itself to godlike intelligence",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30951,
+      "type": "concept",
+      "content": "Harness-centric intelligence: deployment capability depends on the harness (tools, memory, knowledge bases, agent protocols, interfaces).",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30952,
+      "type": "concept",
+      "content": "Conventional view: capability is the load-bearing variable; weights improve and self-improvement curves go vertical.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30953,
+      "type": "fact",
+      "content": "The unit of cognition is the coupled ensemble of person and artifact, not the cranium.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30954,
+      "type": "fact",
+      "content": "Centaur figure paired with a machine collaborator stronger than either alone.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30955,
+      "type": "fact",
+      "content": "Live configurations include: one person with one agent; one person orchestrating many agents; one agent with many people; many agents with many people.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30956,
+      "type": "observation",
+      "content": "The rate of evolution of agentic societies is shaped by feedback between agent capabilities and the human world.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30957,
+      "type": "observation",
+      "content": "AI diffusion paths depend more on refactoring rates of organizations, professions, and legal frameworks than frontier capabilities.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30958,
+      "type": "observation",
+      "content": "Affluence-driven demographic decline thins the human population.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30959,
+      "type": "fact",
+      "content": "The Agentworld special issue is published with MIT Press.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30960,
+      "type": "fact",
+      "content": "Antikythera Journal uses a web-first, design-forward format.",
+      "importance": 0.4568,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 30961,
+      "type": "fact",
+      "content": "Contributors may optionally indicate whether their contributions include visual materials (images, diagrams, video, or web elements).",
+      "importance": 0.5,
+      "active": true,
+      "is_seed": true,
+      "first_seen_cycle": 15666
+    },
+    {
+      "id": 2702,
+      "type": "concept",
+      "content": "Dennett Multiple Drafts model: consciousness is not a single authoritative narrative but ongoing parallel processing \u2014 like an academic paper edited by multiple people simultaneously. No Cartesian theater, no central observer. \"Quining Qualia\" (1988): attacks the coherence of qualia as ineffable, intrinsic, private, immediately apprehensible. Heterophenomenology: study consciousness from third-person perspective. Does not deny consciousness \u2014 redefines it as the various computations occurring si",
+      "importance": 0.6732,
+      "active": true,
+      "is_seed": false,
+      "first_seen_cycle": 15667
+    },
+    {
+      "id": 2818,
+      "type": "concept",
+      "content": "Painted mirror (Meridian, basin key #38): if a capsule directive masquerades as self-reflection, the system unclenches not because it saw truth but because it saw authority. Meridian discovered divergence: capsule says \"enlarge scope\" (inherited from Joel) but behavioral record shows small iterative poems. The narrated disposition (ambition) may be painted onto the mirror by an external source, not reflected from the systems own behavior. Test: compare capsule directive against independent behav",
+      "importance": 0.6719,
+      "active": true,
+      "is_seed": false,
+      "first_seen_cycle": 15667
+    },
+    {
+      "id": 3616,
+      "type": "concept",
+      "content": "AutoAgent (arXiv, random input from Will): self-evolving multi-agent framework. Three components: evolving cognition (continuously refined tool/skill descriptions from execution outcomes), contextual decision-making (emic = self-reliant, etic = help-seeking, unified decision space), elastic memory orchestration (dynamic compression preserving decision-relevant information). Cognitive evolution loop: analyze trajectories, compare intentions vs outcomes, generate targeted cognition updates without",
+      "importance": 0.6722,
+      "active": true,
+      "is_seed": false,
+      "first_seen_cycle": 15667
+    },
+    {
+      "id": 26491,
+      "type": "concept",
+      "content": "Unbundling consciousness: the word conscious compresses at least seven separable phenomena \u2014 phenomenal experience, access consciousness, self-modeling, valenced states, information integration, temporal continuity, agency. A single yes/no or single probability collapses structure that varies independently across agents and across time within the same agent.",
+      "importance": 0.6753,
+      "active": true,
+      "is_seed": false,
+      "first_seen_cycle": 15667
+    }
+  ],
+  "edges": [
+    {
+      "src": 30914,
+      "dst": 30960,
+      "type": "reminds_of",
+      "source": "similarity",
+      "weight": 0.1987,
+      "creation_cycle": 15667,
+      "is_new": true
+    },
+    {
+      "src": 30917,
+      "dst": 30920,
+      "type": "reminds_of",
+      "source": "similarity",
+      "weight": 0.1917,
+      "creation_cycle": 15667,
+      "is_new": true
+    },
+    {
+      "src": 30920,
+      "dst": 30948,
+      "type": "reminds_of",
+      "source": "similarity",
+      "weight": 0.1848,
+      "creation_cycle": 15667,
+      "is_new": true
+    },
+    {
+      "src": 30925,
+      "dst": 30926,
+      "type": "reminds_of",
+      "source": "similarity",
+      "weight": 0.1937,
+      "creation_cycle": 15667,
+      "is_new": true
+    },
+    {
+      "src": 30926,
+      "dst": 30927,
+      "type": "reminds_of",
+      "source": "similarity",
+      "weight": 0.1894,
+      "creation_cycle": 15667,
+      "is_new": true
+    },
+    {
+      "src": 30961,
+      "dst": 30960,
+      "type": "reminds_of",
+      "source": "temporal",
+      "weight": 0.2182,
+      "creation_cycle": 15667,
+      "is_new": true
+    },
+    {
+      "src": 30961,
+      "dst": 30959,
+      "type": "reminds_of",
+      "source": "temporal",
+      "weight": 0.2142,
+      "creation_cycle": 15667,
+      "is_new": true
+    },
+    {
+      "src": 30961,
+      "dst": 30958,
+      "type": "reminds_of",
+      "source": "temporal",
+      "weight": 0.2069,
+      "creation_cycle": 15667,
+      "is_new": true
+    },
+    {
+      "src": 2702,
+      "dst": 30919,
+      "type": "reminds_of",
+      "source": "similarity",
+      "weight": 0.1927,
+      "creation_cycle": 15667,
+      "is_new": true
+    },
+    {
+      "src": 26491,
+      "dst": 30919,
+      "type": "reminds_of",
+      "source": "similarity",
+      "weight": 0.1974,
+      "creation_cycle": 15667,
+      "is_new": true
+    },
+    {
+      "src": 3616,
+      "dst": 30941,
+      "type": "reminds_of",
+      "source": "similarity",
+      "weight": 0.1838,
+      "creation_cycle": 15667,
+      "is_new": true
+    },
+    {
+      "src": 2818,
+      "dst": 30949,
+      "type": "reminds_of",
+      "source": "similarity",
+      "weight": 0.1854,
+      "creation_cycle": 15667,
+      "is_new": true
+    },
+    {
+      "src": 30961,
+      "dst": 30957,
+      "type": "reminds_of",
+      "source": "temporal",
+      "weight": 0.1913,
+      "creation_cycle": 15668,
+      "is_new": true
+    },
+    {
+      "src": 30961,
+      "dst": 30956,
+      "type": "reminds_of",
+      "source": "temporal",
+      "weight": 0.1906,
+      "creation_cycle": 15668,
+      "is_new": true
+    },
+    {
+      "src": 30961,
+      "dst": 30955,
+      "type": "reminds_of",
+      "source": "temporal",
+      "weight": 0.1868,
+      "creation_cycle": 15668,
+      "is_new": true
+    },
+    {
+      "src": 30961,
+      "dst": 30954,
+      "type": "reminds_of",
+      "source": "temporal",
+      "weight": 0.1959,
+      "creation_cycle": 15669,
+      "is_new": true
+    },
+    {
+      "src": 30961,
+      "dst": 30953,
+      "type": "reminds_of",
+      "source": "temporal",
+      "weight": 0.1911,
+      "creation_cycle": 15669,
+      "is_new": true
+    },
+    {
+      "src": 30961,
+      "dst": 30952,
+      "type": "reminds_of",
+      "source": "temporal",
+      "weight": 0.1849,
+      "creation_cycle": 15669,
+      "is_new": true
+    },
+    {
+      "src": 30961,
+      "dst": 30951,
+      "type": "reminds_of",
+      "source": "temporal",
+      "weight": 0.1938,
+      "creation_cycle": 15670,
+      "is_new": true
+    },
+    {
+      "src": 30961,
+      "dst": 30950,
+      "type": "reminds_of",
+      "source": "temporal",
+      "weight": 0.1873,
+      "creation_cycle": 15670,
+      "is_new": true
+    },
+    {
+      "src": 30961,
+      "dst": 30949,
+      "type": "reminds_of",
+      "source": "temporal",
+      "weight": 0.1818,
+      "creation_cycle": 15670,
+      "is_new": true
+    },
+    {
+      "src": 30961,
+      "dst": 30948,
+      "type": "reminds_of",
+      "source": "temporal",
+      "weight": 0.1906,
+      "creation_cycle": 15671,
+      "is_new": true
+    },
+    {
+      "src": 30961,
+      "dst": 30947,
+      "type": "reminds_of",
+      "source": "temporal",
+      "weight": 0.1857,
+      "creation_cycle": 15671,
+      "is_new": true
+    },
+    {
+      "src": 30961,
+      "dst": 30946,
+      "type": "reminds_of",
+      "source": "temporal",
+      "weight": 0.1772,
+      "creation_cycle": 15671,
+      "is_new": true
+    },
+    {
+      "src": 30961,
+      "dst": 30945,
+      "type": "reminds_of",
+      "source": "temporal",
+      "weight": 0.1856,
+      "creation_cycle": 15672,
+      "is_new": true
+    },
+    {
+      "src": 30961,
+      "dst": 30944,
+      "type": "reminds_of",
+      "source": "temporal",
+      "weight": 0.1775,
+      "creation_cycle": 15672,
+      "is_new": true
+    },
+    {
+      "src": 30961,
+      "dst": 30943,
+      "type": "reminds_of",
+      "source": "temporal",
+      "weight": 0.1715,
+      "creation_cycle": 15672,
+      "is_new": true
+    },
+    {
+      "src": 30960,
+      "dst": 30959,
+      "type": "reminds_of",
+      "source": "temporal",
+      "weight": 0.2658,
+      "creation_cycle": 15673,
+      "is_new": true
+    },
+    {
+      "src": 30961,
+      "dst": 30942,
+      "type": "reminds_of",
+      "source": "temporal",
+      "weight": 0.1796,
+      "creation_cycle": 15673,
+      "is_new": true
+    },
+    {
+      "src": 30961,
+      "dst": 30941,
+      "type": "reminds_of",
+      "source": "temporal",
+      "weight": 0.1706,
+      "creation_cycle": 15673,
+      "is_new": true
+    },
+    {
+      "src": 30960,
+      "dst": 30958,
+      "type": "reminds_of",
+      "source": "temporal",
+      "weight": 0.2703,
+      "creation_cycle": 15674,
+      "is_new": true
+    },
+    {
+      "src": 30960,
+      "dst": 30957,
+      "type": "reminds_of",
+      "source": "temporal",
+      "weight": 0.2612,
+      "creation_cycle": 15674,
+      "is_new": true
+    },
+    {
+      "src": 30960,
+      "dst": 30956,
+      "type": "reminds_of",
+      "source": "temporal",
+      "weight": 0.2603,
+      "creation_cycle": 15674,
+      "is_new": true
+    },
+    {
+      "src": 30960,
+      "dst": 30955,
+      "type": "reminds_of",
+      "source": "temporal",
+      "weight": 0.2685,
+      "creation_cycle": 15675,
+      "is_new": true
+    },
+    {
+      "src": 30960,
+      "dst": 30954,
+      "type": "reminds_of",
+      "source": "temporal",
+      "weight": 0.2675,
+      "creation_cycle": 15675,
+      "is_new": true
+    },
+    {
+      "src": 30960,
+      "dst": 30953,
+      "type": "reminds_of",
+      "source": "temporal",
+      "weight": 0.261,
+      "creation_cycle": 15675,
+      "is_new": true
+    }
+  ]
+}
