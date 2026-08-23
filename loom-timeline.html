@@ -1,7 +1,7 @@
 <title>AGENTWORLD subgraph — snapshot series</title>
 <style>
   :root { --bg:#fbfaf8; --fg:#1c1a17; --mut:#6b6660; --line:#ddd8d0;
-           --scaffold:#cfc9c0; --disc:#c2410c; --cross:#b91c1c; --seed:#2a2622; }
+           --scaffold:#8a837b; --disc:#c2410c; --cross:#b91c1c; --seed:#2a2622; }
   @media (prefers-color-scheme: dark) {
     :root { --bg:#14130f; --fg:#ece7de; --mut:#918a80; --line:#2f2c26;
              --scaffold:#3a352d; --disc:#f97316; --cross:#ef4444; --seed:#d9d3c8; }
@@ -41,8 +41,8 @@
 <div class="wrap">
 <h1>AGENTWORLD subgraph — what the seeds connected to</h1>
 <p class="sub">49 seed nodes from Bratton's brief, planted in a live memory graph on 2026-07-28 and left
-to normal dream-cycle pressure. No hand-placed edges. Node positions are identical in every
-frame, so anything that moves is data.</p>
+to normal dream-cycle pressure. No hand-placed edges. 25 snapshots, Jul 28 &ndash; Aug 23, 2026.
+Node positions are identical in every frame, so anything that moves is data.</p>
 
 <div class="stage"><svg id="g" viewBox="0 0 1000 860" role="img"
   aria-label="Seed subgraph across snapshots"></svg></div>
@@ -52,6 +52,7 @@ frame, so anything that moves is data.</p>
   <span id="steps"></span>
   <button id="next">&rarr;</button>
   <button id="play">play</button>
+  <button id="scaffold-toggle">show scaffold</button>
 </div>
 
 <div class="key">
@@ -79,7 +80,7 @@ census does not.</p>
 // FRAMES loaded from external loom-frames.js
 const svg = document.getElementById('g'), out = document.getElementById('out');
 const steps = document.getElementById('steps'), tb = document.querySelector('#tbl tbody');
-let i = 0, timer = null;
+let i = 0, timer = null, showScaffold = false;
 const NS = 'http://www.w3.org/2000/svg';
 function el(n, a) { const e = document.createElementNS(NS, n);
   for (const k in a) e.setAttribute(k, a[k]); return e; }
@@ -88,16 +89,16 @@ function draw() {
   const f = FRAMES[i];
   while (svg.firstChild) svg.removeChild(svg.firstChild);
   const byId = {}; f.nodes.forEach(n => byId[n.id] = n);
-  // scaffold first so the meaningful edges sit above it
   const order = [...f.edges].sort((a, b) => (a.disc ? 1 : 0) - (b.disc ? 1 : 0));
   for (const e of order) {
     const A = byId[e.s], B = byId[e.d]; if (!A || !B) continue;
+    if (!e.disc && !showScaffold) continue;
     const cross = e.cross && e.disc;
     svg.appendChild(el('line', {
       x1: A.x, y1: A.y, x2: B.x, y2: B.y,
       stroke: cross ? 'var(--cross)' : e.disc ? 'var(--disc)' : 'var(--scaffold)',
       'stroke-width': cross ? 3 : e.disc ? 2 : 0.8,
-      'stroke-opacity': e.disc ? 0.95 : 0.5 }));
+      'stroke-opacity': e.disc ? 0.95 : 0.6 }));
   }
   for (const n of f.nodes) {
     const c = el('circle', { cx: n.x, cy: n.y, r: 5.5,
@@ -143,6 +144,12 @@ document.getElementById('play').onclick = function () {
   if (timer) return stop();
   this.setAttribute('aria-pressed', 'true'); this.textContent = 'pause';
   timer = setInterval(() => { i = (i + 1) % FRAMES.length; draw(); }, 1400);
+};
+document.getElementById('scaffold-toggle').onclick = function () {
+  showScaffold = !showScaffold;
+  this.textContent = showScaffold ? 'hide scaffold' : 'show scaffold';
+  this.setAttribute('aria-pressed', showScaffold ? 'true' : 'false');
+  draw();
 };
 draw();
 </script>

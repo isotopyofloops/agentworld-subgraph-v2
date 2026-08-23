@@ -39,7 +39,7 @@
   --origin-kg: #6E6A65;
   --focus-ring: #4A6B8A;
   /* Loom edge-type tokens */
-  --edge-scaffold: #C5C2BC;
+  --edge-scaffold: #8a837b;
   --edge-discovery: #c2410c;
   --edge-crossing: #b91c1c;
 }
@@ -507,7 +507,7 @@ body {
 <div id="top-bar">
   <div>
     <h1>Loom<span class="title-sym"> &cap; </span>AGENTWORLD</h1>
-    <span class="sub">49 seed concepts tracked across 11 snapshots (Jul 28 &ndash; Aug 5, 2026)</span>
+    <span class="sub">49 seed concepts tracked across 25 snapshots (Jul 28 &ndash; Aug 23, 2026)</span>
   </div>
   <div id="theme-toggle">
     <button id="btn-dark" title="Toggle dark mode">Dark</button>
@@ -534,6 +534,7 @@ body {
     <span id="step-label">t=0 of 10</span>
     <button id="btn-next" title="Next frame">Next &rarr;</button>
     <button id="btn-play" title="Auto-play">Play</button>
+    <button id="btn-scaffold" title="Toggle scaffold edges">Show scaffold</button>
   </div>
 </div>
 
@@ -555,6 +556,7 @@ body {
 let currentFrame = 0;
 let selectedNodeId = null;
 let playInterval = null;
+let showScaffold = false;
 
 const svg = document.getElementById('graph-svg');
 const tooltip = document.getElementById('svg-tooltip');
@@ -609,7 +611,7 @@ function draw() {
     if (!src || !dst) return '';
     const cls = edgeClass(e);
     let sw, op;
-    if (cls === 'scaffold') { sw = 0.8; op = 0.35; }
+    if (cls === 'scaffold') { sw = 0.8; op = 0.6; }
     else if (cls === 'discovery') { sw = 2; op = 0.8; }
     else { sw = 3; op = 0.9; }
 
@@ -623,7 +625,7 @@ function draw() {
       data-src="${e.s}" data-dst="${e.d}" data-cls="${cls}" />`;
   }
 
-  scaffoldEdges.forEach(e => { svgContent += drawEdge(e); });
+  if (showScaffold) scaffoldEdges.forEach(e => { svgContent += drawEdge(e); });
   discoveryEdges.forEach(e => { svgContent += drawEdge(e); });
   crossingEdges.forEach(e => { svgContent += drawEdge(e); });
 
@@ -833,6 +835,14 @@ document.getElementById('btn-play').addEventListener('click', function() {
       }
     }, 1200);
   }
+});
+
+// Scaffold toggle
+document.getElementById('btn-scaffold').addEventListener('click', function() {
+  showScaffold = !showScaffold;
+  this.textContent = showScaffold ? 'Hide scaffold' : 'Show scaffold';
+  this.classList.toggle('active', showScaffold);
+  draw();
 });
 
 // Dark mode toggle
