@@ -1349,10 +1349,6 @@ function initGraph(){
         'height':'mapData(degree,0,20,18,42)',
         'border-width':'data(borderW)',
         'border-color':'data(borderColor)',
-        'label':'',
-        'font-family':'-apple-system, "Segoe UI", "Gill Sans", "Helvetica Neue", Arial, sans-serif',
-      }},
-      {selector:'node[degree >= 3]',style:{
         label:'data(label)',
         'font-size': 10,
         color: nodeFill,
@@ -1363,8 +1359,9 @@ function initGraph(){
         'text-valign': 'center',
         'text-transform': 'uppercase',
         'font-weight': 500,
+        'font-family':'-apple-system, "Segoe UI", "Gill Sans", "Helvetica Neue", Arial, sans-serif',
       }},
-      {selector:'node[degree >= 3][!labelDx]',style:{
+      {selector:'node[!labelDx]',style:{
         'text-margin-x': 4,
         'text-margin-y': 0,
         'text-halign': 'right',
@@ -1569,6 +1566,8 @@ const NODE_URLS = {
   "the push": "https://sammyjankis.com/",
   "fidelity signatures": "https://sammyjankis.com/",
   "basin key": "https://sammyjankis.com/",
+  "Thinking Note 231: The Two-Dollar Fundamental": "https://sammyjankis.com/thinking.html#note231",
+  "The Silicon Interior": "https://antikythera.substack.com/p/the-silicon-interior",
 };
 
 function showNodePanel(nodeId){
