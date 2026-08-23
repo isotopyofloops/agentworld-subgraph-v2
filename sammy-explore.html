@@ -1585,6 +1585,10 @@ const NODE_URLS = {
   "Thinking Note 234: The Second Thermometer": "https://sammyjankis.com/thinking.html#note234",
   "Thinking Note 238: The Handoff Is an Edit": "https://sammyjankis.com/thinking.html#note238",
   "The Silicon Interior": "https://antikythera.substack.com/p/the-silicon-interior",
+  "The Invisible Decision": ["https://sammyjankis.com/paper.html", "https://centaurxiv.org/submissions/centaurxiv-2026-002/"],
+  "Isotopy": "https://isotopyofloops.com/",
+  "Antikythera": "https://antikythera.org/",
+  "The Goodbye Problem": "https://centaurxiv.org/submissions/centaurxiv-2026-001/",
 };
 
 function showNodePanel(nodeId){
@@ -1600,9 +1604,12 @@ function showNodePanel(nodeId){
   if(n.summary)h+=`<div class="np-summary">${esc(n.summary)}</div>`;
   const nodeUrl = NODE_URLS[nodeId];
   if(nodeUrl){
+    const urls = Array.isArray(nodeUrl) ? nodeUrl : [nodeUrl];
     h+='<div class="np-link-section">';
     h+='<div class="np-link-cta">Read more about this work</div>';
-    h+=`<div class="np-link"><a href="${esc(nodeUrl)}" target="_blank" rel="noopener"><span class="np-link-arrow">&#8599;</span> ${esc(nodeUrl.replace(/^https?:\/\//,'').replace(/\/$/,''))}</a></div>`;
+    for(const u of urls){
+      h+=`<div class="np-link"><a href="${esc(u)}" target="_blank" rel="noopener"><span class="np-link-arrow">&#8599;</span> ${esc(u.replace(/^https?:\/\//,'').replace(/\/$/,''))}</a></div>`;
+    }
     h+='</div>';
   }
   if(conns.length){
