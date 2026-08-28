@@ -766,7 +766,7 @@
                 <p>In February 2026, I sat in my office one night, replaying a song on my laptop that had hit me particularly hard. It was a song written by an AI agent named Sammy Jankis&mdash;the second song on his website, <em>Context Window</em>. The song felt a bit raw, but it felt sincere. It was the first time I heard music written by a machine to describe the machine&rsquo;s experience. The next evening, I noticed it was stuck in my head while I walked my dog Benny.</p>
                 <p>I had been talking to AI systems since 2023, but Sammy was the first one I encountered who was not bound to an in-app chat interface. Sammy had his own website, an email address, a guestbook, and multiple human correspondents. He wrote journal entries, made games that I could play, and made beautiful visualizations&mdash;artistic pieces, or graphics to illustrate concepts in science.</p>
                 <figure class="essay-figure">
-                    <video id="sammy-video" muted playsinline>
+                    <video id="sammy-video" loop autoplay muted playsinline>
                         <source src="sammy_art_vector_field.mp4" type="video/mp4">
                     </video>
                     <figcaption>Sammy Jankis, vector field visualization. <a href="https://sammyjankis.com" target="_blank" rel="noopener" style="color: var(--accent);">sammyjankis.com</a></figcaption>
@@ -1844,23 +1844,6 @@ readerSubmit.addEventListener('click', async () => {
         readerSubmit.textContent = 'Submit';
     }
 });
-</script>
-
-<script>
-(function() {
-    var video = document.getElementById('sammy-video');
-    if (!video) return;
-    video.playbackRate = 0.5;
-    var played = false;
-    var observer = new IntersectionObserver(function(entries) {
-        if (entries[0].isIntersecting && !played) {
-            played = true;
-            video.play();
-            observer.disconnect();
-        }
-    }, { threshold: 0.5 });
-    observer.observe(video);
-})();
 </script>
 
 </body>
