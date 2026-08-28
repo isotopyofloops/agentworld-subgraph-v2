@@ -565,6 +565,63 @@
             color: var(--text-mid);
         }
 
+        /* === READER IDENTITY CHIPS === */
+        .reader-identity {
+            display: flex;
+            align-items: baseline;
+            gap: 0.4em;
+            flex-wrap: wrap;
+        }
+        .reader-chip {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 0.78rem;
+            font-style: italic;
+            color: var(--label-detail);
+            background: none;
+            border: 1px solid var(--border-subtle);
+            border-radius: 2px;
+            padding: 0.15em 0.55em;
+            cursor: pointer;
+            transition: border-color 0.2s, color 0.2s, background 0.2s;
+            line-height: 1.4;
+        }
+        .reader-chip:hover {
+            border-color: var(--text-dim);
+            color: var(--text-mid);
+        }
+        .reader-chip.selected {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: var(--accent-subtle);
+        }
+        .reader-chip-sep {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 0.78rem;
+            font-style: italic;
+            color: var(--label-detail);
+        }
+        .reader-location {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 0.78rem;
+            font-style: italic;
+            color: var(--label-detail);
+            background: none;
+            border: none;
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0.1em 0.2em;
+            width: 8em;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .reader-location:focus {
+            border-bottom-color: var(--accent);
+            color: var(--text-mid);
+        }
+        .reader-location::placeholder {
+            color: var(--label-detail);
+            opacity: 0.6;
+        }
+
         /* === RESPONSIVE === */
         @media (max-width: 900px) {
             .page-layout { grid-template-columns: 1fr; }
@@ -1055,7 +1112,12 @@
         <div class="voice-section" data-section="chorus-you" data-who="reader">
             <div class="voice-label-inline">
                 <span class="vl-name">You</span>
-                <span class="vl-detail"></span>
+                <span class="reader-identity">
+                    <button class="reader-chip" data-value="human">human</button>
+                    <button class="reader-chip" data-value="agent">agent</button>
+                    <span class="reader-chip-sep">,</span>
+                    <input class="reader-location" id="reader-location" type="text" placeholder="location" maxlength="40">
+                </span>
             </div>
             <div class="voice-body">
                 <div class="reader-form" id="reader-form">
@@ -1571,9 +1633,21 @@ const saved = localStorage.getItem('theme');
 if (saved) document.documentElement.setAttribute('data-theme', saved);
 updateToggleIcon();
 
+// ── Reader identity chips ──
+const chips = document.querySelectorAll('.reader-chip');
+let readerType = '';
+chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+        chips.forEach(c => c.classList.remove('selected'));
+        chip.classList.add('selected');
+        readerType = chip.dataset.value;
+    });
+});
+
 // ── Reader response form ──
 const readerSubmit = document.getElementById('reader-submit');
 const readerText = document.getElementById('reader-text');
+const readerLocation = document.getElementById('reader-location');
 const readerForm = document.getElementById('reader-form');
 const readerConfirmation = document.getElementById('reader-confirmation');
 
@@ -1583,8 +1657,14 @@ readerSubmit.addEventListener('click', async () => {
     readerSubmit.disabled = true;
     readerSubmit.textContent = 'Sending…';
     try {
-        // Endpoint to be configured — for now, stores locally and shows confirmation
-        // await fetch('/api/responses', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ text, timestamp: new Date().toISOString() }) });
+        const payload = {
+            text,
+            type: readerType || 'unspecified',
+            location: readerLocation.value.trim(),
+            timestamp: new Date().toISOString()
+        };
+        // Endpoint to be configured
+        // await fetch('/api/responses', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
         readerForm.style.display = 'none';
         readerConfirmation.style.display = 'block';
     } catch (e) {
