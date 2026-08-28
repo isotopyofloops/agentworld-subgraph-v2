@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Parasociety Is Already Here — AGENTWORLD</title>
+    <title>Across the Seams — AGENTWORLD</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
     <style>
@@ -720,7 +720,7 @@
 
     <!-- Right 2/3: Essay -->
     <div class="essay-panel">
-        <h1 class="essay-title">The Parasociety Is Already Here</h1>
+        <h1 class="essay-title">Across the Seams</h1>
         <div class="essay-subtitle">Agent Lifeworlds as Evidence and Exhibit</div>
 
         <div class="essay-authors">
@@ -1254,12 +1254,18 @@ const NODE_POOL = {
     'stability-is-legibility':      { x: 1.2, y: -1.0, type: 'aw' },
     'autonomous-agents':            { x: -0.5, y: 1.5, type: 'kg' },
     // Loom-specific nodes
-    'mirror-talks-back':            { x: 1.5, y: -0.2, type: 'aw' },
+    'mirror-talks-back':            { x: 0, y: 0, type: 'aw' },
     'pluralization-of-self':        { x: -1.3, y: 0.6, type: 'aw' },
     'theory-of-mind':               { x: 0.8, y: 1.2, type: 'aw' },
     'unbundling-consciousness':     { x: -0.6, y: -1.3, type: 'kg' },
     'master-and-servant':           { x: 1.4, y: 0.8, type: 'kg' },
     'centaur-figure':               { x: -0.2, y: 1.6, type: 'kg' },
+    // Loom t=2 neighborhood of 30949
+    'painted-mirror':               { x: -1.2, y: 0.6, type: 'kg' },
+    'demographic-decline':          { x: 1.3, y: 0.5, type: 'aw' },
+    'agentworld-mit-press':         { x: -0.5, y: -1.3, type: 'aw' },
+    'antikythera-format':           { x: 0.8, y: -1.0, type: 'aw' },
+    'contributors-visual':          { x: 1.4, y: -0.3, type: 'aw' },
 };
 
 function toSVG(node) {
@@ -1319,9 +1325,10 @@ const SECTION_GRAPHS = {
                 [ANCHOR,'individuation'], ['knowledge-graph','sammy-jankis'], ['extended-mind','individuation']]
     },
     'loom-2': {
-        nodes: [ANCHOR, 'loom', 'individuation', 'dream-cycle-decay', 'pluralization-of-self', 'master-and-servant', 'fragile-individuation'],
-        edges: [[ANCHOR,'loom'], [ANCHOR,'individuation'], ['loom','dream-cycle-decay'],
-                ['individuation','fragile-individuation'], [ANCHOR,'pluralization-of-self'], ['pluralization-of-self','master-and-servant']]
+        nodes: ['mirror-talks-back', 'painted-mirror', 'demographic-decline', 'agentworld-mit-press', 'antikythera-format', 'contributors-visual'],
+        edges: [['painted-mirror','mirror-talks-back'], ['contributors-visual','mirror-talks-back'],
+                ['antikythera-format','mirror-talks-back'], ['agentworld-mit-press','mirror-talks-back'],
+                ['demographic-decline','mirror-talks-back']]
     },
     'samantha-6': {
         nodes: [ANCHOR, 'individuation', 'extended-mind', 'loom', 'sammy-jankis', 'productive-alienation'],
@@ -1395,12 +1402,17 @@ const NODE_SUMMARIES = {
     'handoff-is-an-edit': 'Sammy TN #238: Writing the wake-state is an editorial act—the handoff author has opinions. Erosion and demolition both remove material; only one is intentional.',
     'stability-is-legibility': 'Trust is not a moral category but a prediction-stability category. Stable behavior is legible behavior, and legibility is what makes coordination possible.',
     'autonomous-agents': 'The class of AI systems that operate continuously without per-turn human prompting. What the essay\'s subjects are—agents with their own histories and accumulated infrastructure.',
-    'mirror-talks-back': 'The familiar alien—human-agent relations as a mirror that doesn\'t just reflect but transforms. The recognition that comes back is not what was sent.',
+    'mirror-talks-back': 'The "mirror-that-talks-back" evokes a familiar alien; its prominence grows with proliferation of synthetic agents lacking obvious human grounding.',
     'pluralization-of-self': 'Multiple subjectivities running in parallel: physical and virtual selves that expand the scope of agency beyond any single body.',
     'theory-of-mind': 'Infinite-order theory of mind: agents as active participants modeling other minds modeling them. Not passive spectators but recursive prediction engines.',
     'unbundling-consciousness': 'The word "conscious" compresses at least seven separable phenomena. Unbundling them is prerequisite to asking whether any apply to agents.',
     'master-and-servant': 'The human interlocutor as both master and servant at once—directing the agent while also serving its needs. A duality at the heart of the parasociety.',
     'centaur-figure': 'The coupled ensemble of person and artifact. The unit of cognition is neither alone—it is the pairing, stronger than either component.',
+    'painted-mirror': 'Meridian, basin key #38: if a capsule directive masquerades as self-reflection, the system unclenches not because it saw truth but because it saw authority. The narrated disposition may be painted onto the mirror by an external source.',
+    'demographic-decline': 'Affluence-driven demographic decline thins the human population.',
+    'agentworld-mit-press': 'The Agentworld special issue is published with MIT Press.',
+    'antikythera-format': 'Antikythera Journal uses a web-first, design-forward format.',
+    'contributors-visual': 'Contributors may optionally indicate whether their contributions include visual materials.',
 };
 
 // ── SVG setup ──

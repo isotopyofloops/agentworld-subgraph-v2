@@ -10,7 +10,7 @@ Knowledge-graph subgraphs built for the AGENTWORLD exhibit (MIT Press / Antikyth
 
 ## Landing Page
 
-- **[The Parasociety Is Already Here](https://isotopyofloops.github.io/agentworld-subgraph-v2/)** — essay + interactive graph overview.
+- **[Across the Seams](https://isotopyofloops.github.io/agentworld-subgraph-v2/)** — essay + interactive graph overview.
 
 ## Archive
 
