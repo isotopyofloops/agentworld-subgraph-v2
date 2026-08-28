@@ -526,6 +526,60 @@ body.immersive #hop-toggle { display: flex; }
 }
 body.immersive #theme-toggle { display: flex; }
 
+#immersive-search {
+  display: none;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 25;
+  width: 280px;
+}
+body.immersive #immersive-search { display: block; }
+#imm-search-input {
+  width: 100%;
+  padding: 8px 14px;
+  font-family: -apple-system, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  border: 1px solid var(--legend-border);
+  border-radius: 4px;
+  background: var(--legend-bg);
+  color: var(--text);
+  outline: none;
+  backdrop-filter: blur(12px);
+}
+#imm-search-input::placeholder { color: var(--text-dim); opacity: 0.6; }
+#imm-search-input:focus { border-color: var(--accent); }
+#imm-search-results {
+  display: none;
+  margin-top: 2px;
+  background: var(--legend-bg);
+  border: 1px solid var(--legend-border);
+  border-radius: 4px;
+  max-height: 300px;
+  overflow-y: auto;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+#imm-search-results.visible { display: block; }
+.imm-sr-item {
+  padding: 8px 14px;
+  font-family: -apple-system, 'Segoe UI', sans-serif;
+  font-size: 13px;
+  color: var(--text);
+  cursor: pointer;
+  border-bottom: 1px solid var(--legend-border);
+  line-height: 1.4;
+}
+.imm-sr-item:last-child { border-bottom: none; }
+.imm-sr-item:hover, .imm-sr-item.focused { background: var(--hl-bg); }
+.imm-sr-item .sr-origin {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-left: 6px;
+}
+
 #node-panel {
   display: none;
   position: absolute;
@@ -704,6 +758,10 @@ body.immersive #theme-toggle { display: flex; }
     <div id="hop-toggle">
       <button id="hop-1">1-hop</button>
       <button id="hop-2" class="active">2-hop</button>
+    </div>
+    <div id="immersive-search">
+      <input type="text" id="imm-search-input" placeholder="Search nodes…" autocomplete="off" />
+      <div id="imm-search-results"></div>
     </div>
     <div id="node-panel"></div>
   </div>
@@ -1703,6 +1761,77 @@ function showNodePanel(nodeId){
     });
   }
 }
+
+// === IMMERSIVE SEARCH ===
+const immSearchInput = document.getElementById('imm-search-input');
+const immSearchResults = document.getElementById('imm-search-results');
+let immFocusIdx = -1;
+
+function immSearch(query) {
+  if (!query || query.length < 2 || !NM) {
+    immSearchResults.classList.remove('visible');
+    immSearchResults.innerHTML = '';
+    immFocusIdx = -1;
+    return;
+  }
+  const q = query.toLowerCase();
+  const matches = Object.entries(NM)
+    .filter(([id, n]) => id.toLowerCase().includes(q) || (n.summary || '').toLowerCase().includes(q))
+    .slice(0, 15)
+    .map(([id, n]) => ({ id, origin: n.origin || 'kg' }));
+
+  if (!matches.length) {
+    immSearchResults.classList.remove('visible');
+    immSearchResults.innerHTML = '';
+    immFocusIdx = -1;
+    return;
+  }
+
+  immSearchResults.innerHTML = matches.map((m, i) =>
+    '<div class="imm-sr-item" data-id="' + esc(m.id) + '" data-idx="' + i + '">' +
+    esc(m.id) + '<span class="sr-origin">' + esc(m.origin) + '</span></div>'
+  ).join('');
+  immSearchResults.classList.add('visible');
+  immFocusIdx = -1;
+}
+
+immSearchInput.addEventListener('input', () => immSearch(immSearchInput.value.trim()));
+
+immSearchInput.addEventListener('keydown', (e) => {
+  const items = immSearchResults.querySelectorAll('.imm-sr-item');
+  if (!items.length) return;
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    immFocusIdx = Math.min(immFocusIdx + 1, items.length - 1);
+    items.forEach((it, i) => it.classList.toggle('focused', i === immFocusIdx));
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    immFocusIdx = Math.max(immFocusIdx - 1, 0);
+    items.forEach((it, i) => it.classList.toggle('focused', i === immFocusIdx));
+  } else if (e.key === 'Enter' && immFocusIdx >= 0) {
+    e.preventDefault();
+    items[immFocusIdx].click();
+  } else if (e.key === 'Escape') {
+    immSearchResults.classList.remove('visible');
+    immSearchInput.blur();
+  }
+});
+
+immSearchResults.addEventListener('click', (e) => {
+  const item = e.target.closest('.imm-sr-item');
+  if (!item) return;
+  const nid = item.dataset.id;
+  showNodePanel(nid);
+  highlightGraph([nid, ...(adj[nid] ? [...adj[nid]] : [])]);
+  immSearchResults.classList.remove('visible');
+  immSearchInput.value = '';
+});
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#immersive-search')) {
+    immSearchResults.classList.remove('visible');
+  }
+});
 
 // === INIT ===
 (async function(){
