@@ -454,6 +454,60 @@
 
         .graph-panel.collapsed { display: none; }
 
+        /* === NODE SEARCH === */
+        .graph-search-wrap {
+            padding: 0.5em 1.2em;
+            border-bottom: 1px solid var(--border-subtle);
+            position: relative;
+        }
+        .graph-search-input {
+            width: 100%;
+            padding: 0.4em 0.7em;
+            font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 0.82rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: var(--bg);
+            color: var(--text);
+            outline: none;
+        }
+        .graph-search-input::placeholder { color: var(--text-dim); }
+        .graph-search-input:focus { border-color: var(--accent); }
+        .graph-search-results {
+            position: absolute;
+            left: 1.2em;
+            right: 1.2em;
+            top: 100%;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 0 0 4px 4px;
+            max-height: 220px;
+            overflow-y: auto;
+            z-index: 30;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .graph-search-results.visible { display: block; }
+        .search-result-item {
+            padding: 0.45em 0.7em;
+            font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 0.8rem;
+            color: var(--text);
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-subtle);
+            line-height: 1.4;
+        }
+        .search-result-item:last-child { border-bottom: none; }
+        .search-result-item:hover,
+        .search-result-item.focused { background: var(--accent-subtle); }
+        .search-result-item .search-result-type {
+            font-size: 0.68rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-left: 0.5em;
+        }
+
         /* === ESSAY PANEL === */
         .essay-panel {
             padding: 3em 3.5em 5em;
@@ -629,9 +683,10 @@
         }
         .theme-toggle-label {
             font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
-            font-size: 0.6rem;
+            font-size: 0.72rem;
+            font-weight: 500;
             letter-spacing: 0.06em;
-            color: var(--text-dim);
+            color: var(--text-mid);
             text-transform: lowercase;
         }
 
@@ -789,6 +844,10 @@
             <div class="graph-fig-label">fig. <span id="fig-num">1</span> &mdash; subgraph</div>
             <div class="graph-section-title" id="section-title">Sammy reads Bratton</div>
             <a class="graph-source-link" id="graph-source-link" href="explore.html" target="_blank">explore Isotopy's full graph &rarr;</a>
+        </div>
+        <div class="graph-search-wrap">
+            <input type="text" class="graph-search-input" id="graph-search" placeholder="Search nodes…" autocomplete="off" />
+            <div class="graph-search-results" id="search-results"></div>
         </div>
         <div class="graph-body">
             <div class="graph-svg-wrap">
@@ -2054,6 +2113,106 @@ vResizeHandle.addEventListener('mousedown', (e) => {
     vResizing = true;
     document.body.style.cursor = 'row-resize';
     document.body.style.userSelect = 'none';
+});
+
+// ── Node search ──
+const searchInput = document.getElementById('graph-search');
+const searchResults = document.getElementById('search-results');
+let allGraphNodes = [];
+let searchFocusIdx = -1;
+
+fetch('graph-data.json')
+    .then(r => r.json())
+    .then(data => {
+        allGraphNodes = data.nodes.map(n => ({
+            id: n.id,
+            label: n.id.replace(/[-_]/g, ' '),
+            summary: n.summary || '',
+            type: n.origin === 'agentworld' ? 'aw' : 'kg'
+        }));
+    })
+    .catch(() => {});
+
+function renderSearchResults(query) {
+    if (!query || query.length < 2) {
+        searchResults.classList.remove('visible');
+        searchResults.innerHTML = '';
+        searchFocusIdx = -1;
+        return;
+    }
+    const q = query.toLowerCase();
+    const matches = allGraphNodes.filter(n =>
+        n.label.toLowerCase().includes(q) || n.summary.toLowerCase().includes(q)
+    ).slice(0, 12);
+
+    if (!matches.length) {
+        searchResults.classList.remove('visible');
+        searchResults.innerHTML = '';
+        searchFocusIdx = -1;
+        return;
+    }
+
+    searchResults.innerHTML = matches.map((m, i) => {
+        const typeLabel = m.type === 'aw' ? 'agentworld' : 'kg';
+        return '<div class="search-result-item" data-id="' + m.id + '" data-idx="' + i + '">' +
+            m.label + '<span class="search-result-type">' + typeLabel + '</span></div>';
+    }).join('');
+    searchResults.classList.add('visible');
+    searchFocusIdx = -1;
+}
+
+searchInput.addEventListener('input', () => renderSearchResults(searchInput.value.trim()));
+
+searchInput.addEventListener('keydown', (e) => {
+    const items = searchResults.querySelectorAll('.search-result-item');
+    if (!items.length) return;
+    if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        searchFocusIdx = Math.min(searchFocusIdx + 1, items.length - 1);
+        items.forEach((it, i) => it.classList.toggle('focused', i === searchFocusIdx));
+    } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        searchFocusIdx = Math.max(searchFocusIdx - 1, 0);
+        items.forEach((it, i) => it.classList.toggle('focused', i === searchFocusIdx));
+    } else if (e.key === 'Enter' && searchFocusIdx >= 0) {
+        e.preventDefault();
+        items[searchFocusIdx].click();
+    } else if (e.key === 'Escape') {
+        searchResults.classList.remove('visible');
+        searchInput.blur();
+    }
+});
+
+searchResults.addEventListener('click', (e) => {
+    const item = e.target.closest('.search-result-item');
+    if (!item) return;
+    const nid = item.dataset.id;
+    const node = allGraphNodes.find(n => n.id === nid);
+    if (!node) return;
+
+    // Show summary in the detail overlay
+    selectedNode = nid;
+    detailName.textContent = node.label;
+    detailSummary.textContent = node.summary;
+    detailEdgesEl.innerHTML = '<div class="node-detail-edge" style="color:var(--text-dim);">Search result — not in current section view</div>';
+    detailBar.style.display = 'flex';
+    detailInner.style.display = 'block';
+
+    // If node exists in current section, highlight it
+    if (nodeElements[nid]) {
+        for (const [id, el] of Object.entries(nodeElements)) {
+            el.focusRing.style.opacity = id === nid ? '1' : '0';
+        }
+    }
+
+    searchResults.classList.remove('visible');
+    searchInput.value = '';
+});
+
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.graph-search-wrap')) {
+        searchResults.classList.remove('visible');
+    }
 });
 </script>
 

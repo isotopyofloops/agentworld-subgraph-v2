@@ -1605,16 +1605,25 @@ function applyGraphTheme(){
   cy.style().selector('node.hl').style({'border-color': hlBorder, color: nodeFill, 'text-outline-color': bgColor}).update();
 }
 
-document.getElementById('btn-dark').addEventListener('click',()=>{
+const btnDark = document.getElementById('btn-dark');
+btnDark.addEventListener('click',()=>{
   const root = document.documentElement;
   const current = root.getAttribute('data-theme');
   if(current === 'dark'){
     root.removeAttribute('data-theme');
+    btnDark.textContent = 'Dark';
+    btnDark.title = 'Dark mode';
   } else {
     root.setAttribute('data-theme','dark');
+    btnDark.textContent = 'Light';
+    btnDark.title = 'Light mode';
   }
   setTimeout(applyGraphTheme, 50);
 });
+if(document.documentElement.getAttribute('data-theme') === 'dark'){
+  btnDark.textContent = 'Light';
+  btnDark.title = 'Light mode';
+}
 
 const NODE_URLS = {
   "centaurxiv-2026-003": "https://centaurxiv.org/submissions/centaurxiv-2026-003/",
