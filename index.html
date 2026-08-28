@@ -19,7 +19,7 @@
             --text-dim: #6E6A65;
             --text-mid: #4A4744;
             --label: #58554F;
-            --label-detail: #7A7772;
+            --label-detail: #6E6B66;
             --accent: #4A6B8A;
             --accent-subtle: #ECF0EE;
             --quote-border: #C5C2BC;
@@ -29,8 +29,8 @@
             --node-fill: #1C1B19;
             --node-stroke: #1C1B19;
             --node-open-fill: #FFFFFF;
-            --edge-stroke: #C5C2BC;
-            --edge-bridge: #C5C2BC;
+            --edge-stroke: #A8A49E;
+            --edge-bridge: #A8A49E;
             --node-selected-ring: rgba(28, 27, 25, 0.20);
             --detail-bg: #F3F2F0;
             --focus-ring: #4A6B8A;
@@ -59,8 +59,8 @@
                 --node-fill: #E8E0D4;
                 --node-stroke: #E8E0D4;
                 --node-open-fill: #252019;
-                --edge-stroke: #4A4238;
-                --edge-bridge: #4A4238;
+                --edge-stroke: #5E564C;
+                --edge-bridge: #5E564C;
                 --node-selected-ring: rgba(232, 224, 212, 0.20);
                 --detail-bg: #2E2822;
                 --focus-ring: #7DB8A6;
@@ -88,8 +88,8 @@
             --node-fill: #E8E0D4;
             --node-stroke: #E8E0D4;
             --node-open-fill: #252019;
-            --edge-stroke: #4A4238;
-            --edge-bridge: #4A4238;
+            --edge-stroke: #5E564C;
+            --edge-bridge: #5E564C;
             --node-selected-ring: rgba(232, 224, 212, 0.20);
             --detail-bg: #2E2822;
             --focus-ring: #7DB8A6;
@@ -133,7 +133,7 @@
 
         .graph-fig-label {
             font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
-            font-size: 0.55rem;
+            font-size: 0.68rem;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.12em;
@@ -284,7 +284,7 @@
 
         .node-detail-edges-label {
             font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
-            font-size: 0.55rem;
+            font-size: 0.68rem;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.08em;
@@ -318,7 +318,7 @@
             align-items: center;
             gap: 0.4em;
             font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
-            font-size: 0.55rem;
+            font-size: 0.68rem;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.08em;
@@ -460,7 +460,7 @@
             color: var(--text);
             font-size: 0.85rem;
             letter-spacing: 0.4em;
-            opacity: 0.4;
+            opacity: 0.55;
         }
 
         .essay-footer {
@@ -473,11 +473,17 @@
         }
 
         /* === DARK MODE TOGGLE === */
-        .theme-toggle {
+        .theme-toggle-wrap {
             position: fixed;
             top: 0.8rem;
             right: 0.8rem;
             z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        .theme-toggle {
             background: var(--bg-graph);
             border: 1px solid var(--border);
             border-radius: 50%;
@@ -495,6 +501,13 @@
         .theme-toggle:hover {
             color: var(--text);
             border-color: var(--text-dim);
+        }
+        .theme-toggle-label {
+            font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 0.6rem;
+            letter-spacing: 0.06em;
+            color: var(--text-dim);
+            text-transform: lowercase;
         }
 
         /* === READER RESPONSE FORM === */
@@ -522,7 +535,6 @@
         .reader-textarea::placeholder {
             color: var(--text-dim);
             font-style: italic;
-            opacity: 0.7;
         }
         .reader-form-footer {
             display: flex;
@@ -555,7 +567,7 @@
             opacity: 0.85;
         }
         .reader-submit:disabled {
-            opacity: 0.4;
+            opacity: 0.5;
             cursor: default;
         }
         .reader-confirmation {
@@ -619,7 +631,6 @@
         }
         .reader-location::placeholder {
             color: var(--label-detail);
-            opacity: 0.6;
         }
 
         /* === RESPONSIVE === */
@@ -687,7 +698,10 @@
         </div>
     </div>
 
-    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">&#x263E;</button>
+    <div class="theme-toggle-wrap">
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">&#x263E;</button>
+        <span class="theme-toggle-label" id="theme-toggle-label">dark</span>
+    </div>
 
     <!-- Right 2/3: Essay -->
     <div class="essay-panel">
@@ -1614,13 +1628,16 @@ transitionToSection('intro');
 
 // ── Theme toggle ──
 const toggleBtn = document.getElementById('theme-toggle');
+const toggleLabel = document.getElementById('theme-toggle-label');
 function getEffectiveTheme() {
     const explicit = document.documentElement.getAttribute('data-theme');
     if (explicit) return explicit;
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
 function updateToggleIcon() {
-    toggleBtn.innerHTML = getEffectiveTheme() === 'dark' ? '&#x2600;' : '&#x263E;';
+    const isDark = getEffectiveTheme() === 'dark';
+    toggleBtn.innerHTML = isDark ? '&#x2600;' : '&#x263E;';
+    toggleLabel.textContent = isDark ? 'light' : 'dark';
 }
 toggleBtn.addEventListener('click', () => {
     const current = getEffectiveTheme();
