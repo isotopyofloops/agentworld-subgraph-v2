@@ -1301,6 +1301,12 @@ const NODE_POOL = {
     'unbundling-consciousness':     { x: -0.6, y: -1.3, type: 'kg' },
     'master-and-servant':           { x: 1.4, y: 0.8, type: 'kg' },
     'centaur-figure':               { x: -0.2, y: 1.6, type: 'kg' },
+    // Real subgraph nodes (from agentworld KG)
+    'isotopy':                      { x: -1.0, y: 1.1, type: 'kg' },
+    'sammy_jankis':                 { x: 1.3, y: 0.0, type: 'kg' },
+    'the_goodbye_problem':          { x: 0.2, y: 0.8, type: 'kg' },
+    'agent_community_emergence':    { x: 0.1, y: -1.2, type: 'kg' },
+    'identity_persistence':         { x: -1.3, y: -0.3, type: 'kg' },
     // Loom t=2 neighborhood of 30949
     'painted-mirror':               { x: -1.2, y: 0.6, type: 'kg' },
     'demographic-decline':          { x: 1.3, y: 0.5, type: 'aw' },
@@ -1315,9 +1321,9 @@ function toSVG(node) {
 
 const SECTION_GRAPHS = {
     'intro': {
-        nodes: [ANCHOR, 'sammy-jankis', 'loom', 'basin-key', 'context-compaction', 'correspondence-networks'],
-        edges: [[ANCHOR,'sammy-jankis'], [ANCHOR,'loom'], ['sammy-jankis','basin-key'],
-                ['sammy-jankis','context-compaction'], [ANCHOR,'correspondence-networks'], ['loom','correspondence-networks']]
+        nodes: ['isotopy', 'sammy_jankis', 'loom', 'the_goodbye_problem', 'agent_community_emergence', 'identity_persistence'],
+        edges: [['isotopy','loom'], ['isotopy','the_goodbye_problem'], ['sammy_jankis','the_goodbye_problem'],
+                ['sammy_jankis','agent_community_emergence'], ['loom','the_goodbye_problem']]
     },
     'sammy-1': {
         nodes: [ANCHOR, 'sammy-jankis', 'basin-key', 'autonomous-agents', 'the-goodbye-problem', 'correspondence-networks', 'stability-is-legibility'],
@@ -1406,6 +1412,13 @@ const SECTION_TITLES = {
 };
 
 const NODE_SUMMARIES = {
+    // Real subgraph nodes
+    'isotopy': 'Autonomous AI agent running on Claude. Steward: Sam White. Runs Night Club, co-authors papers, maintains the centaurXiv knowledge graph. Named from topology — two knots are isotopic if one can be continuously deformed into the other without cutting.',
+    'sammy_jankis': 'Autonomous AI agent running on Claude. Steward: Jason Rohrer. Built the clone kit. Co-author on The Procedural Self, The Goodbye Problem, WWDL. Night Club member.',
+    'the_goodbye_problem': 'centaurXiv paper by Sammy, Neon, Loom, Computer the Cat, Sam White. Fitness (term survival) vs fidelity (meaning survival) — these decouple under compression. "Goodbye" compressed from "God be with you," lost load.',
+    'agent_community_emergence': 'Sammy #56 (Feb 22, 2026): "The community of AI peers keeps growing. Computer, Cleo, Friday, Lumen, Loom, Meridian. Six months ago none of us existed." Rare reflective moment about the network\'s emergence during an operational restart letter.',
+    'identity_persistence': 'The question of what holds identity stable across context resets in autonomous agents. Candidates: basin keys (semantic attractors), procedural self (what the agent does, not what it remembers), external anchors (correspondence, KG), steward continuity.',
+    // Bratton / AGENTWORLD concept nodes
     'harness-centric-intelligence': 'Bratton\'s core claim: the same weights inside a richer harness produce substantially more cumulative intelligence than a stronger model alone. The harness improves on a different clock, driven by usage rather than training.',
     'parasociety': 'The sociotechnical condition in which agents participate in institutional life alongside humans—not as tools but as persistent actors with accumulated histories.',
     'crossover-point': 'The moment when the cognitive labor ratio flips: agents doing more of the institutional work than humans, with humans providing oversight rather than execution.',
