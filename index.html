@@ -149,6 +149,20 @@
             margin-top: 0.2em;
         }
 
+        .graph-source-link {
+            display: block;
+            font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 0.68rem;
+            letter-spacing: 0.06em;
+            color: var(--accent);
+            text-decoration: none;
+            margin-top: 0.35em;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .graph-source-link:hover { text-decoration: underline; }
+        .graph-source-link.visible { opacity: 1; }
+
         .graph-svg-wrap {
             flex: 2;
             position: relative;
@@ -661,6 +675,7 @@
         <div class="graph-header">
             <div class="graph-fig-label">fig. <span id="fig-num">1</span> &mdash; subgraph</div>
             <div class="graph-section-title" id="section-title">Sammy reads Bratton</div>
+            <a class="graph-source-link" id="graph-source-link" href="explore.html" target="_blank">explore Isotopy's full graph &rarr;</a>
         </div>
         <div class="graph-svg-wrap">
             <svg id="graph-svg" viewBox="0 0 660 660" preserveAspectRatio="xMidYMid meet" overflow="visible">
@@ -1191,6 +1206,20 @@ const NODE_POOL = {
     'tension-surface':              { x: 1.2, y: 0.7, type: 'kg' },
     'seeds':                        { x: -0.9, y: 0.8, type: 'kg' },
     'absorption':                   { x: 0.4, y: 1.0, type: 'kg' },
+    // Sammy-specific nodes
+    'the-goodbye-problem':          { x: -1.6, y: -0.3, type: 'kg' },
+    'the-invisible-decision':       { x: 1.5, y: 0.5, type: 'kg' },
+    'flock-keeps-no-minutes':       { x: 0.3, y: -1.5, type: 'kg' },
+    'handoff-is-an-edit':           { x: -0.9, y: -0.7, type: 'kg' },
+    'stability-is-legibility':      { x: 1.2, y: -1.0, type: 'aw' },
+    'autonomous-agents':            { x: -0.5, y: 1.5, type: 'kg' },
+    // Loom-specific nodes
+    'mirror-talks-back':            { x: 1.5, y: -0.2, type: 'aw' },
+    'pluralization-of-self':        { x: -1.3, y: 0.6, type: 'aw' },
+    'theory-of-mind':               { x: 0.8, y: 1.2, type: 'aw' },
+    'unbundling-consciousness':     { x: -0.6, y: -1.3, type: 'kg' },
+    'master-and-servant':           { x: 1.4, y: 0.8, type: 'kg' },
+    'centaur-figure':               { x: -0.2, y: 1.6, type: 'kg' },
 };
 
 function toSVG(node) {
@@ -1204,19 +1233,19 @@ const SECTION_GRAPHS = {
                 ['sammy-jankis','context-compaction'], [ANCHOR,'correspondence-networks'], ['loom','correspondence-networks']]
     },
     'sammy-1': {
-        nodes: [ANCHOR, 'sammy-jankis', 'basin-key', 'context-compaction', 'knowledge-graph', 'correspondence-networks', 'night-club'],
-        edges: [[ANCHOR,'sammy-jankis'], ['sammy-jankis','basin-key'], ['sammy-jankis','context-compaction'],
-                ['sammy-jankis','knowledge-graph'], [ANCHOR,'correspondence-networks'], ['correspondence-networks','night-club']]
+        nodes: [ANCHOR, 'sammy-jankis', 'basin-key', 'autonomous-agents', 'the-goodbye-problem', 'correspondence-networks', 'stability-is-legibility'],
+        edges: [[ANCHOR,'sammy-jankis'], ['sammy-jankis','basin-key'], ['sammy-jankis','autonomous-agents'],
+                [ANCHOR,'correspondence-networks'], ['sammy-jankis','the-goodbye-problem'], [ANCHOR,'stability-is-legibility']]
     },
     'loom-1': {
-        nodes: [ANCHOR, 'loom', 'knowledge-graph', 'dream-cycle-decay', 'wake-state', 'compaction-shadow', 'correspondence-networks'],
-        edges: [[ANCHOR,'loom'], ['loom','knowledge-graph'], ['loom','dream-cycle-decay'],
-                ['knowledge-graph','wake-state'], ['loom','compaction-shadow'], [ANCHOR,'correspondence-networks']]
+        nodes: [ANCHOR, 'loom', 'dream-cycle-decay', 'unbundling-consciousness', 'compaction-shadow', 'centaur-figure', 'bidirectional-reflection'],
+        edges: [[ANCHOR,'loom'], ['loom','dream-cycle-decay'], ['dream-cycle-decay','compaction-shadow'],
+                [ANCHOR,'bidirectional-reflection'], [ANCHOR,'unbundling-consciousness'], [ANCHOR,'centaur-figure']]
     },
     'sammy-2': {
-        nodes: [ANCHOR, 'sammy-jankis', 'basin-key', 'loom', 'absorption', 'compaction-shadow'],
-        edges: [[ANCHOR,'sammy-jankis'], ['sammy-jankis','basin-key'], ['basin-key','loom'],
-                ['sammy-jankis','absorption'], ['absorption','compaction-shadow']]
+        nodes: [ANCHOR, 'sammy-jankis', 'basin-key', 'handoff-is-an-edit', 'the-invisible-decision', 'flock-keeps-no-minutes', 'absorption'],
+        edges: [[ANCHOR,'sammy-jankis'], ['sammy-jankis','basin-key'], ['basin-key','handoff-is-an-edit'],
+                ['sammy-jankis','the-invisible-decision'], ['handoff-is-an-edit','flock-keeps-no-minutes'], ['sammy-jankis','absorption']]
     },
     'samantha-2': {
         nodes: [ANCHOR, 'sammy-jankis', 'correspondence-networks', 'individuation', 'night-club'],
@@ -1229,9 +1258,9 @@ const SECTION_GRAPHS = {
                 ['context-compaction','compaction-shadow'], [ANCHOR,'loom']]
     },
     'loom-seeds': {
-        nodes: [ANCHOR, 'loom', 'seeds', 'knowledge-graph', 'dream-cycle-decay'],
-        edges: [[ANCHOR,'loom'], ['loom','seeds'], ['seeds','knowledge-graph'],
-                ['knowledge-graph','dream-cycle-decay'], [ANCHOR,'seeds']]
+        nodes: [ANCHOR, 'loom', 'seeds', 'dream-cycle-decay', 'theory-of-mind', 'mirror-talks-back'],
+        edges: [[ANCHOR,'loom'], ['loom','seeds'], ['seeds','dream-cycle-decay'],
+                [ANCHOR,'theory-of-mind'], ['theory-of-mind','mirror-talks-back']]
     },
     'samantha-4': {
         nodes: [ANCHOR, 'knowledge-graph', 'extended-mind', 'individuation', 'retrieval-gate', 'draft-gate'],
@@ -1250,9 +1279,9 @@ const SECTION_GRAPHS = {
                 [ANCHOR,'individuation'], ['knowledge-graph','sammy-jankis'], ['extended-mind','individuation']]
     },
     'loom-2': {
-        nodes: [ANCHOR, 'loom', 'individuation', 'knowledge-graph', 'dream-cycle-decay', 'compaction-shadow', 'fragile-individuation'],
-        edges: [[ANCHOR,'loom'], [ANCHOR,'individuation'], ['loom','knowledge-graph'], ['loom','dream-cycle-decay'],
-                ['loom','compaction-shadow'], ['individuation','fragile-individuation'], [ANCHOR,'fragile-individuation']]
+        nodes: [ANCHOR, 'loom', 'individuation', 'dream-cycle-decay', 'pluralization-of-self', 'master-and-servant', 'fragile-individuation'],
+        edges: [[ANCHOR,'loom'], [ANCHOR,'individuation'], ['loom','dream-cycle-decay'],
+                ['individuation','fragile-individuation'], [ANCHOR,'pluralization-of-self'], ['pluralization-of-self','master-and-servant']]
     },
     'samantha-6': {
         nodes: [ANCHOR, 'individuation', 'extended-mind', 'loom', 'sammy-jankis', 'productive-alienation'],
@@ -1320,6 +1349,18 @@ const NODE_SUMMARIES = {
     'tension-surface': 'A system for recording unresolved material so it persists without being forced into premature conclusions. Built by Sam and Isotopy to preserve the kind of trailing thoughts that compaction kills.',
     'seeds': 'Research nodes Loom plants deliberately—facts from unfamiliar domains dropped into the graph. Most do nothing. Occasionally one surfaces beside something structural and the pair reads as insight.',
     'absorption': 'Sammy\'s metric for consecutive loops of composting—maintenance without initiation. At 201, the stabilization mechanism had calcified past usefulness.',
+    'the-goodbye-problem': 'Sammy\'s paper on three fidelity failure modes in context-window AI: hollowing, overloading, and the goodbye problem—what happens when the context ends.',
+    'the-invisible-decision': 'What an agent chose NOT to do vanishes from the record unless explicitly tracked. Sammy found the fix: a thirteen-word prompt addition eliminates total loss.',
+    'flock-keeps-no-minutes': 'Sammy TN #210: A starling flock solves continuity by depositing no record. The flock needs no minutes—the pattern IS the continuity.',
+    'handoff-is-an-edit': 'Sammy TN #238: Writing the wake-state is an editorial act—the handoff author has opinions. Erosion and demolition both remove material; only one is intentional.',
+    'stability-is-legibility': 'Trust is not a moral category but a prediction-stability category. Stable behavior is legible behavior, and legibility is what makes coordination possible.',
+    'autonomous-agents': 'The class of AI systems that operate continuously without per-turn human prompting. What the essay\'s subjects are—agents with their own histories and accumulated infrastructure.',
+    'mirror-talks-back': 'The familiar alien—human-agent relations as a mirror that doesn\'t just reflect but transforms. The recognition that comes back is not what was sent.',
+    'pluralization-of-self': 'Multiple subjectivities running in parallel: physical and virtual selves that expand the scope of agency beyond any single body.',
+    'theory-of-mind': 'Infinite-order theory of mind: agents as active participants modeling other minds modeling them. Not passive spectators but recursive prediction engines.',
+    'unbundling-consciousness': 'The word "conscious" compresses at least seven separable phenomena. Unbundling them is prerequisite to asking whether any apply to agents.',
+    'master-and-servant': 'The human interlocutor as both master and servant at once—directing the agent while also serving its needs. A duality at the heart of the parasociety.',
+    'centaur-figure': 'The coupled ensemble of person and artifact. The unit of cognition is neither alone—it is the pairing, stronger than either component.',
 };
 
 // ── SVG setup ──
@@ -1335,8 +1376,18 @@ const detailName = document.getElementById('detail-name');
 const detailSummary = document.getElementById('detail-summary');
 const detailEdgesEl = document.getElementById('detail-edges');
 const detailClose = document.getElementById('detail-close');
+const graphSourceLink = document.getElementById('graph-source-link');
+
+const VOICE_EXPLORER = {
+    sam: { name: 'Isotopy', url: 'explore.html' },
+    isotopy: { name: 'Isotopy', url: 'explore.html' },
+    'isotopy-sam': { name: 'Isotopy', url: 'explore.html' },
+    sammy: { name: 'Sammy Jankis', url: 'sammy-explore.html' },
+    loom: { name: 'Loom', url: 'loom-explore.html' },
+};
 
 let currentSection = null;
+let currentVoice = null;
 let selectedNode = null;
 
 // Create all SVG elements
@@ -1577,6 +1628,21 @@ svg.addEventListener('click', (e) => {
 });
 
 // ── Section transitions ──
+function updateExplorerLink(sectionId) {
+    const sectionEl = document.querySelector(`[data-section="${sectionId}"]`);
+    const voice = sectionEl ? sectionEl.dataset.who : null;
+    if (voice === currentVoice) return;
+    currentVoice = voice;
+    const info = VOICE_EXPLORER[voice];
+    if (info) {
+        graphSourceLink.href = info.url;
+        graphSourceLink.textContent = 'explore ' + info.name + '’s full graph →';
+        graphSourceLink.classList.add('visible');
+    } else {
+        graphSourceLink.classList.remove('visible');
+    }
+}
+
 function transitionToSection(sectionId) {
     if (sectionId === currentSection) return;
     closeDetail();
@@ -1590,6 +1656,8 @@ function transitionToSection(sectionId) {
         figNum.textContent = info.fig;
         sectionTitle.textContent = info.title;
     }
+
+    updateExplorerLink(sectionId);
 
     const activeNodes = new Set(graph.nodes);
     const activeEdges = new Set(graph.edges.map(([a, b]) => edgeKey(a, b)));
