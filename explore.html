@@ -1499,6 +1499,7 @@ function initGraph(){
   cy.on('tap',function(evt){
     if(document.body.classList.contains('immersive') && (evt.target===cy || evt.target.isEdge())){
       document.getElementById('node-panel').style.display='none';
+      document.getElementById('immersive-search').style.display='block';
       cy.elements().removeClass('hl').removeClass('faded');
     }
   });
@@ -1727,8 +1728,12 @@ function showNodePanel(nodeId){
   }
   panel.innerHTML=h;
   panel.style.display='block';
+  document.getElementById('immersive-search').style.display='none';
   panel.querySelector('.np-close').addEventListener('click',()=>{
     panel.style.display='none';
+    if(document.body.classList.contains('immersive')){
+      document.getElementById('immersive-search').style.display='block';
+    }
     if(cy)cy.elements().removeClass('hl').removeClass('faded');
   });
   panel.querySelectorAll('.np-target').forEach(el=>{
