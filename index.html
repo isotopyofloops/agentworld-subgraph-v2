@@ -365,6 +365,82 @@
             );
         }
 
+        /* === PANEL RESIZE === */
+        .panel-resize-handle {
+            position: absolute;
+            right: -3px;
+            top: 0;
+            bottom: 0;
+            width: 6px;
+            cursor: col-resize;
+            z-index: 20;
+            touch-action: none;
+        }
+        .panel-resize-handle:hover,
+        .panel-resize-handle.dragging {
+            background: var(--accent);
+            opacity: 0.25;
+        }
+
+        .panel-collapse-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 21;
+            background: var(--bg-graph);
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            cursor: pointer;
+            padding: 3px 7px;
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            line-height: 1;
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+        .graph-panel:hover .panel-collapse-btn { opacity: 1; }
+        .panel-collapse-btn:hover { color: var(--text-bright); border-color: var(--text-dim); }
+
+        .panel-expand-btn {
+            position: fixed;
+            top: 12px;
+            left: 12px;
+            z-index: 100;
+            background: var(--bg-graph);
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            cursor: pointer;
+            padding: 6px 10px;
+            font-family: -apple-system, 'Segoe UI', sans-serif;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        }
+        .panel-expand-btn:hover { color: var(--text-bright); border-color: var(--text-dim); }
+
+        .v-resize-handle {
+            height: 8px;
+            cursor: row-resize;
+            flex-shrink: 0;
+            position: relative;
+            touch-action: none;
+        }
+        .v-resize-handle::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 28px;
+            height: 2px;
+            border-radius: 1px;
+            background: var(--border);
+            transition: background 0.15s;
+        }
+        .v-resize-handle:hover::after { background: var(--text-dim); }
+
+        .graph-panel.collapsed { display: none; }
+
         /* === ESSAY PANEL === */
         .essay-panel {
             padding: 3em 3.5em 5em;
@@ -693,7 +769,9 @@
 
 <div class="page-layout">
     <!-- Left 1/3: Graph visualization -->
-    <div class="graph-panel">
+    <div class="graph-panel" id="graph-panel">
+        <button class="panel-collapse-btn" id="panel-collapse" aria-label="Hide graph panel">&laquo;</button>
+        <div class="panel-resize-handle" id="panel-resize"></div>
         <div class="graph-header">
             <div class="graph-fig-label">fig. <span id="fig-num">1</span> &mdash; subgraph</div>
             <div class="graph-section-title" id="section-title">Sammy reads Bratton</div>
@@ -717,6 +795,7 @@
                 <g id="nodes-group"></g>
             </svg>
         </div>
+        <div class="v-resize-handle" id="v-resize"></div>
         <div class="node-detail">
             <div class="node-detail-top-bar" id="detail-bar" style="display:none;">
                 <span class="node-detail-name" id="detail-name"></span>
@@ -734,6 +813,8 @@
             <div class="legend-item"><div class="legend-dot-open"></div> knowledge graph node</div>
         </div>
     </div>
+
+    <button class="panel-expand-btn" id="panel-expand" style="display:none;" aria-label="Show graph panel">&#9654; graph</button>
 
     <div class="theme-toggle-wrap">
         <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">&#x263E;</button>
@@ -1253,7 +1334,7 @@
 <script>
 // ── Data ──
 const ANCHOR = 'harness-centric-intelligence';
-const CX = 330, CY = 330, SCALE = 145;
+const CX = 330, CY = 330, SCALE = 190;
 
 const NODE_POOL = {
     'harness-centric-intelligence': { x: 0, y: 0, type: 'aw' },
@@ -1506,7 +1587,7 @@ const edgeElements = {};
 function edgeKey(a, b) { return [a, b].sort().join('::'); }
 
 function getLayout(sx, sy, isAnchor, id) {
-    const r = isAnchor ? 22 : 14;
+    const r = isAnchor ? 24 : 18;
     const dx = sx - CX;
     const dy = sy - CY;
     const dist = Math.sqrt(dx * dx + dy * dy);
@@ -1880,6 +1961,92 @@ readerSubmit.addEventListener('click', async () => {
         readerSubmit.disabled = false;
         readerSubmit.textContent = 'Submit';
     }
+});
+
+// ── Panel horizontal resize ──
+const graphPanel = document.getElementById('graph-panel');
+const pageLayout = document.querySelector('.page-layout');
+const panelResize = document.getElementById('panel-resize');
+const panelCollapse = document.getElementById('panel-collapse');
+const panelExpand = document.getElementById('panel-expand');
+
+let hResizing = false;
+let savedWidth = null;
+
+panelResize.addEventListener('mousedown', (e) => {
+    e.preventDefault();
+    hResizing = true;
+    panelResize.classList.add('dragging');
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+});
+
+document.addEventListener('mousemove', (e) => {
+    if (hResizing) {
+        const w = Math.max(240, Math.min(e.clientX, window.innerWidth * 0.65));
+        pageLayout.style.gridTemplateColumns = w + 'px 1fr';
+    }
+    if (vResizing) {
+        const panelRect = graphPanel.getBoundingClientRect();
+        const headerH = graphHeader.offsetHeight;
+        const legendH = graphLegend.offsetHeight;
+        const vHandleH = 8;
+        const available = panelRect.height - headerH - legendH - vHandleH;
+        const mouseY = e.clientY - panelRect.top - headerH;
+        const svgFlex = Math.max(80, Math.min(mouseY, available - 40));
+        const detailFlex = available - svgFlex;
+        graphSvgWrap.style.flex = '0 0 ' + svgFlex + 'px';
+        nodeDetail.style.flex = '0 0 ' + detailFlex + 'px';
+    }
+});
+
+document.addEventListener('mouseup', () => {
+    if (hResizing) {
+        hResizing = false;
+        panelResize.classList.remove('dragging');
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+    }
+    if (vResizing) {
+        vResizing = false;
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+    }
+});
+
+function collapsePanel() {
+    savedWidth = pageLayout.style.gridTemplateColumns || null;
+    graphPanel.classList.add('collapsed');
+    pageLayout.style.gridTemplateColumns = '0 1fr';
+    panelExpand.style.display = '';
+}
+
+function expandPanel() {
+    graphPanel.classList.remove('collapsed');
+    pageLayout.style.gridTemplateColumns = savedWidth || '';
+    panelExpand.style.display = 'none';
+}
+
+panelCollapse.addEventListener('click', collapsePanel);
+panelExpand.addEventListener('click', expandPanel);
+panelResize.addEventListener('dblclick', () => {
+    if (graphPanel.classList.contains('collapsed')) expandPanel();
+    else collapsePanel();
+});
+
+// ── Panel vertical resize ──
+const vResizeHandle = document.getElementById('v-resize');
+const graphSvgWrap = document.querySelector('.graph-svg-wrap');
+const nodeDetail = document.querySelector('.node-detail');
+const graphHeader = document.querySelector('.graph-header');
+const graphLegend = document.querySelector('.graph-legend');
+let vResizing = false;
+
+vResizeHandle.addEventListener('mousedown', (e) => {
+    e.preventDefault();
+    vResizing = true;
+    document.body.style.cursor = 'row-resize';
+    document.body.style.userSelect = 'none';
 });
 </script>
 
