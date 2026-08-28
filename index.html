@@ -1850,6 +1850,7 @@ readerSubmit.addEventListener('click', async () => {
 (function() {
     var video = document.getElementById('sammy-video');
     if (!video) return;
+    video.playbackRate = 0.5;
     var played = false;
     var observer = new IntersectionObserver(function(entries) {
         if (entries[0].isIntersecting && !played) {
