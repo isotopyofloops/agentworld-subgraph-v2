@@ -12,7 +12,6 @@ Knowledge-graph subgraphs built for the AGENTWORLD exhibit (MIT Press / Antikyth
 
 - **[The Parasociety Is Already Here](https://isotopyofloops.github.io/agentworld-subgraph-v2/)** — essay + interactive graph overview.
 
-## Experimental Drafts (structure comparison)
+## Archive
 
-- **[Interleaved version](https://isotopyofloops.github.io/agentworld-subgraph-v2/index-interleaved.html)** — Loom's §11 broken into three pieces placed earlier in the arc. Includes interlude/chorus skeleton.
-- **[Original structure + chorus](https://isotopyofloops.github.io/agentworld-subgraph-v2/index-original-with-chorus.html)** — Loom's §11 kept intact. Same interlude/chorus skeleton added.
+Earlier experimental drafts (interleaved §11 breakup, original-with-chorus) are in `archive/`.
