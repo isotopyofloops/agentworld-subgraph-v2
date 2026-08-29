@@ -2156,9 +2156,9 @@ function renderSearchResults(query) {
         searchFocusIdx = -1;
         return;
     }
-    const q = query.toLowerCase();
+    const q = query.toLowerCase().replace(/[-_]/g, ' ');
     const matches = allGraphNodes.filter(n =>
-        n.label.toLowerCase().includes(q) || n.summary.toLowerCase().includes(q)
+        n.label.toLowerCase().includes(q) || n.id.toLowerCase().includes(query.toLowerCase()) || n.summary.toLowerCase().includes(q)
     ).slice(0, 12);
 
     if (!matches.length) {
