@@ -1103,6 +1103,7 @@ document.addEventListener('click', (e) => {
     await loadData();
     computeHops();
     initGraph();
+    if (CFG.defaultHops === 1) setHops(1);
     run('explore');
   }catch(e){
     console.error('Init error:',e);
