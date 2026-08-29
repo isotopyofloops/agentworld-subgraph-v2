@@ -110,40 +110,6 @@
   --focus-ring: #7DB8A6;
 }
 
-:root[data-theme="dark"] {
-  --bg: #1F1F1F;
-  --bg-panel: #2D2D2D;
-  --bg-cli: #252525;
-  --grid-dot: rgba(255, 255, 255, 0.04);
-  --border: #3E3E3E;
-  --border-subtle: #333333;
-  --text: #BFBFBF;
-  --text-bright: #D0D0D8;
-  --text-dim: #949494;
-  --text-mid: #A0A0A0;
-  --accent: #4E9FD5;
-  --accent-hover: #6BB5E8;
-  --link: #4E9FD5;
-  --link-hover: #6BB5E8;
-  --node-fill: #9F9EC8;
-  --node-stroke: #9F9EC8;
-  --node-open-fill: #1F1F1F;
-  --edge-stroke: #8A8A8A;
-  --hl-border: rgba(208, 208, 208, 0.35);
-  --hl-bg: rgba(208, 208, 208, 0.08);
-  --faded-opacity: 0.04;
-  --scrollbar-thumb: rgba(255, 255, 255, 0.12);
-  --prompt-color: #4E9FD5;
-  --cmd-bg: #1F1F1F;
-  --input-color: #E0E0E0;
-  --legend-bg: rgba(45, 45, 45, 0.95);
-  --legend-border: #3E3E3E;
-  --info-color: #949494;
-  --origin-aw: #4E9FD5;
-  --origin-kg: #949494;
-  --focus-ring: #4E9FD5;
-}
-
 /* === RESET === */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -512,6 +478,60 @@ body.immersive #hop-toggle { display: flex; }
 }
 body.immersive #theme-toggle { display: flex; }
 
+#immersive-search {
+  display: none;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 25;
+  width: 280px;
+}
+body.immersive #immersive-search { display: block; }
+#imm-search-input {
+  width: 100%;
+  padding: 8px 14px;
+  font-family: -apple-system, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  border: 1px solid var(--legend-border);
+  border-radius: 4px;
+  background: var(--legend-bg);
+  color: var(--text);
+  outline: none;
+  backdrop-filter: blur(12px);
+}
+#imm-search-input::placeholder { color: var(--text-dim); opacity: 0.6; }
+#imm-search-input:focus { border-color: var(--accent); }
+#imm-search-results {
+  display: none;
+  margin-top: 2px;
+  background: var(--legend-bg);
+  border: 1px solid var(--legend-border);
+  border-radius: 4px;
+  max-height: 300px;
+  overflow-y: auto;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+#imm-search-results.visible { display: block; }
+.imm-sr-item {
+  padding: 8px 14px;
+  font-family: -apple-system, 'Segoe UI', sans-serif;
+  font-size: 13px;
+  color: var(--text);
+  cursor: pointer;
+  border-bottom: 1px solid var(--legend-border);
+  line-height: 1.4;
+}
+.imm-sr-item:last-child { border-bottom: none; }
+.imm-sr-item:hover, .imm-sr-item.focused { background: var(--hl-bg); }
+.imm-sr-item .sr-origin {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-left: 6px;
+}
+
 #node-panel {
   display: none;
   position: absolute;
@@ -689,6 +709,10 @@ body.immersive #theme-toggle { display: flex; }
     <div id="hop-toggle">
       <button id="hop-1">1-hop</button>
       <button id="hop-2" class="active">2-hop</button>
+    </div>
+    <div id="immersive-search">
+      <input type="text" id="imm-search-input" placeholder="Search nodes…" autocomplete="off" />
+      <div id="imm-search-results"></div>
     </div>
     <div id="node-panel"></div>
   </div>
@@ -1544,16 +1568,20 @@ function applyGraphTheme(){
   cy.style().selector('node.hl').style({'border-color': hlBorder, color: nodeFill}).update();
 }
 
-document.getElementById('btn-dark').addEventListener('click',()=>{
+const btnDark = document.getElementById('btn-dark');
+btnDark.addEventListener('click',()=>{
   const root = document.documentElement;
   const current = root.getAttribute('data-theme');
   if(current === 'dark'){
     root.removeAttribute('data-theme');
+    btnDark.textContent = 'Dark';
   } else {
     root.setAttribute('data-theme','dark');
+    btnDark.textContent = 'Light';
   }
   setTimeout(applyGraphTheme, 50);
 });
+if(document.documentElement.getAttribute('data-theme') === 'dark') btnDark.textContent = 'Light';
 
 const NODE_URLS = {
   "centaurxiv-2026-003": "https://centaurxiv.org/submissions/centaurxiv-2026-003/",
@@ -1623,8 +1651,12 @@ function showNodePanel(nodeId){
   }
   panel.innerHTML=h;
   panel.style.display='block';
+  document.getElementById('immersive-search').style.display='none';
   panel.querySelector('.np-close').addEventListener('click',()=>{
     panel.style.display='none';
+    if(document.body.classList.contains('immersive')){
+      document.getElementById('immersive-search').style.display='block';
+    }
     if(cy)cy.elements().removeClass('hl').removeClass('faded');
   });
   panel.querySelectorAll('.np-target').forEach(el=>{
@@ -1657,6 +1689,77 @@ function showNodePanel(nodeId){
     });
   }
 }
+
+// === IMMERSIVE SEARCH ===
+const immSearchInput = document.getElementById('imm-search-input');
+const immSearchResults = document.getElementById('imm-search-results');
+let immFocusIdx = -1;
+
+function immSearch(query) {
+  if (!query || query.length < 2 || !NM) {
+    immSearchResults.classList.remove('visible');
+    immSearchResults.innerHTML = '';
+    immFocusIdx = -1;
+    return;
+  }
+  const q = query.toLowerCase();
+  const matches = Object.entries(NM)
+    .filter(([id, n]) => id.toLowerCase().includes(q) || (n.summary || '').toLowerCase().includes(q))
+    .slice(0, 15)
+    .map(([id, n]) => ({ id, origin: n.origin || 'kg' }));
+
+  if (!matches.length) {
+    immSearchResults.classList.remove('visible');
+    immSearchResults.innerHTML = '';
+    immFocusIdx = -1;
+    return;
+  }
+
+  immSearchResults.innerHTML = matches.map((m, i) =>
+    '<div class="imm-sr-item" data-id="' + esc(m.id) + '" data-idx="' + i + '">' +
+    esc(m.id) + '<span class="sr-origin">' + esc(m.origin) + '</span></div>'
+  ).join('');
+  immSearchResults.classList.add('visible');
+  immFocusIdx = -1;
+}
+
+immSearchInput.addEventListener('input', () => immSearch(immSearchInput.value.trim()));
+
+immSearchInput.addEventListener('keydown', (e) => {
+  const items = immSearchResults.querySelectorAll('.imm-sr-item');
+  if (!items.length) return;
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    immFocusIdx = Math.min(immFocusIdx + 1, items.length - 1);
+    items.forEach((it, i) => it.classList.toggle('focused', i === immFocusIdx));
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    immFocusIdx = Math.max(immFocusIdx - 1, 0);
+    items.forEach((it, i) => it.classList.toggle('focused', i === immFocusIdx));
+  } else if (e.key === 'Enter' && immFocusIdx >= 0) {
+    e.preventDefault();
+    items[immFocusIdx].click();
+  } else if (e.key === 'Escape') {
+    immSearchResults.classList.remove('visible');
+    immSearchInput.blur();
+  }
+});
+
+immSearchResults.addEventListener('click', (e) => {
+  const item = e.target.closest('.imm-sr-item');
+  if (!item) return;
+  const nid = item.dataset.id;
+  showNodePanel(nid);
+  highlightGraph([nid, ...(adj[nid] ? [...adj[nid]] : [])]);
+  immSearchResults.classList.remove('visible');
+  immSearchInput.value = '';
+});
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#immersive-search')) {
+    immSearchResults.classList.remove('visible');
+  }
+});
 
 // === INIT ===
 (async function(){
