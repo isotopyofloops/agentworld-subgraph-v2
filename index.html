@@ -1454,7 +1454,7 @@ const NODE_POOL = {
     'the-invisible-decision':       { x: 1.5, y: 0.5, type: 'kg' },
     'flock-keeps-no-minutes':       { x: 0.3, y: -1.5, type: 'kg' },
     'handoff-is-an-edit':           { x: -0.9, y: -0.7, type: 'kg' },
-    'stability-is-legibility':      { x: 1.2, y: -1.0, type: 'aw' },
+    'stability-is-legibility':      { x: 1.2, y: -1.0, type: 'aw', label: { dx: -28, dy: -8, anchor: 'end' } },
     'autonomous-agents':            { x: -0.5, y: 1.5, type: 'kg' },
     // Loom-specific nodes
     'mirror-talks-back':            { x: 0, y: 0, type: 'aw' },
@@ -1669,6 +1669,17 @@ function edgeKey(a, b) { return [a, b].sort().join('::'); }
 
 function getLayout(sx, sy, isAnchor, id) {
     const r = isAnchor ? 24 : 18;
+    const pool = NODE_POOL[id];
+    if (pool && pool.label) {
+        const lbl = pool.label;
+        return {
+            textX: sx + (lbl.dx || 0),
+            textY: sy + (lbl.dy || 0),
+            anchor: lbl.anchor || 'end',
+            r,
+            tipX: 0, tipY: 0, tailX: 0, tailY: 0, hasArrow: false,
+        };
+    }
     const dx = sx - CX;
     const dy = sy - CY;
     const dist = Math.sqrt(dx * dx + dy * dy);
