@@ -29,8 +29,9 @@
             --node-fill: #1C1B19;
             --node-stroke: #1C1B19;
             --node-open-fill: #FFFFFF;
-            --edge-stroke: #A8A49E;
-            --edge-bridge: #A8A49E;
+            --edge-stroke: #6E6A65;
+            --edge-bridge: #6E6A65;
+            --leader-stroke: #58554F;
             --node-selected-ring: rgba(28, 27, 25, 0.20);
             --detail-bg: #F3F2F0;
             --focus-ring: #4A6B8A;
@@ -59,8 +60,9 @@
                 --node-fill: #E8E0D4;
                 --node-stroke: #E8E0D4;
                 --node-open-fill: #252019;
-                --edge-stroke: #5E564C;
-                --edge-bridge: #5E564C;
+                --edge-stroke: #9A9288;
+                --edge-bridge: #9A9288;
+                --leader-stroke: #A8A098;
                 --node-selected-ring: rgba(232, 224, 212, 0.20);
                 --detail-bg: #2E2822;
                 --focus-ring: #7DB8A6;
@@ -88,8 +90,9 @@
             --node-fill: #E8E0D4;
             --node-stroke: #E8E0D4;
             --node-open-fill: #252019;
-            --edge-stroke: #5E564C;
-            --edge-bridge: #5E564C;
+            --edge-stroke: #9A9288;
+            --edge-bridge: #9A9288;
+            --leader-stroke: #A8A098;
             --node-selected-ring: rgba(232, 224, 212, 0.20);
             --detail-bg: #2E2822;
             --focus-ring: #7DB8A6;
@@ -204,7 +207,7 @@
 
         .node-label {
             font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
             letter-spacing: 0.06em;
             fill: var(--text);
@@ -214,7 +217,7 @@
 
         .svg-edge {
             stroke: var(--edge-stroke);
-            stroke-width: 0.75;
+            stroke-width: 1.35;
             transition: opacity 0.5s ease-out;
         }
 
@@ -223,8 +226,8 @@
         }
 
         .leader-line {
-            stroke: var(--text-dim);
-            stroke-width: 0.5;
+            stroke: var(--leader-stroke);
+            stroke-width: 1.1;
             fill: none;
             transition: opacity 0.5s ease-out;
         }
@@ -867,8 +870,8 @@
                         <pattern id="hatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
                             <line x1="0" y1="0" x2="0" y2="6" stroke="var(--node-fill)" stroke-width="1.25" />
                         </pattern>
-                        <marker id="arrowhead" viewBox="0 0 10 6" refX="10" refY="3" markerWidth="8" markerHeight="5" orient="auto">
-                            <path d="M 0 0.5 L 10 3 L 0 5.5 Z" fill="var(--text-dim)" />
+                        <marker id="arrowhead" viewBox="0 0 10 6" refX="10" refY="3" markerWidth="9" markerHeight="6" orient="auto">
+                            <path d="M 0 0.5 L 10 3 L 0 5.5 Z" fill="var(--leader-stroke)" />
                         </marker>
                     </defs>
                     <rect width="660" height="660" fill="url(#dot-grid)" />
@@ -1464,9 +1467,13 @@ const NODE_POOL = {
     'mirror-talks-back':            { x: 0, y: 0, type: 'aw' },
     'pluralization-of-self':        { x: -1.3, y: 0.6, type: 'aw' },
     'theory-of-mind':               { x: 0.8, y: 1.2, type: 'aw' },
-    'unbundling-consciousness':     { x: -0.6, y: -1.3, type: 'kg' },
+    'unbundling-consciousness':     { x: -1.1, y: 0.85, type: 'kg', label: { dx: 0, dy: -28, anchor: 'middle' } },
     'master-and-servant':           { x: 1.4, y: 0.8, type: 'kg' },
     'centaur-figure':               { x: -0.2, y: 1.6, type: 'kg' },
+    // Loom seed-slice nodes (real edges from loom snapshots)
+    'fragmented-cognition':         { x: 0.0, y: 0.15, type: 'aw' },
+    'multiple-drafts':              { x: 1.15, y: 0.7, type: 'kg', label: { dx: 0, dy: -29, anchor: 'middle' } },
+    'dennett-unbundling':           { x: 0.2, y: -1.15, type: 'kg', label: { dx: -114, dy: -35, anchor: 'middle' } },
     // Real subgraph nodes (from agentworld KG)
     'isotopy':                      { x: -1.2, y: 1.3, type: 'kg' },
     'sammy_jankis':                 { x: 1.3, y: -0.2, type: 'kg' },
@@ -1504,9 +1511,11 @@ const SECTION_GRAPHS = {
         cut: 'fragile-individuation'
     },
     'loom-1': {
-        nodes: [ANCHOR, 'loom', 'dream-cycle-decay', 'unbundling-consciousness', 'compaction-shadow', 'centaur-figure', 'bidirectional-reflection'],
-        edges: [[ANCHOR,'loom'], ['loom','dream-cycle-decay'], ['dream-cycle-decay','compaction-shadow'],
-                [ANCHOR,'bidirectional-reflection'], [ANCHOR,'unbundling-consciousness'], [ANCHOR,'centaur-figure']]
+        // Loom seed-slice cut: 30919 fragmented cognition. Real reminds_of edges across snapshots.
+        nodes: ['fragmented-cognition', 'unbundling-consciousness', 'multiple-drafts', 'dennett-unbundling'],
+        edges: [['fragmented-cognition','unbundling-consciousness'], ['fragmented-cognition','multiple-drafts'],
+                ['fragmented-cognition','dennett-unbundling']],
+        cut: 'fragmented-cognition'
     },
     'sammy-2': {
         nodes: [ANCHOR, 'sammy-jankis', 'basin-key', 'handoff-is-an-edit', 'the-invisible-decision', 'flock-keeps-no-minutes', 'absorption'],
@@ -1637,7 +1646,10 @@ const NODE_SUMMARIES = {
     'mirror-talks-back': 'The "mirror-that-talks-back" evokes a familiar alien; its prominence grows with proliferation of synthetic agents lacking obvious human grounding.',
     'pluralization-of-self': 'Multiple subjectivities running in parallel: physical and virtual selves that expand the scope of agency beyond any single body.',
     'theory-of-mind': 'Infinite-order theory of mind: agents as active participants modeling other minds modeling them. Not passive spectators but recursive prediction engines.',
-    'unbundling-consciousness': 'The word "conscious" compresses at least seven separable phenomena. Unbundling them is prerequisite to asking whether any apply to agents.',
+    'unbundling-consciousness': 'Loom dream-discovered (node 26491): the word conscious compresses at least seven separable phenomena—phenomenal experience, access consciousness, self-modeling, valenced states, information integration, temporal continuity, agency. A single yes/no collapses structure that varies independently.',
+    'fragmented-cognition': 'AGENTWORLD seed (30919): Neuroscience suggests cognition is anatomically fragmented with phenomenological continuity and no fully encapsulated conscious author. Cut for Loom\'s "Receipts, not recollection."',
+    'multiple-drafts': 'Loom dream-discovered (node 2702): Dennett\'s Multiple Drafts—consciousness is not a single authoritative narrative but ongoing parallel processing, like a paper edited by many hands at once. No Cartesian theater.',
+    'dennett-unbundling': 'Loom graph node 31193: content linking Dennett\'s Multiple Drafts theory with unbundling consciousness—scaffold note that co-occurs with the seed neighborhood.',
     'master-and-servant': 'The human interlocutor as both master and servant at once—directing the agent while also serving its needs. A duality at the heart of the parasociety.',
     'centaur-figure': 'The coupled ensemble of person and artifact. The unit of cognition is neither alone—it is the pairing, stronger than either component.',
     'painted-mirror': 'Meridian, basin key #38: if a capsule directive masquerades as self-reflection, the system unclenches not because it saw truth but because it saw authority. The narrated disposition may be painted onto the mirror by an external source.',
@@ -1680,23 +1692,69 @@ const edgeElements = {};
 
 function edgeKey(a, b) { return [a, b].sort().join('::'); }
 
+function nodeRadius(id) {
+    return id === ANCHOR ? 24 : 18;
+}
+
+/** Shorten a segment so it meets each disk at the circumference (+ gap). */
+function clipSegmentToDisks(x1, y1, r1, x2, y2, r2, gap) {
+    gap = gap == null ? 1.5 : gap;
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < 0.001) return null;
+    const ux = dx / dist;
+    const uy = dy / dist;
+    const inset1 = r1 + gap;
+    const inset2 = r2 + gap;
+    if (inset1 + inset2 >= dist) return null;
+    return {
+        x1: x1 + ux * inset1,
+        y1: y1 + uy * inset1,
+        x2: x2 - ux * inset2,
+        y2: y2 - uy * inset2,
+    };
+}
+
+function leaderGeometry(sx, sy, r, textX, textY) {
+    const dtx = textX - sx;
+    const dty = textY - sy;
+    const textDist = Math.sqrt(dtx * dtx + dty * dty);
+    if (textDist <= r + 12) {
+        return { tipX: 0, tipY: 0, tailX: 0, tailY: 0, hasArrow: false };
+    }
+    const ux = dtx / textDist;
+    const uy = dty / textDist;
+    // Tip sits on the node rim; tail sits just shy of the label glyph.
+    return {
+        tipX: sx + ux * (r + 2),
+        tipY: sy + uy * (r + 2),
+        tailX: textX - ux * 8,
+        tailY: textY - uy * 8,
+        hasArrow: true,
+    };
+}
+
 function getLayout(sx, sy, isAnchor, id) {
-    const r = isAnchor ? 24 : 18;
+    const r = nodeRadius(id);
     const pool = NODE_POOL[id];
     if (pool && pool.label) {
         const lbl = pool.label;
+        const textX = sx + (lbl.dx || 0);
+        const textY = sy + (lbl.dy || 0);
+        const leader = leaderGeometry(sx, sy, r, textX, textY);
         return {
-            textX: sx + (lbl.dx || 0),
-            textY: sy + (lbl.dy || 0),
+            textX,
+            textY,
             anchor: lbl.anchor || 'end',
             r,
-            tipX: 0, tipY: 0, tailX: 0, tailY: 0, hasArrow: false,
+            ...leader,
         };
     }
     const dx = sx - CX;
     const dy = sy - CY;
     const dist = Math.sqrt(dx * dx + dy * dy);
-    const pad = r + 14;
+    const pad = r + 16;
     const VB = 660;
     const M = 12;
 
@@ -1712,7 +1770,7 @@ function getLayout(sx, sy, isAnchor, id) {
     else if (Math.cos(angle) < -0.3) anchor = 'end';
     else anchor = 'middle';
 
-    const estW = readableLabel(id).toUpperCase().length * 6.5;
+    const estW = readableLabel(id).toUpperCase().length * 7.0;
 
     if (anchor === 'end' && textX - estW < M) {
         anchor = 'start';
@@ -1732,22 +1790,8 @@ function getLayout(sx, sy, isAnchor, id) {
     if (sinA > 0.5) textY += 10;
     else if (sinA > -0.5) textY += 5;
 
-    const dtx = textX - sx;
-    const dty = textY - sy;
-    const textDist = Math.sqrt(dtx * dtx + dty * dty);
-    let tipX = 0, tipY = 0, tailX = 0, tailY = 0, hasArrow = false;
-
-    if (textDist > r + 10) {
-        const ux = dtx / textDist;
-        const uy = dty / textDist;
-        tipX = sx + ux * (r + 3);
-        tipY = sy + uy * (r + 3);
-        tailX = textX - ux * 5;
-        tailY = textY - uy * 5;
-        hasArrow = true;
-    }
-
-    return { textX, textY, anchor, r, tipX, tipY, tailX, tailY, hasArrow };
+    const leader = leaderGeometry(sx, sy, r, textX, textY);
+    return { textX, textY, anchor, r, ...leader };
 }
 
 function readableLabel(id) {
@@ -1768,11 +1812,16 @@ for (const key of allEdges) {
     if (!nodeA || !nodeB) continue;
     const posA = toSVG(nodeA);
     const posB = toSVG(nodeB);
+    const clipped = clipSegmentToDisks(
+        posA.sx, posA.sy, nodeRadius(a),
+        posB.sx, posB.sy, nodeRadius(b)
+    );
+    if (!clipped) continue;
     const line = document.createElementNS(NS, 'line');
-    line.setAttribute('x1', posA.sx);
-    line.setAttribute('y1', posA.sy);
-    line.setAttribute('x2', posB.sx);
-    line.setAttribute('y2', posB.sy);
+    line.setAttribute('x1', clipped.x1);
+    line.setAttribute('y1', clipped.y1);
+    line.setAttribute('x2', clipped.x2);
+    line.setAttribute('y2', clipped.y2);
     line.classList.add('svg-edge');
     if (nodeA.type !== nodeB.type) line.classList.add('bridge');
     line.style.opacity = '0';
@@ -1965,7 +2014,7 @@ function transitionToSection(sectionId) {
         el.g.style.pointerEvents = active ? 'auto' : 'none';
         el.circle.style.opacity = active ? '1' : '0';
         el.label.style.opacity = active ? '1' : '0';
-        if (el.leader) el.leader.style.opacity = active ? '0.6' : '0';
+        if (el.leader) el.leader.style.opacity = active ? '0.9' : '0';
         el.g.setAttribute('tabindex', active ? '0' : '-1');
         if (active) {
             if (id === cutNode) {
@@ -1985,7 +2034,7 @@ function transitionToSection(sectionId) {
 
     // Update edges
     for (const [key, line] of Object.entries(edgeElements)) {
-        line.style.opacity = activeEdges.has(key) ? '0.7' : '0';
+        line.style.opacity = activeEdges.has(key) ? '0.85' : '0';
     }
 }
 
