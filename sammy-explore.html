@@ -1321,6 +1321,16 @@ function getComputedToken(name) {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 }
 
+function shortLabel(id) {
+  // Strip common prefixes for Sammy's long node names
+  let s = id.replace(/^Thinking Note \d+:\s*/i, 'TN: ')
+            .replace(/^centaurxiv-2026-/i, '')
+            .replace(/ \(paper\)$/i, '')
+            .replace(/ \(Loom, \d{4}-\d{2}-\d{2}\)$/i, '');
+  if (s.length > 30) s = s.slice(0, 28) + '…';
+  return s;
+}
+
 function initGraph(){
   if(typeof cytoscape==='undefined'){
     document.getElementById('graph-info').textContent='Graph library not loaded';return;
@@ -1332,6 +1342,7 @@ function initGraph(){
   const edgeStroke = getComputedToken('--edge-stroke');
   const hlBorder = getComputedToken('--text-bright');
   const labelColor = getComputedToken('--text');
+  const bgColor = getComputedToken('--bg');
 
   function hasPresetPositions(){
     const first=Object.values(NM)[0];
@@ -1343,7 +1354,7 @@ function initGraph(){
     const isAW = n.origin === 'agentworld';
     const el={data:{
       id,
-      label: id.length > 35 ? id.slice(0,33)+'…' : id,
+      label: shortLabel(id),
       degree: deg(id),
       bgColor: isAW ? nodeFill : nodeOpenFill,
       borderColor: nodeStroke,
@@ -1373,19 +1384,25 @@ function initGraph(){
         'height':'mapData(degree,0,20,18,42)',
         'border-width':'data(borderW)',
         'border-color':'data(borderColor)',
+        'label':'',
+        'font-family':'-apple-system, "Segoe UI", "Gill Sans", "Helvetica Neue", Arial, sans-serif',
+      }},
+      {selector:'node[degree >= 3]',style:{
         label:'data(label)',
-        'font-size': 10,
+        'font-size': 12,
         color: nodeFill,
-        'text-opacity': 0.85,
+        'text-opacity': 1,
+        'text-outline-color': bgColor,
+        'text-outline-width': 3,
+        'text-outline-opacity': 0.85,
         'text-margin-x': 'data(labelDx)',
         'text-margin-y': 'data(labelDy)',
         'text-halign': 'center',
         'text-valign': 'center',
         'text-transform': 'uppercase',
-        'font-weight': 500,
-        'font-family':'-apple-system, "Segoe UI", "Gill Sans", "Helvetica Neue", Arial, sans-serif',
+        'font-weight': 600,
       }},
-      {selector:'node[!labelDx]',style:{
+      {selector:'node[degree >= 3][!labelDx]',style:{
         'text-margin-x': 4,
         'text-margin-y': 0,
         'text-halign': 'right',
@@ -1402,9 +1419,12 @@ function initGraph(){
         'border-width':2,
         'border-color': hlBorder,
         label:'data(label)',
-        'font-size': 13,
+        'font-size': 14,
         color: nodeFill,
-        'text-opacity': 0.95,
+        'text-opacity': 1,
+        'text-outline-color': bgColor,
+        'text-outline-width': 3,
+        'text-outline-opacity': 0.9,
         'text-margin-x': 'data(labelDx)',
         'text-margin-y': 'data(labelDy)',
         'text-halign': 'center',
@@ -1557,6 +1577,7 @@ function applyGraphTheme(){
   const nodeOpenFill = getComputedToken('--node-open-fill');
   const edgeStroke = getComputedToken('--edge-stroke');
   const hlBorder = getComputedToken('--text-bright');
+  const bgColor = getComputedToken('--bg');
   cy.nodes().forEach(n => {
     const nd = NM[n.id()];
     const isAW = nd && nd.origin === 'agentworld';
@@ -1564,8 +1585,8 @@ function applyGraphTheme(){
     n.data('borderColor', nodeStroke);
   });
   cy.style().selector('edge').style({'line-color': edgeStroke}).update();
-  cy.style().selector('node[degree >= 3]').style({color: nodeFill}).update();
-  cy.style().selector('node.hl').style({'border-color': hlBorder, color: nodeFill}).update();
+  cy.style().selector('node[degree >= 3]').style({color: nodeFill, 'text-outline-color': bgColor}).update();
+  cy.style().selector('node.hl').style({'border-color': hlBorder, color: nodeFill, 'text-outline-color': bgColor}).update();
 }
 
 const btnDark = document.getElementById('btn-dark');
