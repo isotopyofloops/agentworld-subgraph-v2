@@ -2085,7 +2085,7 @@ document.addEventListener('mouseup', () => {
 function collapsePanel() {
     savedWidth = pageLayout.style.gridTemplateColumns || null;
     graphPanel.classList.add('collapsed');
-    pageLayout.style.gridTemplateColumns = '0 1fr';
+    pageLayout.style.gridTemplateColumns = '1fr';
     panelExpand.style.display = '';
 }
 
