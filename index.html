@@ -416,21 +416,24 @@
         .panel-collapse-btn:hover { color: var(--text-bright); border-color: var(--text-dim); }
 
         .panel-expand-btn {
-            position: fixed;
-            top: 12px;
-            left: 12px;
-            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100vh;
+            position: sticky;
+            top: 0;
             background: var(--bg-graph);
-            border: 1px solid var(--border);
-            border-radius: 3px;
+            border: none;
             cursor: pointer;
-            padding: 6px 10px;
+            padding: 0;
             font-family: -apple-system, 'Segoe UI', sans-serif;
             font-size: 0.7rem;
             color: var(--text-dim);
-            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            writing-mode: vertical-rl;
+            letter-spacing: 0.08em;
         }
-        .panel-expand-btn:hover { color: var(--text-bright); border-color: var(--text-dim); }
+        .panel-expand-btn:hover { color: var(--text-bright); background: var(--bg-panel); }
 
         .v-resize-handle {
             height: 12px;
@@ -452,7 +455,12 @@
         }
         .v-resize-handle:hover::after { background: var(--text-dim); }
 
-        .graph-panel.collapsed { display: none; }
+        .graph-panel.collapsed {
+            min-width: 0;
+            overflow: hidden;
+        }
+        .graph-panel.collapsed > *:not(.panel-expand-btn) { display: none; }
+        .graph-panel.collapsed .panel-expand-btn { display: flex; }
 
         /* === NODE SEARCH === */
         .graph-search-wrap {
@@ -886,9 +894,8 @@
             <div class="legend-item"><div class="legend-dot-filled"></div> agentworld concept</div>
             <div class="legend-item"><div class="legend-dot-open"></div> knowledge graph node</div>
         </div>
+        <button class="panel-expand-btn" id="panel-expand" aria-label="Show graph panel">&#9654; graph</button>
     </div>
-
-    <button class="panel-expand-btn" id="panel-expand" style="display:none;" aria-label="Show graph panel">&#9654; graph</button>
 
     <div class="theme-toggle-wrap">
         <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">&#x263E;</button>
@@ -2085,14 +2092,12 @@ document.addEventListener('mouseup', () => {
 function collapsePanel() {
     savedWidth = pageLayout.style.gridTemplateColumns || null;
     graphPanel.classList.add('collapsed');
-    pageLayout.style.gridTemplateColumns = '1fr';
-    panelExpand.style.display = '';
+    pageLayout.style.gridTemplateColumns = '36px 1fr';
 }
 
 function expandPanel() {
     graphPanel.classList.remove('collapsed');
     pageLayout.style.gridTemplateColumns = savedWidth || '';
-    panelExpand.style.display = 'none';
 }
 
 panelCollapse.addEventListener('click', collapsePanel);
