@@ -894,6 +894,10 @@ function setHops(maxHop){
   document.getElementById('hop-1').classList.toggle('active',maxHop===1);
   document.getElementById('hop-2').classList.toggle('active',maxHop===2);
   document.getElementById('node-panel').style.display='none';
+  immSearchInput.value='';
+  immSearchResults.classList.remove('visible');
+  immSearchResults.innerHTML='';
+  immFocusIdx=-1;
   cy.elements().removeClass('hl').removeClass('faded');
   cy.nodes().forEach(n=>{
     const h=hopDist[n.id()];
@@ -1038,9 +1042,13 @@ function immSearch(query) {
     immFocusIdx = -1;
     return;
   }
-  const q = query.toLowerCase();
+  const q = query.toLowerCase().replace(/[-_]/g, ' ');
   const matches = Object.entries(NM)
-    .filter(([id, n]) => id.toLowerCase().includes(q) || (n.summary || '').toLowerCase().includes(q))
+    .filter(([id, n]) => {
+      if (cy) { const cyN = cy.getElementById(id); if (cyN.length && cyN.style('display') === 'none') return false; }
+      const label = id.toLowerCase().replace(/[-_]/g, ' ');
+      return label.includes(q) || id.toLowerCase().includes(query.toLowerCase()) || (n.summary || '').toLowerCase().includes(q);
+    })
     .slice(0, 15)
     .map(([id, n]) => ({ id, origin: n.origin || 'kg' }));
 
