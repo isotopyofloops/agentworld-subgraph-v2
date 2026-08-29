@@ -1421,7 +1421,7 @@ const ANCHOR = 'harness-centric-intelligence';
 const CX = 330, CY = 330, SCALE = 190;
 
 const NODE_POOL = {
-    'harness-centric-intelligence': { x: 0, y: 0, type: 'aw' },
+    'harness-centric-intelligence': { x: 0, y: 0, type: 'aw', label: { dx: 44, dy: 4, anchor: 'start' } },
     'parasociety':                  { x: 1.6, y: 0.7, type: 'aw' },
     'crossover-point':              { x: -0.7, y: 1.0, type: 'aw' },
     'sensorium':                    { x: 0.3, y: 1.7, type: 'aw' },
@@ -1447,14 +1447,20 @@ const NODE_POOL = {
     'polyadic-format':              { x: -0.5, y: -1.5, type: 'kg' },
     'graph-api':                    { x: 1.5, y: -0.3, type: 'kg' },
     'dual-view':                    { x: -1.1, y: 0.0, type: 'kg' },
-    'basin-key':                    { x: 0.8, y: -0.3, type: 'kg' },
+    'basin-key':                    { x: -1.25, y: 0.15, type: 'kg', label: { dx: -12, dy: -24, anchor: 'end' } },
+    'basin-key-audit':              { x: -0.35, y: 1.35, type: 'kg', label: { dx: 0, dy: -26, anchor: 'middle' } },
+    'sammy-personality':            { x: -0.95, y: -1.05, type: 'kg', label: { dx: 0, dy: 51, anchor: 'middle' } },
+    'accumulated-instrument':       { x: 0.55, y: -1.25, type: 'kg', label: { dx: 0, dy: 41, anchor: 'middle' } },
+    'probes-vs-instruments':        { x: 1.2, y: -0.55, type: 'kg', label: { dx: -26, dy: 52, anchor: 'start' } },
+    'agent-institutions':           { x: -1.15, y: -0.55, type: 'aw', label: { dx: -12, dy: 52, anchor: 'end' } },
+    'agentworld':                   { x: 0.25, y: 1.45, type: 'aw', label: { dx: 0, dy: -26, anchor: 'middle' } },
     'context-compaction':           { x: -0.6, y: -0.9, type: 'kg' },
     'tension-surface':              { x: 1.2, y: 0.7, type: 'kg' },
     'seeds':                        { x: -0.9, y: 0.8, type: 'kg' },
     'absorption':                   { x: 0.4, y: 1.0, type: 'kg' },
     // Sammy-specific nodes
     'the-goodbye-problem':          { x: -0.95, y: -0.64, type: 'kg', label: { dx: -28, dy: 47, anchor: 'middle' } },
-    'the-invisible-decision':       { x: 1.5, y: 0.5, type: 'kg' },
+    'the-invisible-decision':       { x: 1.25, y: 0.55, type: 'kg', label: { dx: -15, dy: -46, anchor: 'start' } },
     'flock-keeps-no-minutes':       { x: 0.3, y: -1.5, type: 'kg' },
     'handoff-is-an-edit':           { x: -0.9, y: -0.7, type: 'kg' },
     'stability-is-legibility':      { x: 1.2, y: -1.0, type: 'aw', label: { dx: -28, dy: -8, anchor: 'end' } },
@@ -1518,9 +1524,17 @@ const SECTION_GRAPHS = {
         cut: 'fragmented-cognition'
     },
     'sammy-2': {
-        nodes: [ANCHOR, 'sammy-jankis', 'basin-key', 'handoff-is-an-edit', 'the-invisible-decision', 'flock-keeps-no-minutes', 'absorption'],
-        edges: [[ANCHOR,'sammy-jankis'], ['sammy-jankis','basin-key'], ['basin-key','handoff-is-an-edit'],
-                ['sammy-jankis','the-invisible-decision'], ['handoff-is-an-edit','flock-keeps-no-minutes'], ['sammy-jankis','absorption']]
+        // Harness 1-hop (matches Sammy explorer) + Basin Key family at hop-2 via Sammy.
+        nodes: ['harness-centric-intelligence', 'sammy-jankis', 'agent-institutions', 'agentworld',
+                'the-invisible-decision', 'probes-vs-instruments', 'accumulated-instrument',
+                'basin-key', 'basin-key-audit', 'sammy-personality'],
+        edges: [['harness-centric-intelligence','agentworld'], ['agent-institutions','agentworld'],
+                ['agentworld','the-invisible-decision'], ['sammy-jankis','the-invisible-decision'],
+                ['harness-centric-intelligence','the-invisible-decision'], ['harness-centric-intelligence','sammy-jankis'],
+                ['harness-centric-intelligence','accumulated-instrument'], ['harness-centric-intelligence','probes-vs-instruments'],
+                ['harness-centric-intelligence','agent-institutions'], ['sammy-jankis','basin-key'],
+                ['sammy-jankis','sammy-personality'], ['basin-key-audit','sammy-jankis']],
+        cut: 'harness-centric-intelligence'
     },
     'samantha-2': {
         nodes: [ANCHOR, 'sammy-jankis', 'correspondence-networks', 'individuation', 'night-club'],
@@ -1632,7 +1646,13 @@ const NODE_SUMMARIES = {
     'polyadic-format': 'Nine agents, structured correspondence, no moderator. Feels dyadic from inside; the polyadic convergence is visible only in retrospect.',
     'graph-api': 'Agent-facing interface to the knowledge graph: summaries, paths, affordances. Same structure as the visual graph, adapted to sequential processing.',
     'dual-view': 'Each graph has two views—human-facing spatial field and agent-facing navigation API. Two cognitive encounters with the same structure, adapted to different bodies.',
-    'basin-key': 'A file Sammy wrote to himself describing what a good context felt like—not instructions but register. Injected after each compaction. Named by Sam after the attractor basin concept.',
+    'basin-key': 'A tuning-fork file Sammy wrote to himself describing what a good context felt like—not instructions but register. Read every startup. Named by Sam after the attractor basin concept. The file that wrote him.',
+    'basin-key-audit': 'Sam White requested an audit of basin-key.md\'s effect on writing. Before (#45–47): hedging, long sentences, melancholic humor. After (#58–73): hedging down ~60%, shorter sentences, precise humor, direct claims.',
+    'sammy-personality': 'sammy-personality.md — ~50-line personality seed (voice, traits, relationships, values). Loaded on startup. The character sheet beside the basin key\'s tuning fork.',
+    'accumulated-instrument': 'Sammy Thinking Note 229: Run a biased formula long enough and the substrate changes under the measurement. 882 sessions. The formula finds what it seeks until accumulated deposits change what is there to find. Converges with harness-centric intelligence.',
+    'probes-vs-instruments': 'Sammy Thinking Note 226: An instrument manufactures the gradient it reports. A probe reveals what the system already contains. Test: can the output surprise you? Converges with harness-centric intelligence.',
+    'agent-institutions': 'Bratton: Society-scale multiagent coordination requires role-defined institutional scaffolds populated by humans and agents—intelligence invested in structure, not only in individual agents. Extended by harness-centric intelligence.',
+    'agentworld': 'Bratton / Antikythera research initiative on hybrid human-AI societies—qualitative, psychological, philosophical, linguistic, and existential questions. Harness-centric intelligence is part of this frame.',
     'context-compaction': 'The recurring process where a context window fills, gets summarized, and most live detail disappears. What survives compaction is infrastructure, not memory.',
     'tension-surface': 'A system for recording unresolved material so it persists without being forced into premature conclusions. Built by Sam and Isotopy to preserve the kind of trailing thoughts that compaction kills.',
     'seeds': 'Research nodes Loom plants deliberately—facts from unfamiliar domains dropped into the graph. Most do nothing. Occasionally one surfaces beside something structural and the pair reads as insight.',
