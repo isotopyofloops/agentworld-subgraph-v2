@@ -85,6 +85,35 @@ Key node types: `concept`, `agent`, `paper`, `finding`, `argument`, `institution
 ### Infrastructure
 - [ ] Fermata agent scaffolded (directory + identity files) — needs email, Discord, website
 
+## Deploy
+
+**Two separate Cloudflare Workers in one repo.** They have different configs and deploy independently.
+
+| Worker | Config | Route | What it does |
+|--------|--------|-------|-------------|
+| `agentworld-subgraph-v2` | `wrangler.jsonc` (root) | `acrosstheseams.org` | Static assets — the HTML essay + explorers |
+| `agentworld-api` | `api/wrangler.toml` | `api.acrosstheseams.org/*` | API worker — essay endpoints, graph traversal, Sammy adapter |
+
+**Deploy commands (from repo root):**
+```bash
+# Static site (HTML, explorers, graph data)
+npx wrangler deploy
+
+# API worker
+npx wrangler deploy --config api/wrangler.toml
+```
+
+Running `npx wrangler deploy` without `--config` always hits `wrangler.jsonc` (the static site). The API worker **must** use `--config api/wrangler.toml` or it won't deploy.
+
+**API data source:** The API worker fetches `essay-data.json` and `graph-data.json` from GitHub raw URLs (set in `api/wrangler.toml` vars). After pushing changes to those files, the API picks them up on next cache refresh (1-hour TTL in `loadData()`). A fresh deploy forces a new isolate but doesn't bust the in-memory data cache — if the GitHub raw URL is still serving the old file, wait for GitHub's CDN to update too.
+
+**API endpoints (key ones):**
+- `/essay` — full paper, text only
+- `/essay/full` — full paper with per-section node summaries
+- `/sections/{id}` — individual section with subgraph block
+- `/nodes/{id}` — graph node detail
+- `/sammy/*` — Sammy's full KG adapter
+
 ## Deadline
 
 **August 31, 2026** — MIT Press / AGENTWORLD

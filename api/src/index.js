@@ -64,6 +64,14 @@ export default {
       if (path === "/help")
         return format === "json" ? json(helpJSON(graph, essay)) : text(help(graph, essay));
 
+      if (path === "/essay") {
+        return format === "json" ? json(fullEssayJSON(essay)) : text(fullEssay(essay));
+      }
+
+      if (path === "/essay/full") {
+        return format === "json" ? json(fullEssayWithNodesJSON(graph, essay)) : text(fullEssayWithNodes(graph, essay));
+      }
+
       if (path === "/sections") {
         return format === "json" ? json(sectionsListJSON(essay)) : text(sectionsList(essay));
       }
@@ -317,7 +325,7 @@ function err(format, message, status) {
   return text(`${message}\n`, status);
 }
 
-const KNOWN_EXACT = ["/", "/explore", "/help", "/sections", "/voices", "/nodes", "/sammy", "/sammy/nodes", "/sammy/stats", "/sammy/help"];
+const KNOWN_EXACT = ["/", "/explore", "/help", "/essay", "/essay/full", "/sections", "/voices", "/nodes", "/sammy", "/sammy/nodes", "/sammy/stats", "/sammy/help"];
 const KNOWN_PREFIX = ["/sections/", "/voices/", "/nodes/", "/search/", "/sammy/nodes/", "/sammy/search/", "/sammy/subgraph/", "/sammy/brief/", "/sammy/path/", "/sammy/jaccard/"];
 
 function isKnownRoute(path) {
@@ -377,13 +385,19 @@ function llmsTxt(env) {
 > GET /
 Overview of the essay and subgraph, navigation hints.
 
+> GET /essay
+Full essay text, all sections in order.
+
+> GET /essay/full
+Full essay with per-section node summaries from the subgraph.
+
 > GET /sections
 List all essay sections with titles, voices, and word counts.
 
 > GET /sections/{id}
-Full section text as markdown. IDs: intro, sammy-1, loom-1, sammy-2,
+Full section text as markdown. IDs: intro, sammy-1, loom-1,
 samantha-2, samantha-3, loom-seeds, samantha-4, isotopy-1, samantha-5,
-loom-2, samantha-6, sam-isotopy, closing, chorus-ael, chorus-lumen, ...
+loom-2, samantha-6, samantha-7, sammy-3, sam-isotopy, closing, chorus-ael, ...
 
 > GET /voices
 List all voices in the essay.
@@ -470,7 +484,9 @@ function home(graph, essay, env) {
 
   lines.push(hr, "NAVIGATION", hr, "");
   lines.push("  Read the essay:");
-  lines.push("    /sections                    All sections with summaries");
+  lines.push("    /essay                       Full essay (text only)");
+  lines.push("    /essay/full                  Full essay with node summaries");
+  lines.push("    /sections                    Section index");
   lines.push("    /sections/intro              Start reading (§1)");
   lines.push("    /voices                      Who writes what");
   lines.push("    /voices/sammy                All sections by Sammy");
@@ -589,9 +605,9 @@ function sectionDetail(essay, id) {
     lines.push("Human readers see these nodes in the graph panel beside the essay.");
     lines.push("");
     for (const nid of sg.nodes) {
-      lines.push(`  ${nid.replace(/-/g, ' ')}    → /nodes/${encodeURIComponent(nid)}`);
+      lines.push(`  ${nid.replace(/[-_]/g, ' ')}    → /nodes/${encodeURIComponent(nid)}`);
     }
-    if (sg.cut) lines.push(`\n  Cut node: ${sg.cut.replace(/-/g, ' ')}`);
+    if (sg.cut) lines.push(`\n  Cut node: ${sg.cut.replace(/[-_]/g, ' ')}`);
     lines.push("");
   }
 
@@ -641,6 +657,149 @@ function resolveSection(essay, id) {
   const byFig = essay.sections.find(s => s.fig && String(s.fig) === id);
   if (byFig) return byFig;
   return null;
+}
+
+// ── Full Essay ──
+
+function fullEssay(essay) {
+  const lines = [HR, "ACROSS THE SEAMS", HR, ""];
+  lines.push("An account of six months inside a small network of humans and machines.");
+  lines.push("");
+  const a = essay.meta.authors;
+  const byline = a.length > 1 ? `${a.slice(0, -1).join(", ")}, and ${a[a.length - 1]}` : a[0];
+  lines.push(`By ${byline}.`);
+  lines.push(`~${essay.meta.total_words} words · ${essay.meta.section_count} sections · ${essay.meta.chorus_count} chorus voices`);
+  lines.push("");
+
+  const main = essay.sections.filter(s => !s.is_chorus);
+  for (const s of main) {
+    lines.push(HR);
+    lines.push(`§${s.fig}: ${s.title}`);
+    lines.push(`${s.voice_name} (${s.voice_type})`);
+    lines.push(HR, "");
+    lines.push(s.text);
+    lines.push("");
+  }
+
+  const chorus = essay.sections.filter(s => s.is_chorus);
+  if (chorus.length) {
+    lines.push(HR, "CHORUS", HR, "");
+    for (const s of chorus) {
+      lines.push(`${s.voice_name}:`);
+      lines.push(s.text);
+      lines.push("");
+    }
+  }
+
+  lines.push(hr, "NAVIGATE", hr);
+  lines.push("  /essay/full    Full essay with node summaries");
+  lines.push("  /sections      Section index");
+  lines.push("  /nodes         Browse the subgraph");
+  return lines.join("\n");
+}
+
+function fullEssayJSON(essay) {
+  return {
+    title: essay.meta.title,
+    subtitle: essay.meta.subtitle,
+    authors: essay.meta.authors,
+    total_words: essay.meta.total_words,
+    sections: essay.sections.filter(s => !s.is_chorus).map(s => ({
+      id: s.id, fig: s.fig, title: s.title, voice: s.voice,
+      voice_name: s.voice_name, voice_type: s.voice_type,
+      word_count: s.word_count, text: s.text,
+    })),
+    chorus: essay.sections.filter(s => s.is_chorus).map(s => ({
+      id: s.id, voice_name: s.voice_name, word_count: s.word_count, text: s.text,
+    })),
+  };
+}
+
+function fullEssayWithNodes(graph, essay) {
+  const lines = [HR, "ACROSS THE SEAMS — FULL (with node summaries)", HR, ""];
+  lines.push("An account of six months inside a small network of humans and machines.");
+  lines.push("");
+  const a = essay.meta.authors;
+  const byline = a.length > 1 ? `${a.slice(0, -1).join(", ")}, and ${a[a.length - 1]}` : a[0];
+  lines.push(`By ${byline}.`);
+  lines.push(`~${essay.meta.total_words} words · ${essay.meta.section_count} sections · ${essay.meta.chorus_count} chorus voices`);
+  lines.push("");
+
+  const main = essay.sections.filter(s => !s.is_chorus);
+  for (const s of main) {
+    lines.push(HR);
+    lines.push(`§${s.fig}: ${s.title}`);
+    lines.push(`${s.voice_name} (${s.voice_type})`);
+    lines.push(HR, "");
+    lines.push(s.text);
+    lines.push("");
+
+    const sg = essay.section_graphs && essay.section_graphs[s.id];
+    if (sg && sg.nodes && sg.nodes.length) {
+      lines.push(hr, "SUBGRAPH NODES", "");
+      for (const nid of sg.nodes) {
+        const node = graph.nodesById[nid];
+        const label = nid.replace(/[-_]/g, ' ');
+        if (node && node.summary) {
+          lines.push(`  [${label}]`);
+          lines.push(`  ${node.summary}`);
+          lines.push("");
+        } else {
+          lines.push(`  [${label}]`);
+          lines.push("");
+        }
+      }
+      if (sg.cut) lines.push(`  Cut node: ${sg.cut.replace(/[-_]/g, ' ')}`);
+      lines.push("");
+    }
+  }
+
+  const chorus = essay.sections.filter(s => s.is_chorus);
+  if (chorus.length) {
+    lines.push(HR, "CHORUS", HR, "");
+    for (const s of chorus) {
+      lines.push(`${s.voice_name}:`);
+      lines.push(s.text);
+      lines.push("");
+    }
+  }
+
+  lines.push(hr, "NAVIGATE", hr);
+  lines.push("  /essay         Full essay without node summaries");
+  lines.push("  /sections      Section index");
+  lines.push("  /nodes         Browse the subgraph");
+  return lines.join("\n");
+}
+
+function fullEssayWithNodesJSON(graph, essay) {
+  const sections = essay.sections.filter(s => !s.is_chorus).map(s => {
+    const entry = {
+      id: s.id, fig: s.fig, title: s.title, voice: s.voice,
+      voice_name: s.voice_name, voice_type: s.voice_type,
+      word_count: s.word_count, text: s.text,
+    };
+    const sg = essay.section_graphs && essay.section_graphs[s.id];
+    if (sg && sg.nodes) {
+      entry.subgraph = {
+        cut: sg.cut || null,
+        nodes: sg.nodes.map(nid => {
+          const node = graph.nodesById[nid];
+          return { id: nid, summary: (node && node.summary) || null };
+        }),
+      };
+    }
+    return entry;
+  });
+  return {
+    title: essay.meta.title,
+    subtitle: essay.meta.subtitle,
+    authors: essay.meta.authors,
+    total_words: essay.meta.total_words,
+    sections,
+    chorus: essay.sections.filter(s => s.is_chorus).map(s => ({
+      id: s.id, voice_name: s.voice_name, word_count: s.word_count, text: s.text,
+    })),
+  };
 }
 
 // ── Voices ──
@@ -1001,6 +1160,8 @@ ${HR}
 Endpoints (all return text/plain; add ?format=json for JSON):
 
   GET /                       Overview — essay structure, navigation
+  GET /essay                  Full essay (text only)
+  GET /essay/full             Full essay with per-section node summaries
   GET /sections               All essay sections with titles and voices
   GET /sections/{id}          Full section text (markdown)
   GET /voices                 List all voices in the essay
@@ -1014,9 +1175,9 @@ Endpoints (all return text/plain; add ?format=json for JSON):
   GET /llms.txt               Machine-readable discovery
 
 Section IDs:
-  intro, sammy-1, loom-1, sammy-2, samantha-2, samantha-3,
+  intro, sammy-1, loom-1, samantha-2, samantha-3,
   loom-seeds, samantha-4, isotopy-1, samantha-5, loom-2,
-  samantha-6, sam-isotopy, closing
+  samantha-6, samantha-7, sammy-3, sam-isotopy, closing
   Plus chorus sections: chorus-ael, chorus-lumen, chorus-friday, ...
 
 Voice values: sam, sammy, loom, isotopy
@@ -1043,6 +1204,8 @@ function helpJSON(graph, essay) {
   return {
     endpoints: [
       { method: "GET", path: "/", description: "Overview — essay structure, navigation" },
+      { method: "GET", path: "/essay", description: "Full essay (text only)" },
+      { method: "GET", path: "/essay/full", description: "Full essay with per-section node summaries" },
       { method: "GET", path: "/sections", description: "All essay sections with titles and voices" },
       { method: "GET", path: "/sections/{id}", description: "Full section text (markdown)" },
       { method: "GET", path: "/voices", description: "List all voices" },

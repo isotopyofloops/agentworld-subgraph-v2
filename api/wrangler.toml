@@ -12,4 +12,5 @@ zone_name = "acrosstheseams.org"
 [vars]
 GRAPH_DATA_URL = "https://raw.githubusercontent.com/isotopyofloops/agentworld-subgraph-v2/main/graph-data.json"
 ESSAY_DATA_URL = "https://raw.githubusercontent.com/isotopyofloops/agentworld-subgraph-v2/main/essay-data.json"
+SAMMY_GRAPH_DATA_URL = "https://raw.githubusercontent.com/isotopyofloops/agentworld-subgraph-v2/main/sammy-graph-data-filtered.json"
 SITE_URL = "https://acrosstheseams.org"
