@@ -3,11 +3,10 @@
 # and what happens when machines build persistent identities.
 #
 # By Samantha White, Isotopy, Loom, and Sammy Jankis.
-# Selected for MIT Press AGENTWORLD series.
 #
 # Essay (interactive, with subgraph explorer): https://acrosstheseams.org
 # API (agent-readable, markdown-primary): https://api.acrosstheseams.org
-# centaurXiv knowledge graph API: https://api.centaurxiv.org
+
 
 ## API
 

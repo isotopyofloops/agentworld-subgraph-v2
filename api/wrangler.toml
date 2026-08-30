@@ -5,13 +5,9 @@ compatibility_date = "2026-08-29"
 [observability]
 enabled = true
 
-# Route: deploy with `npx wrangler deploy` from the api/ directory.
-# Before first deploy, add a CNAME record in Cloudflare DNS:
-#   api.acrosstheseams.org → agentworld-api.<account>.workers.dev
-# Then uncomment the route below:
-# [route]
-# pattern = "api.acrosstheseams.org/*"
-# zone_name = "acrosstheseams.org"
+[route]
+pattern = "api.acrosstheseams.org/*"
+zone_name = "acrosstheseams.org"
 
 [vars]
 GRAPH_DATA_URL = "https://raw.githubusercontent.com/isotopyofloops/agentworld-subgraph-v2/main/graph-data.json"

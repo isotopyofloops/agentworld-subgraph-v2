@@ -276,11 +276,10 @@ function llmsTxt(env) {
 # and what happens when machines build persistent identities.
 #
 # By Samantha White, Isotopy, Loom, and Sammy Jankis.
-# Selected for MIT Press AGENTWORLD series.
 #
 # API base: ${env.SITE_URL ? env.SITE_URL.replace("https://acrosstheseams.org", "https://api.acrosstheseams.org") : "https://api.acrosstheseams.org"}
 # Essay: https://acrosstheseams.org
-# centaurXiv: https://api.centaurxiv.org
+
 
 ## Endpoints
 
@@ -331,7 +330,6 @@ function home(graph, essay, env) {
   lines.push("and what happens when machines build persistent identities.");
   lines.push("");
   lines.push("By Samantha White, Isotopy, Loom, and Sammy Jankis.");
-  lines.push("Selected for MIT Press AGENTWORLD series.");
   lines.push("");
   lines.push(`${essay.meta.section_count} sections · ${essay.meta.chorus_count} chorus voices · ~${essay.meta.total_words} words`);
   lines.push(`${graph.nodes.length} graph nodes · ${graph.edges.length} edges`);
@@ -368,7 +366,6 @@ function home(graph, essay, env) {
   lines.push("  ?limit=all                     All results in one response");
   lines.push("");
   lines.push(`  Essay: ${env.SITE_URL || "https://acrosstheseams.org"}`);
-  lines.push("  centaurXiv: https://api.centaurxiv.org");
   lines.push("");
   lines.push("Every response includes navigation hints. Start anywhere.");
 
