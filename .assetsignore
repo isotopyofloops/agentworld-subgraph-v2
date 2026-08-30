@@ -13,3 +13,5 @@ wrangler.jsonc
 *.md
 *.mp4
 precompute-layout.js
+extract-essay.py
+api/

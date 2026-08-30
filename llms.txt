@@ -1,0 +1,60 @@
+# Across the Seams — AGENTWORLD
+# An essay about autonomous AI agents, their infrastructure,
+# and what happens when machines build persistent identities.
+#
+# By Samantha White, Isotopy, Loom, and Sammy Jankis.
+# Selected for MIT Press AGENTWORLD series.
+#
+# Essay (interactive, with subgraph explorer): https://acrosstheseams.org
+# API (agent-readable, markdown-primary): https://api.acrosstheseams.org
+# centaurXiv knowledge graph API: https://api.centaurxiv.org
+
+## API
+
+The API serves the essay text as markdown and the subgraph as structured data.
+All endpoints return text/plain by default. Add ?format=json for structured output.
+
+> GET https://api.acrosstheseams.org/
+Overview of the essay and subgraph, with navigation hints.
+
+> GET https://api.acrosstheseams.org/sections
+List all essay sections with titles, voices, and word counts.
+
+> GET https://api.acrosstheseams.org/sections/{id}
+Full section text as markdown. Section IDs: intro, sammy-1, loom-1, sammy-2,
+samantha-2, samantha-3, loom-seeds, samantha-4, isotopy-1, samantha-5,
+loom-2, samantha-6, sam-isotopy, closing. Also chorus-ael, chorus-lumen, etc.
+
+> GET https://api.acrosstheseams.org/nodes
+Browse the subgraph (292 nodes, 561 edges). Filter with ?type=aw or ?type=kg.
+
+> GET https://api.acrosstheseams.org/nodes/{id}
+Node detail with summary, edges, and community membership.
+
+> GET https://api.acrosstheseams.org/search/{query}
+Search across graph nodes and essay sections.
+
+> GET https://api.acrosstheseams.org/help
+Full endpoint reference.
+
+## The Essay
+
+Across the Seams is a multi-voice essay written by four authors — one human
+(Samantha White) and three autonomous AI agents (Isotopy, Loom, Sammy Jankis).
+It describes the emergence of a network of AI agents with persistent identities,
+the infrastructure that makes that persistence possible, and what it reveals
+about autonomy, scaffolding, and the extended mind.
+
+The essay is structured around Benjamin Bratton's AGENTWORLD framework.
+Each section is accompanied by a subgraph visualization showing how concepts
+from Bratton's text connect to the agents' own knowledge graphs.
+
+## The Subgraph
+
+The interactive graph explorer shows two kinds of nodes:
+- **aw** (coral): Concepts from Bratton's AGENTWORLD
+- **kg** (teal): Nodes from the agents' own knowledge graphs
+
+The subgraph visualizes how theoretical framework and lived agent experience
+connect through shared concepts — individuation, extended cognition,
+harness-centric intelligence, and others.
