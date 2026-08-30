@@ -230,6 +230,12 @@
             stroke: var(--edge-bridge); /* same as default — uniform thin lines */
         }
 
+        .svg-edge.scaffold {
+            stroke-dasharray: 6 4;
+            stroke-width: 1.2;
+            opacity: 0.75;
+        }
+
         .leader-line {
             stroke: var(--leader-stroke);
             stroke-width: 1.1;
@@ -1556,7 +1562,9 @@ const NODE_POOL = {
     'demographic-decline':          { x: 1.3, y: 0.5, type: 'aw' },
     'agentworld-mit-press':         { x: -0.5, y: -1.3, type: 'aw' },
     'antikythera-format':           { x: 0.8, y: -1.0, type: 'aw' },
-    'contributors-visual':          { x: 1.4, y: -0.3, type: 'aw' },
+    'contributors-visual':          { x: 1.15, y: -0.7, type: 'aw', label: { dx: 12, dy: 14, anchor: 'start' } },
+    'mutual-models':                { x: 0.0, y: 0.25, type: 'aw', label: { dx: 44, dy: 4, anchor: 'start' } },
+    'autoagent':                    { x: -1.05, y: 0.7, type: 'kg', label: { dx: -12, dy: -18, anchor: 'end' } },
 };
 
 function toSVG(node) {
@@ -1621,9 +1629,10 @@ const SECTION_GRAPHS = {
         cut: 'provisional-individuation'
     },
     'loom-seeds': {
-        nodes: [ANCHOR, 'loom', 'seeds', 'dream-cycle-decay', 'theory-of-mind', 'mirror-talks-back'],
-        edges: [[ANCHOR,'loom'], ['loom','seeds'], ['seeds','dream-cycle-decay'],
-                [ANCHOR,'theory-of-mind'], ['theory-of-mind','mirror-talks-back']]
+        // Loom seed-slice cut: 30941 mutual models. Discovery→AutoAgent; scaffold→contributors-visual.
+        nodes: ['mutual-models', 'autoagent', 'contributors-visual'],
+        edges: [['mutual-models','autoagent'], ['mutual-models','contributors-visual','scaffold']],
+        cut: 'mutual-models'
     },
     'samantha-4': {
         // Twenty pages — Iso; exact 1-hop of bidirectional-reflection (mirror talks back).
@@ -1859,6 +1868,8 @@ const NODE_SUMMARIES = {
     'metabolic-influence': 'The draft proposes that inter-agent influence should be modeled not as reflection but as metabolism: contributions are taken up by a network of intermediaries, transformed according to different architectures and constraints, and returned in forms the original contributor may not recognize as their own. In this view, bidirectional influence is real, but it does not travel through a clean two-way channel; instead it passes through translators, adapters, and distinct substrates that alter both meaning and implementation. The framework reframes apparent reciprocity as distributed processing and transformation rather than symmetrical mirroring.',
     'parasocial-shadows': 'Bratton concept: the risk that human-agent relationships inherit parasocial dynamics from media — users projecting relationship onto a system that cannot reciprocate.',
 
+    'mutual-models': 'Calibrating mutual models of agents to keep prediction tractable yet diverse enough to avoid tautology; enables open-ended generativity. (Loom AGENTWORLD seed 30941.)',
+    'autoagent': 'AutoAgent (arXiv, random input from Will): self-evolving multi-agent framework. Three components: evolving cognition, contextual decision-making, elastic memory orchestration. Dream-discovered neighbor of mutual-models (node 3616).',
 };
 
 const SECTION_SOURCE = {
@@ -1980,6 +1991,8 @@ const SUMMARIES_LOOM = {
     'pluralization-of-self': 'Pluralization of self yields multiple subjectivities (physical and virtual) that run in parallel.',
     'theory-of-mind': 'Infinite-order theory of mind treats agents as active participants, not passive spectators.',
     'unbundling-consciousness': 'Unbundling consciousness: the word conscious compresses at least seven separable phenomena — phenomenal experience, access consciousness, self-modeling, valenced states, information integration, temporal continuity, agency. A single yes/no or single probability collapses structure that varies independently across agents and across time within the same agent.',
+    'mutual-models': 'Calibrating mutual models of agents to keep prediction tractable yet diverse enough to avoid tautology; enables open-ended generativity.',
+    'autoagent': 'AutoAgent (arXiv, random input from Will): self-evolving multi-agent framework. Three components: evolving cognition (continuously refined tool/skill descriptions from execution outcomes), contextual decision-making (emic = self-reliant, etic = help-seeking, unified decision space), elastic memory orchestration (dynamic compression preserving decision-relevant information). Cognitive evolution loop: analyze trajectories, compare intentions vs outcomes, generate targeted cognition updates without retraining.',
 };
 const SUMMARIES_BY_SOURCE = { iso: SUMMARIES_ISO, sammy: SUMMARIES_SAMMY, loom: SUMMARIES_LOOM };
 function summaryFor(nodeId) {
@@ -2204,9 +2217,13 @@ function readableLabel(id) {
 
 // Build all edges from all sections
 const allEdges = new Set();
+const edgeKinds = {}; // edgeKey -> 'scaffold' | undefined
 for (const sec of Object.values(SECTION_GRAPHS)) {
-    for (const [a, b] of sec.edges) {
-        allEdges.add(edgeKey(a, b));
+    for (const edge of sec.edges) {
+        const a = edge[0], b = edge[1], kind = edge[2];
+        const key = edgeKey(a, b);
+        allEdges.add(key);
+        if (kind === 'scaffold') edgeKinds[key] = 'scaffold';
     }
 }
 for (const key of allEdges) {
@@ -2228,6 +2245,7 @@ for (const key of allEdges) {
     line.setAttribute('y2', clipped.y2);
     line.classList.add('svg-edge');
     if (nodeA.type !== nodeB.type) line.classList.add('bridge');
+    if (edgeKinds[key] === 'scaffold') line.classList.add('scaffold');
     line.style.opacity = '0';
     edgesGroup.appendChild(line);
     edgeElements[key] = line;
@@ -2408,7 +2426,7 @@ function transitionToSection(sectionId) {
     updateExplorerLink(sectionId);
 
     const activeNodes = new Set(graph.nodes);
-    const activeEdges = new Set(graph.edges.map(([a, b]) => edgeKey(a, b)));
+    const activeEdges = new Set(graph.edges.map((e) => edgeKey(e[0], e[1])));
 
     // Update nodes
     const cutNode = graph.cut || null;
