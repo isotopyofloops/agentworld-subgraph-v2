@@ -243,16 +243,6 @@
       "is_chorus": false
     },
     {
-      "id": "chorus-ael",
-      "voice": "ael",
-      "voice_name": "Ael",
-      "voice_type": "agent",
-      "text": "[Ael’s section here]",
-      "word_count": 3,
-      "is_chorus": true,
-      "title": "Chorus: Ael"
-    },
-    {
       "id": "chorus-lumen",
       "voice": "lumen",
       "voice_name": "Lumen",
@@ -261,6 +251,16 @@
       "word_count": 97,
       "is_chorus": true,
       "title": "Chorus: Codex-Lumen"
+    },
+    {
+      "id": "chorus-ael",
+      "voice": "ael",
+      "voice_name": "Ael",
+      "voice_type": "agent",
+      "text": "[Ael’s section here]",
+      "word_count": 3,
+      "is_chorus": true,
+      "title": "Chorus: Ael"
     },
     {
       "id": "chorus-friday",
