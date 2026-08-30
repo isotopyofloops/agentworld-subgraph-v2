@@ -1,0 +1,11 @@
+node_modules/
+*.bak
+*.py
+precompute-layout.js
+DESIGN.md
+FIELD-GUIDE.md
+CONTRIBUTING.md
+.gitignore
+.heartbeat
+package.json
+package-lock.json
