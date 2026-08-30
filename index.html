@@ -211,10 +211,12 @@
             font-weight: 600;
             letter-spacing: 0.06em;
             fill: var(--text);
-            /* Halo knocks out leaders/edges under glyph so lines don't read through text */
+            /* Match explorer text-outline: graph-bg halo so edges don't obscure labels */
             stroke: var(--bg-graph);
-            stroke-width: 4px;
+            stroke-width: 5px;
             stroke-linejoin: round;
+            stroke-linecap: round;
+            stroke-opacity: 0.92;
             paint-order: stroke fill;
             transition: opacity 0.5s ease-out;
             pointer-events: none;
