@@ -268,6 +268,7 @@ async function loadData(env) {
       meta: essayRaw.meta,
       sections: essayRaw.sections,
       sectionsById,
+      section_graphs: essayRaw.section_graphs || {},
     };
 
     cacheTime = Date.now();
@@ -466,11 +467,6 @@ function home(graph, essay, env) {
     lines.push(`       ${s.voice_name} · ${s.word_count} words · → /sections/${s.id}`);
   }
   lines.push("");
-  const chorusSections = essay.sections.filter(s => s.is_chorus);
-  if (chorusSections.length) {
-    lines.push(`  Chorus (${chorusSections.length} voices): ${chorusSections.map(s => s.voice_name).join(", ")}`);
-    lines.push("");
-  }
 
   lines.push(hr, "NAVIGATION", hr, "");
   lines.push("  Read the essay:");
@@ -586,6 +582,19 @@ function sectionDetail(essay, id) {
   lines.push(s.text);
   lines.push("");
 
+  const sg = essay.section_graphs && essay.section_graphs[s.id];
+  if (sg && sg.nodes && sg.nodes.length) {
+    lines.push(hr);
+    lines.push("SUBGRAPH");
+    lines.push("Human readers see these nodes in the graph panel beside the essay.");
+    lines.push("");
+    for (const nid of sg.nodes) {
+      lines.push(`  ${nid.replace(/-/g, ' ')}    → /nodes/${encodeURIComponent(nid)}`);
+    }
+    if (sg.cut) lines.push(`\n  Cut node: ${sg.cut.replace(/-/g, ' ')}`);
+    lines.push("");
+  }
+
   lines.push(hr, "NAVIGATE", hr);
   if (idx > 0) {
     const prev = main[idx - 1];
@@ -615,6 +624,8 @@ function sectionDetailJSON(essay, id) {
     word_count: s.word_count, is_chorus: s.is_chorus || false,
     text: s.text,
   };
+  const sg = essay.section_graphs && essay.section_graphs[s.id];
+  if (sg) result.subgraph = { nodes: sg.nodes, cut: sg.cut || null };
   if (idx > 0) result.prev = { id: main[idx - 1].id, title: main[idx - 1].title };
   if (idx >= 0 && idx < main.length - 1) result.next = { id: main[idx + 1].id, title: main[idx + 1].title };
   return result;
