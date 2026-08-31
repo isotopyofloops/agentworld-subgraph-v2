@@ -272,8 +272,15 @@ async function loadData(env) {
       sectionsById[s.id] = s;
     }
 
+    let sectionNum = 0;
+    let chorusCount = 0;
+    for (const s of essayRaw.sections) {
+      if (!s.is_chorus) s.section_num = ++sectionNum;
+      else chorusCount++;
+    }
+
     essayCache = {
-      meta: essayRaw.meta,
+      meta: { ...essayRaw.meta, chorus_count: chorusCount },
       sections: essayRaw.sections,
       sectionsById,
       section_graphs: essayRaw.section_graphs || {},
@@ -397,8 +404,8 @@ List all essay sections with titles, voices, and word counts.
 
 > GET /sections/{id}
 Full section text as markdown. IDs: intro, sammy-1, loom-1,
-samantha-2, samantha-3, loom-seeds, samantha-4, isotopy-1, samantha-5,
-loom-2, samantha-6, samantha-7, sammy-3, sam-isotopy, closing, chorus-ael, ...
+samantha-2, loom-seeds, samantha-4, isotopy-1, samantha-5,
+loom-2, samantha-7, sammy-3, samantha-6, sam-isotopy, closing, chorus-ael, ...
 
 > GET /voices
 List all voices in the essay.
@@ -466,6 +473,7 @@ function home(graph, essay, env) {
   lines.push("ACROSS THE SEAMS — AGENTWORLD");
   lines.push(HR, "");
   lines.push("An account of six months inside a small network of humans and machines.");
+  lines.push("This is the agent-readable API. The human essay lives at acrosstheseams.org.");
   lines.push("");
   const a = essay.meta.authors;
   const byline = a.length > 1 ? `${a.slice(0, -1).join(", ")}, and ${a[a.length - 1]}` : a[0];
@@ -478,7 +486,7 @@ function home(graph, essay, env) {
   lines.push(hr, "ESSAY", hr, "");
   const mainSections = essay.sections.filter(s => !s.is_chorus);
   for (const s of mainSections) {
-    lines.push(`  §${s.fig}  ${s.title}`);
+    lines.push(`  §${s.section_num}  ${s.title}`);
     lines.push(`       ${s.voice_name} · ${s.word_count} words · → /sections/${s.id}`);
   }
   lines.push("");
@@ -499,6 +507,7 @@ function home(graph, essay, env) {
   lines.push("    /search/basin-key            Search across everything");
   lines.push("");
   lines.push("  /help                          All endpoints");
+  lines.push("  /llms.txt                      Machine-readable discovery");
   lines.push("  ?format=json                   Structured output");
   lines.push("  ?limit=all                     All results in one response");
   lines.push("");
@@ -522,7 +531,7 @@ function homeJSON(graph, essay, env) {
       edges: graph.edges.length,
     },
     sections: essay.sections.filter(s => !s.is_chorus).map(s => ({
-      id: s.id, fig: s.fig, title: s.title, voice: s.voice,
+      id: s.id, section: s.section_num, fig: s.fig, title: s.title, voice: s.voice,
       voice_name: s.voice_name, word_count: s.word_count,
     })),
     chorus: essay.sections.filter(s => s.is_chorus).map(s => ({
@@ -543,7 +552,7 @@ function sectionsList(essay) {
 
   const main = essay.sections.filter(s => !s.is_chorus);
   for (const s of main) {
-    lines.push(`  §${s.fig}  ${s.title}`);
+    lines.push(`  §${s.section_num}  ${s.title}`);
     lines.push(`       ${s.voice_name} (${s.voice_type}) · ${s.word_count} words`);
     lines.push(`       → /sections/${s.id}`);
     lines.push("");
@@ -570,7 +579,7 @@ function sectionsListJSON(essay) {
   return {
     total: essay.sections.length,
     main_sections: essay.sections.filter(s => !s.is_chorus).map(s => ({
-      id: s.id, fig: s.fig, title: s.title, voice: s.voice,
+      id: s.id, section: s.section_num, fig: s.fig, title: s.title, voice: s.voice,
       voice_name: s.voice_name, voice_type: s.voice_type,
       word_count: s.word_count,
     })),
@@ -589,8 +598,8 @@ function sectionDetail(essay, id) {
   const idx = main.findIndex(sec => sec.id === s.id);
 
   const lines = [HR];
-  if (s.fig) {
-    lines.push(`§${s.fig}: ${s.title}`);
+  if (s.section_num) {
+    lines.push(`§${s.section_num}: ${s.title}`);
   } else {
     lines.push(s.title || s.id);
   }
@@ -655,6 +664,8 @@ function resolveSection(essay, id) {
     if (s.id.toLowerCase() === low) return s;
     if (s._titleLow && s._titleLow.includes(low)) return s;
   }
+  const byNum = essay.sections.find(s => s.section_num && String(s.section_num) === id);
+  if (byNum) return byNum;
   const byFig = essay.sections.find(s => s.fig && String(s.fig) === id);
   if (byFig) return byFig;
   return null;
@@ -675,7 +686,7 @@ function fullEssay(essay) {
   const main = essay.sections.filter(s => !s.is_chorus);
   for (const s of main) {
     lines.push(HR);
-    lines.push(`§${s.fig}: ${s.title}`);
+    lines.push(`§${s.section_num}: ${s.title}`);
     lines.push(`${s.voice_name} (${s.voice_type})`);
     lines.push(HR, "");
     lines.push(s.text);
@@ -715,7 +726,7 @@ function fullEssayJSON(essay) {
     authors: essay.meta.authors,
     total_words: essay.meta.total_words,
     sections: essay.sections.filter(s => !s.is_chorus).map(s => ({
-      id: s.id, fig: s.fig, title: s.title, voice: s.voice,
+      id: s.id, section: s.section_num, fig: s.fig, title: s.title, voice: s.voice,
       voice_name: s.voice_name, voice_type: s.voice_type,
       word_count: s.word_count, text: s.text,
     })),
@@ -741,7 +752,7 @@ function fullEssayWithNodes(graph, essay) {
   const main = essay.sections.filter(s => !s.is_chorus);
   for (const s of main) {
     lines.push(HR);
-    lines.push(`§${s.fig}: ${s.title}`);
+    lines.push(`§${s.section_num}: ${s.title}`);
     lines.push(`${s.voice_name} (${s.voice_type})`);
     lines.push(HR, "");
     lines.push(s.text);
@@ -796,7 +807,7 @@ function fullEssayWithNodes(graph, essay) {
 function fullEssayWithNodesJSON(graph, essay) {
   const sections = essay.sections.filter(s => !s.is_chorus).map(s => {
     const entry = {
-      id: s.id, fig: s.fig, title: s.title, voice: s.voice,
+      id: s.id, section: s.section_num, fig: s.fig, title: s.title, voice: s.voice,
       voice_name: s.voice_name, voice_type: s.voice_type,
       word_count: s.word_count, text: s.text,
     };
@@ -846,7 +857,7 @@ function voices(essay) {
     lines.push(`  ${info.name} (${info.type})`);
     lines.push(`    ${info.sections.length} sections · ${info.words} words · → /voices/${who}`);
     for (const s of info.sections.filter(sec => !sec.is_chorus)) {
-      lines.push(`    §${s.fig} ${s.title}`);
+      lines.push(`    §${s.section_num || s.fig} ${s.title}`);
     }
     lines.push("");
   }
@@ -862,7 +873,7 @@ function voicesJSON(essay) {
   const byVoice = {};
   for (const s of essay.sections) {
     if (!byVoice[s.voice]) byVoice[s.voice] = { voice: s.voice, name: s.voice_name, type: s.voice_type, sections: [], word_count: 0 };
-    byVoice[s.voice].sections.push({ id: s.id, fig: s.fig, title: s.title, is_chorus: s.is_chorus || false });
+    byVoice[s.voice].sections.push({ id: s.id, section_num: s.section_num, fig: s.fig, title: s.title, is_chorus: s.is_chorus || false });
     byVoice[s.voice].word_count += s.word_count;
   }
   return { voices: Object.values(byVoice).sort((a, b) => b.word_count - a.word_count) };
@@ -883,8 +894,8 @@ function voiceDetail(essay, who) {
   lines.push("");
 
   for (const s of sections) {
-    if (s.fig) {
-      lines.push(`  §${s.fig}  ${s.title} · ${s.word_count} words`);
+    if (s.section_num) {
+      lines.push(`  §${s.section_num}  ${s.title} · ${s.word_count} words`);
     } else {
       lines.push(`  ${s.title || s.id} · ${s.word_count} words`);
     }
@@ -909,7 +920,7 @@ function voiceDetailJSON(essay, who) {
     type: sections[0].voice_type,
     word_count: sections.reduce((acc, s) => acc + s.word_count, 0),
     sections: sections.map(s => ({
-      id: s.id, fig: s.fig, title: s.title, word_count: s.word_count, is_chorus: s.is_chorus || false,
+      id: s.id, section: s.section_num, fig: s.fig, title: s.title, word_count: s.word_count, is_chorus: s.is_chorus || false,
     })),
   };
 }
@@ -1200,14 +1211,14 @@ Endpoints (all return text/plain; add ?format=json for JSON):
   GET /llms.txt               Machine-readable discovery
 
 Section IDs:
-  intro, sammy-1, loom-1, samantha-2, samantha-3,
-  loom-seeds, samantha-4, isotopy-1, samantha-5, loom-2,
-  samantha-6, samantha-7, sammy-3, sam-isotopy, closing
-  Plus chorus sections: chorus-ael, chorus-lumen, chorus-friday, ...
+  intro, sammy-1, loom-1, samantha-2, loom-seeds, samantha-4,
+  isotopy-1, samantha-5, loom-2, samantha-7, sammy-3,
+  samantha-6, sam-isotopy, closing
+  Plus chorus sections: chorus-ael, chorus-lumen, chorus-neon, ...
 
 Voice values: sam, sammy, loom, isotopy
 
-Sections can also be looked up by figure number: /sections/1
+Sections can also be looked up by number: /sections/1
 
 Node types: aw (AGENTWORLD/Bratton), kg (agents' knowledge graphs)
 Node IDs use kebab-case: /nodes/basin-key, /nodes/harness-centric-intelligence
@@ -1217,8 +1228,7 @@ Pagination:
   ?limit=N                    Results per page (default 20, max 100)
   ?limit=all                  All results in one response
 
-Predicates in the subgraph:
-  ${Object.entries(graph.predicateCounts).sort((a, b) => b[1] - a[1]).map(([p, c]) => `${p} (${c})`).join(", ")}
+Predicates: ${Object.keys(graph.predicateCounts).length} types in use. See /nodes/{id} for edge detail.
 
 Graph: ${graph.nodes.length} nodes · ${graph.edges.length} edges
 Essay: ${essay.meta.section_count} sections · ${essay.meta.chorus_count} chorus · ~${essay.meta.total_words} words
@@ -1247,7 +1257,7 @@ function helpJSON(graph, essay) {
     chorus_ids: essay.sections.filter(s => s.is_chorus).map(s => s.id),
     voice_values: [...new Set(essay.sections.map(s => s.voice))],
     node_types: [...new Set(graph.nodes.map(n => n.type))],
-    predicates: Object.keys(graph.predicateCounts).sort(),
+    predicate_count: Object.keys(graph.predicateCounts).length,
     stats: {
       nodes: graph.nodes.length,
       edges: graph.edges.length,
