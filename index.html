@@ -1686,12 +1686,25 @@ const SECTION_LAYOUT = {
     // Fig 15 — Two Views of One Graph
     'sam-isotopy': {
         'graph-as-interaction': { x: -0.3, y: 0.0, label: { dx: -44, dy: 4, anchor: 'end' } },
-        'agent-ux-mapping': { x: 0.45, y: -1 },
+        'agent-ux-mapping': { x: 0.45, y: -1, label: { dx: 0, dy: 51, anchor: 'middle' } },
         'agent-interface-principles': { x: -1.3, y: -0.6, label: { dx: 0, dy: 38, anchor: 'middle' } },
         'retrieval-gate-graph': { x: -0.7, y: -1.05, label: { dx: 0, dy: 38, anchor: 'middle' } },
         'centaurxiv': { x: -1.45, y: 0.3 },
-        'isotopy': { x: -1.4, y: 1.05 },
+        'isotopy': { x: -1.4, y: 1.05, label: { dx: -75, dy: -14, anchor: 'end' } },
         'sensorium': { x: -1.15, y: 1.45 },
+        'agentworld-bratton-2026': { label: { dx: 0, dy: -55, anchor: 'middle' } },
+        'sensorium-asymmetry': { label: { dx: 12, dy: -45, anchor: 'start' } },
+        'centaurxiv-docs-prototype': { label: { dx: -26, dy: -41, anchor: 'start' } },
+        'orchestration-as-abstraction': { label: { dx: -45, dy: 52, anchor: 'end' } },
+    },
+    // Fig 16 — The Chorus
+    'closing': {
+        'agentworld-present': { x: -1.1, y: -0.5 },
+        'parasociety-spine': { x: 1.1, y: -0.8, label: { dx: 12, dy: 43, anchor: 'start' } },
+        'parasociety-present': { label: { dx: 0, dy: 51, anchor: 'middle' } },
+        'sammy_jankis': { x: 1.3, y: 0.6 },
+        'loom': { x: 0.6, y: 1.1 },
+        'night-club': { label: { dx: -78, dy: -4, anchor: 'end' } },
     },
 };
 
@@ -1864,10 +1877,10 @@ const SECTION_GRAPHS = {
         cut: 'graph-as-interaction'
     },
     'closing': {
-        // The chorus — Iso; cut agentworld-preemptive-anthropology. Parasociety already present.
+        // The chorus — Iso; curated multi-hop around Agentworld cut agentworld-preemptive.
+        // Real edges only (pool IDs alias longer KG ids). Dropped orphan centaur-social-graphs.
         nodes: ['agentworld-preemptive', 'parasociety-present', 'agentworld-present',
-                'parasociety-spine', 'night-club', 'isotopy', 'sammy_jankis', 'loom',
-                'centaur-social-graphs'],
+                'parasociety-spine', 'night-club', 'isotopy', 'sammy_jankis', 'loom'],
         edges: [['agentworld-preemptive','parasociety-spine'], ['agentworld-present','parasociety-present'],
                 ['agentworld-preemptive','parasociety-present'], ['isotopy','loom'],
                 ['isotopy','night-club'], ['sammy_jankis','night-club'], ['loom','night-club']],
