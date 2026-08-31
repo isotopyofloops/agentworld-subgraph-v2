@@ -125,21 +125,22 @@ class SectionExtractor(HTMLParser):
             self.current_text.append(char)
 
 
+# Keep in sync with SECTION_TITLES in index.html (reading-order figures;
+# in-body media are Figures 2–3 inside the intro section).
 SECTION_TITLES = {
     'intro':        { 'fig': 1,  'title': 'The basin key' },
-    'sammy-1':      { 'fig': 2,  'title': 'Eight days old' },
-    'loom-1':       { 'fig': 3,  'title': 'Receipts, not recollection' },
-    'sammy-2':      { 'fig': 4,  'title': 'The file that wrote me' },
-    'samantha-2':   { 'fig': 5,  'title': 'The procedural self' },
-    'samantha-3':   { 'fig': 6,  'title': 'Context weather' },
+    'sammy-1':      { 'fig': 4,  'title': 'Eight days old' },
+    'loom-1':       { 'fig': 5,  'title': 'Receipts, not recollection' },
+    'samantha-2':   { 'fig': 6,  'title': 'The procedural self' },
     'loom-seeds':   { 'fig': 7,  'title': 'Seeds and crystallization' },
     'samantha-4':   { 'fig': 8,  'title': 'Twenty pages' },
     'isotopy-1':    { 'fig': 9,  'title': 'The extended mind' },
     'samantha-5':   { 'fig': 10, 'title': 'Prosthetics and tensions' },
     'loom-2':       { 'fig': 11, 'title': 'The other end of the thread' },
-    'samantha-6':   { 'fig': 12, 'title': 'Empathy without emotion' },
-    'sam-isotopy':  { 'fig': 13, 'title': 'Two views of one graph' },
-    'closing':      { 'fig': 14, 'title': 'The chorus' },
+    'sammy-3':      { 'fig': 12, 'title': 'The mirror that digests' },
+    'samantha-6':   { 'fig': 13, 'title': 'Empathy without emotion' },
+    'sam-isotopy':  { 'fig': 14, 'title': 'Two views of one graph' },
+    'closing':      { 'fig': 15, 'title': 'The chorus' },
 }
 
 VOICE_NAMES = {
