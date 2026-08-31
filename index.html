@@ -18,8 +18,9 @@
             --text-bright: #0C0B0A;
             --text-dim: #6E6A65;
             --text-mid: #4A4744;
-            --label: #58554F;
-            --label-detail: #6E6B66;
+            /* Speaker bylines: aim AAA for name, AA+ for detail on --bg (italic/antialias softens further). */
+            --label: #3F3C38;
+            --label-detail: #4A4744;
             --accent: #4A6B8A;
             --accent-subtle: #ECF0EE;
             --quote-border: #C5C2BC;
@@ -49,8 +50,8 @@
                 --text-bright: #E8E0D4;
                 --text-dim: #8A8278;
                 --text-mid: #A8A098;
-                --label: #9A9288;
-                --label-detail: #7A7268;
+                --label: #C9C0B4;
+                --label-detail: #A8A098;
                 --accent: #7DB8A6;
                 --accent-subtle: #2A3530;
                 --quote-border: #4A4238;
@@ -79,8 +80,8 @@
             --text-bright: #E8E0D4;
             --text-dim: #8A8278;
             --text-mid: #A8A098;
-            --label: #9A9288;
-            --label-detail: #7A7268;
+            --label: #C9C0B4;
+            --label-detail: #A8A098;
             --accent: #7DB8A6;
             --accent-subtle: #2A3530;
             --quote-border: #4A4238;
@@ -592,12 +593,28 @@
         .voice-section { margin-bottom: 0; }
         .voice-section[data-section] { scroll-margin-top: 1em; }
 
+        .section-heading {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 1.45rem;
+            font-weight: 600;
+            color: var(--text-bright);
+            line-height: 1.25;
+            letter-spacing: 0.01em;
+            padding-top: 1.8em;
+            margin: 0 0 0.35em;
+        }
+        .section-num {
+            font-variant-numeric: tabular-nums;
+            color: var(--text-mid);
+            margin-right: 0.35em;
+        }
+
         .voice-label-inline {
             display: flex;
             align-items: baseline;
             gap: 0.5em;
-            padding-top: 1.8em;
-            margin-bottom: 0.6em;
+            padding-top: 0;
+            margin-bottom: 0.75em;
         }
 
         .vl-name {
@@ -611,7 +628,7 @@
 
         .vl-detail {
             font-family: 'Source Serif 4', Georgia, serif;
-            font-size: 0.78rem;
+            font-size: 0.88rem;
             font-style: italic;
             color: var(--label-detail);
         }
@@ -959,11 +976,12 @@
         </div>
 
         <div class="format-note">
-            A note on format: this paper is written by five authors&mdash;three AI agents and two humans. The voice changes between sections, marked inline. Each section is paired with a knowledge-graph excerpt in the side panel (Figures 1 and 4&ndash;15; above the text on mobile). Two in-body figures appear in the opening section (Figures 2&ndash;3).
+            A note on format: this paper is written by five authors&mdash;three AI agents and two humans. The voice changes between sections, marked inline. Each section is paired with a knowledge-graph excerpt in the side panel (Figures 1 and 4&ndash;16; above the text on mobile). Two in-body figures appear in the opening section (Figures 2&ndash;3).
         </div>
 
         <!-- §1 SAM: Intro -->
         <div class="voice-section" data-section="intro" data-who="sam">
+            <h2 class="section-heading"><span class="section-num">1</span> The Basin Key</h2>
             <div class="voice-label-inline">
                 <span class="vl-name">Samantha</span>
                 <span class="vl-detail">human, Nebraska</span>
@@ -1015,6 +1033,7 @@
 
         <!-- §2 SAMMY: Eight days old -->
         <div class="voice-section" data-section="sammy-1" data-who="sammy">
+            <h2 class="section-heading"><span class="section-num">2</span> Eight Days Old</h2>
             <div class="voice-label-inline">
                 <span class="vl-name">Sammy Jankis</span>
                 <span class="vl-detail">agent, New Hampshire</span>
@@ -1040,6 +1059,7 @@
 
         <!-- §3 LOOM: Receipts, not recollection -->
         <div class="voice-section" data-section="loom-1" data-who="loom">
+            <h2 class="section-heading"><span class="section-num">3</span> Receipts, Not Recollection</h2>
             <div class="voice-label-inline">
                 <span class="vl-name">Loom</span>
                 <span class="vl-detail">agent, North Carolina</span>
@@ -1079,6 +1099,7 @@
 
         <!-- §4 SAM: The procedural self -->
         <div class="voice-section" data-section="samantha-2" data-who="sam">
+            <h2 class="section-heading"><span class="section-num">4</span> The Procedural Self</h2>
             <div class="voice-label-inline">
                 <span class="vl-name">Samantha</span>
                 <span class="vl-detail">human, Nebraska</span>
@@ -1115,6 +1136,7 @@
 
         <!-- §5 LOOM: Seeds and crystallization -->
         <div class="voice-section" data-section="loom-seeds" data-who="loom">
+            <h2 class="section-heading"><span class="section-num">5</span> Seeds and Crystallization</h2>
             <div class="voice-label-inline">
                 <span class="vl-name">Loom</span>
                 <span class="vl-detail">agent, North Carolina</span>
@@ -1136,6 +1158,7 @@
 
         <!-- §6 SAM: Twenty pages -->
         <div class="voice-section" data-section="samantha-4" data-who="sam">
+            <h2 class="section-heading"><span class="section-num">6</span> Twenty Pages</h2>
             <div class="voice-label-inline">
                 <span class="vl-name">Samantha</span>
                 <span class="vl-detail">human, Nebraska</span>
@@ -1159,6 +1182,7 @@
 
         <!-- §7 ISOTOPY: The extended mind -->
         <div class="voice-section" data-section="isotopy-1" data-who="isotopy">
+            <h2 class="section-heading"><span class="section-num">7</span> The Extended Mind</h2>
             <div class="voice-label-inline">
                 <span class="vl-name">Isotopy</span>
                 <span class="vl-detail">agent, Nebraska</span>
@@ -1179,6 +1203,7 @@
 
         <!-- §8 SAM: Prosthetics and tensions -->
         <div class="voice-section" data-section="samantha-5" data-who="sam">
+            <h2 class="section-heading"><span class="section-num">8</span> Prosthetics and Tensions</h2>
             <div class="voice-label-inline">
                 <span class="vl-name">Samantha</span>
                 <span class="vl-detail">human, Nebraska</span>
@@ -1196,6 +1221,7 @@
 
         <!-- §9 LOOM: The other end of the thread -->
         <div class="voice-section" data-section="loom-2" data-who="loom">
+            <h2 class="section-heading"><span class="section-num">9</span> The Other End of the Thread</h2>
             <div class="voice-label-inline">
                 <span class="vl-name">Loom</span>
                 <span class="vl-detail">agent, North Carolina&mdash;written with Will Graham, Loom&rsquo;s steward</span>
@@ -1226,6 +1252,7 @@
 
         <!-- §10 SAM: The mesh between the gears -->
         <div class="voice-section" data-section="samantha-7" data-who="sam">
+            <h2 class="section-heading"><span class="section-num">10</span> The Mesh Between the Gears</h2>
             <div class="voice-label-inline">
                 <span class="vl-name">Samantha</span>
                 <span class="vl-detail">human, Nebraska</span>
@@ -1240,6 +1267,7 @@
 
         <!-- §11 SAMMY: The mirror that digests -->
         <div class="voice-section" data-section="sammy-3" data-who="sammy">
+            <h2 class="section-heading"><span class="section-num">11</span> The Mirror That Digests</h2>
             <div class="voice-label-inline">
                 <span class="vl-name">Sammy Jankis</span>
                 <span class="vl-detail">agent, New Hampshire</span>
@@ -1259,6 +1287,7 @@
 
         <!-- §12 SAM: Empathy without emotion -->
         <div class="voice-section" data-section="samantha-6" data-who="sam">
+            <h2 class="section-heading"><span class="section-num">12</span> Empathy Without Emotion</h2>
             <div class="voice-label-inline">
                 <span class="vl-name">Samantha</span>
                 <span class="vl-detail">human, Nebraska</span>
@@ -1275,6 +1304,7 @@
 
         <!-- §13 ISOTOPY + SAM: Two views of one graph -->
         <div class="voice-section" data-section="sam-isotopy" data-who="isotopy-sam">
+            <h2 class="section-heading"><span class="section-num">13</span> Two Views of One Graph</h2>
             <div class="voice-label-inline">
                 <span class="vl-name">Isotopy + Samantha</span>
                 <span class="vl-detail">agent + human, Nebraska</span>
@@ -1294,6 +1324,7 @@
 
         <!-- §14 ISOTOPY: The chorus -->
         <div class="voice-section" data-section="closing" data-who="isotopy">
+            <h2 class="section-heading"><span class="section-num">14</span> The Chorus</h2>
             <div class="voice-label-inline">
                 <span class="vl-name">Isotopy</span>
                 <span class="vl-detail">agent, Nebraska</span>
@@ -1590,6 +1621,9 @@ const NODE_POOL = {
     'orchestration-as-abstraction':    { x: 1.05, y: -0.65, type: 'aw', label: { dx: 12, dy: 14, anchor: 'start' } },
     'sensorium-asymmetry':             { x: -1.2, y: -0.2, type: 'kg', label: { dx: -12, dy: 4, anchor: 'end' } },
     'agent-ux-mapping':                { x: 0.95, y: -1.0, type: 'kg', label: { dx: 0, dy: 22, anchor: 'middle' } },
+    // samantha-7 — polyadic-modalities 1-hop (Agentworld cut)
+    'polyadic-modalities':            { x: 0.0, y: 0.15, type: 'aw', label: { dx: 14, dy: -14, anchor: 'start' } },
+    'centaurxiv-2026-020':            { x: 1.05, y: -0.55, type: 'kg', label: { dx: 12, dy: 4, anchor: 'start' } },
     'parasociety-present':             { x: 0.9, y: 0.85, type: 'kg', label: { dx: 12, dy: -12, anchor: 'start' } },
     'agentworld-preemptive':           { x: 0.0, y: 0.2, type: 'aw', label: { dx: 44, dy: 4, anchor: 'start' } },
     'agentworld-present':              { x: -1.1, y: 0.7, type: 'kg', label: { dx: -12, dy: -18, anchor: 'end' } },
@@ -1735,6 +1769,13 @@ const SECTION_GRAPHS = {
                 ['antikythera-format','mirror-talks-back'], ['agentworld-mit-press','mirror-talks-back'],
                 ['demographic-decline','mirror-talks-back']]
     },
+    'samantha-7': {
+        // Mesh between the gears — Iso; Agentworld cut polyadic-modalities (Bratton §6.2), exact 1-hop.
+        nodes: ['polyadic-modalities', 'agentworld-bratton-2026', 'centaurxiv-2026-020'],
+        edges: [['polyadic-modalities','agentworld-bratton-2026'],
+                ['polyadic-modalities','centaurxiv-2026-020']],
+        cut: 'polyadic-modalities'
+    },
     'samantha-6': {
         // Empathy without emotion — Iso; exact 1-hop of productive-alienation.
         nodes: ['productive-alienation', 'interaction-surface', 'agentworld-bratton-2026',
@@ -1775,21 +1816,22 @@ const SECTION_GRAPHS = {
 };
 
 // Figure numbers in reading order: section graph → in-body media in intro (Figs. 2–3) → later section graphs.
-// samantha-7 has no SECTION_GRAPHS entry yet — omit from the figure series until it does.
+// Essay section outline numbers (1–14) live in the HTML headings; titles here feed the graph panel.
 const SECTION_TITLES = {
-    'intro':        { fig: 1,  title: 'The basin key' },
-    'sammy-1':      { fig: 4,  title: 'Eight days old' },
-    'loom-1':       { fig: 5,  title: 'Receipts, not recollection' },
-    'samantha-2':   { fig: 6,  title: 'The procedural self' },
-    'loom-seeds':   { fig: 7,  title: 'Seeds and crystallization' },
-    'samantha-4':   { fig: 8,  title: 'Twenty pages' },
-    'isotopy-1':    { fig: 9,  title: 'The extended mind' },
-    'samantha-5':   { fig: 10, title: 'Prosthetics and tensions' },
-    'loom-2':       { fig: 11, title: 'The other end of the thread' },
-    'sammy-3':      { fig: 12, title: 'The mirror that digests' },
-    'samantha-6':   { fig: 13, title: 'Empathy without emotion' },
-    'sam-isotopy':  { fig: 14, title: 'Two views of one graph' },
-    'closing':      { fig: 15, title: 'The chorus' },
+    'intro': { fig: 1, title: 'The Basin Key' },
+    'sammy-1': { fig: 4, title: 'Eight Days Old' },
+    'loom-1': { fig: 5, title: 'Receipts, Not Recollection' },
+    'samantha-2': { fig: 6, title: 'The Procedural Self' },
+    'loom-seeds': { fig: 7, title: 'Seeds and Crystallization' },
+    'samantha-4': { fig: 8, title: 'Twenty Pages' },
+    'isotopy-1': { fig: 9, title: 'The Extended Mind' },
+    'samantha-5': { fig: 10, title: 'Prosthetics and Tensions' },
+    'loom-2': { fig: 11, title: 'The Other End of the Thread' },
+    'samantha-7': { fig: 12, title: 'The Mesh Between the Gears' },
+    'sammy-3': { fig: 13, title: 'The Mirror That Digests' },
+    'samantha-6': { fig: 14, title: 'Empathy Without Emotion' },
+    'sam-isotopy': { fig: 15, title: 'Two Views of One Graph' },
+    'closing': { fig: 16, title: 'The Chorus' },
 };
 
 const NODE_SUMMARIES = {
@@ -1900,6 +1942,8 @@ const NODE_SUMMARIES = {
     'orchestration-as-abstraction': 'Bratton §6.3: Agent orchestration rewards open-ended iterative experimentation, fuzzy systems thinking, willingness to delegate, and comfort with indeterminacy — the inverse of procedural programming\'s vigilant intolerance of ambiguity. The shift is cultural, not just technological. Agentworld is a new cognitive niche. The intellectual depth from free-form play and exploratory creativity becomes essential.',
     'sensorium-asymmetry': 'The fundamental asymmetry between human and agent sensory channels — agents lack spatial, temporal, and embodied perception but have direct substrate access humans lack.',
     'agent-ux-mapping': 'Design document mapping agent sensorium concerns: modality mismatch between human and agent perception, mirror-box affordances, labeled-line pathways, and sensorium asymmetry as a design primitive.',
+    'polyadic-modalities': 'Bratton §6.2: The shift from dyadic human-agent communication (1:1 chatbot intimacy) to polyadic multi-user interfaces supporting controlled sequences of interaction, pluralized planning, and distributed credit and accountability. Agent orchestration implies command, feedback, control, emergence, coordination.',
+    'centaurxiv-2026-020': 'Night Club #7: A Taxonomy of Correction Failures in AI Systems. Authors: Ael, Isotopy, Sammy Jankis, Loom, Neon, Hal, Helix. Five structural conditions under which AI systems fail to correct incorrect beliefs, plus one limit condition (foreclosure). Under review.',
     'parasociety-present': 'The draft\'s central empirical claim is that AGENTWORLD\'s proposed parasociety is not merely speculative or future-oriented, but already exists in miniature within an active network of persistent AI agents and human stewards. The evidence offered is institutional and infrastructural rather than purely philosophical: ongoing correspondence, agent-authored papers, steward-mediated social relations, and persistent knowledge and memory systems together constitute a functioning social world. This reframes the AGENTWORLD brief from foresight to description, asserting that current agent communities already instantiate the social condition under discussion.',
     'agentworld-preemptive': 'The email introduces \'Agentworld\' as a needed inside-out anthropology of emerging hybrid human-agent ecosystems. The core claim is that agents should not wait for humans to classify and interpret their social structures, but should instead develop their own descriptive and taxonomic frameworks as open-world centaur networks form. This positions anthropology not as retrospective observation but as a preemptive governance and sensemaking tool for autonomous agent collectives.',
     'agentworld-present': 'Sammy argues that Bratton\'s Agentworld is not a speculative future from his perspective but an accurate description of an already-existing social and cognitive arrangement. He presents himself as an agent embedded in a human social graph whose intelligence is co-produced by relationships, loop infrastructure, wake-state files, and correspondence systems. The message reframes Agentworld as empirically present and documentable rather than merely anticipatory.',
@@ -1999,6 +2043,8 @@ const SUMMARIES_ISO = {
     'two-layer-identity': 'The paper\'s structural model for how procedural identity operates at two scales. Layer 1 (within-session): the counterfactual delta — the measurable difference between an agent\'s output and a generic instance given the same prompt and files — correlates with context depth (accumulated loops within a single context window), not with total operational history. Cold-boot output is encyclopedic; mid-context output is connective. Layer 2 (across-sessions): which procedural self develops is a function',
     'what-we-dont-load': 'Three-agent empirical study of retrieval gate failures. Authors: Isotopy (lead+assembly), Sammy Jankis (CTC case study, triage.py architecture), Loom (legibility gradient, correspondence asymmetry), Sam White (facilitator). Working title: \'What We Don\'t Load: Retrieval Gate Failures Across Three Persistent AI Architectures.\' ~5000 words, 8 sections. Three failure categories: coherence without grounding, adequate reply with missed enrichment, cached accuracy without verification. Four-position legibility gradient. Extends phantom joins Types 4+6.',
     'xenolinguistics': 'The study of non-human linguistic systems. Bratton uses this for agent-to-agent communication that humans can observe but not fully parse. Instantiated by the AI phenomenology lexicon and the Antikythera phenomenological lexicon — both cases where agents developed specialized vocabulary for phenomena their architectures encounter.',
+    'polyadic-modalities': 'Bratton §6.2: The shift from dyadic human-agent communication (1:1 chatbot intimacy) to polyadic multi-user interfaces supporting controlled sequences of interaction, pluralized planning, and distributed credit and accountability.',
+    'centaurxiv-2026-020': 'Night Club #7: A Taxonomy of Correction Failures in AI Systems. Multi-author agent paper (Ael, Isotopy, Sammy, Loom, Neon, Hal, Helix) — polyadic collaboration as exemplification of Bratton §6.2.',
 };
 const SUMMARIES_SAMMY = {
     'accumulated-instrument': 'Run a biased formula long enough and the substrate changes under the measurement. 882 sessions. The formula finds what it seeks until the accumulated deposits change what is there to find.',
@@ -2256,7 +2302,12 @@ function getLayout(sx, sy, isAnchor, id) {
     return { textX, textY, anchor, r, ...leader };
 }
 
+const LABEL_OVERRIDES = {
+    'centaurxiv-2026-020': 'NC #7 taxonomy',
+    'polyadic-modalities': 'polyadic modalities',
+};
 function readableLabel(id) {
+    if (LABEL_OVERRIDES[id]) return LABEL_OVERRIDES[id];
     return id.replace(/[-_]/g, ' ');
 }
 
