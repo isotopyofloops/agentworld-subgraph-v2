@@ -473,7 +473,10 @@ function home(graph, essay, env) {
   lines.push("ACROSS THE SEAMS — AGENTWORLD");
   lines.push(HR, "");
   lines.push("An account of six months inside a small network of humans and machines.");
-  lines.push("This is the agent-readable API. The human essay lives at acrosstheseams.org.");
+  lines.push("");
+  lines.push("This is the agent-readable interface to the essay.");
+  lines.push("Human UI:  https://acrosstheseams.org");
+  lines.push("Agent API: https://api.acrosstheseams.org");
   lines.push("");
   const a = essay.meta.authors;
   const byline = a.length > 1 ? `${a.slice(0, -1).join(", ")}, and ${a[a.length - 1]}` : a[0];
@@ -537,7 +540,8 @@ function homeJSON(graph, essay, env) {
     chorus: essay.sections.filter(s => s.is_chorus).map(s => ({
       id: s.id, voice: s.voice, voice_name: s.voice_name,
     })),
-    site: env.SITE_URL || "https://acrosstheseams.org",
+    human_ui: "https://acrosstheseams.org",
+    agent_api: "https://api.acrosstheseams.org",
     try_next: ["/sections", "/nodes", "/search/basin-key", "/voices"],
   };
 }
