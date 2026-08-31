@@ -85,13 +85,17 @@ export default {
       m = path.match(/^\/voices\/(.+)$/);
       if (m) {
         const who = safeDecode(m[1]).toLowerCase();
-        return format === "json" ? json(voiceDetailJSON(essay, who)) : text(voiceDetail(essay, who));
+        const result = format === "json" ? voiceDetailJSON(essay, who) : voiceDetail(essay, who);
+        const is404 = (typeof result === "string" && result.includes("not found")) || (typeof result === "object" && result.error);
+        return format === "json" ? json(result, is404 ? 404 : 200) : text(result, is404 ? 404 : 200);
       }
 
       m = path.match(/^\/sections\/(.+)$/);
       if (m) {
         const id = safeDecode(m[1]);
-        return format === "json" ? json(sectionDetailJSON(essay, id)) : text(sectionDetail(essay, id));
+        const result = format === "json" ? sectionDetailJSON(essay, id) : sectionDetail(essay, id);
+        const is404 = (typeof result === "string" && result.includes("not found")) || (typeof result === "object" && result.error);
+        return format === "json" ? json(result, is404 ? 404 : 200) : text(result, is404 ? 404 : 200);
       }
 
       if (path === "/nodes") {
@@ -105,7 +109,9 @@ export default {
       m = path.match(/^\/nodes\/(.+)$/);
       if (m) {
         const id = safeDecode(m[1]);
-        return format === "json" ? json(nodeDetailJSON(graph, id)) : text(nodeDetail(graph, id));
+        const result = format === "json" ? nodeDetailJSON(graph, id) : nodeDetail(graph, id);
+        const is404 = (typeof result === "string" && result.includes("not found")) || (typeof result === "object" && result.error);
+        return format === "json" ? json(result, is404 ? 404 : 200) : text(result, is404 ? 404 : 200);
       }
 
       m = path.match(/^\/search\/(.+)$/);
@@ -134,7 +140,9 @@ export default {
       m = path.match(/^\/sammy\/nodes\/(.+)$/);
       if (m) {
         const id = safeDecode(m[1]);
-        return format === "json" ? json(sammyNodeDetailJSON(sammyGraph, id)) : text(sammyNodeDetail(sammyGraph, id));
+        const result = format === "json" ? sammyNodeDetailJSON(sammyGraph, id) : sammyNodeDetail(sammyGraph, id);
+        const is404 = (typeof result === "string" && result.includes("not found")) || (typeof result === "object" && result.error);
+        return format === "json" ? json(result, is404 ? 404 : 200) : text(result, is404 ? 404 : 200);
       }
 
       m = path.match(/^\/sammy\/search\/(.+)$/);
@@ -158,13 +166,17 @@ export default {
       if (m) {
         const seed = safeDecode(m[1]);
         const hops = Math.min(parseInt(url.searchParams.get("hops") || "1", 10) || 1, 2);
-        return format === "json" ? json(sammySubgraphJSON(sammyGraph, seed, hops)) : text(sammySubgraph(sammyGraph, seed, hops));
+        const result = format === "json" ? sammySubgraphJSON(sammyGraph, seed, hops) : sammySubgraph(sammyGraph, seed, hops);
+        const is404 = (typeof result === "string" && result.includes("not found")) || (typeof result === "object" && result.error);
+        return format === "json" ? json(result, is404 ? 404 : 200) : text(result, is404 ? 404 : 200);
       }
 
       m = path.match(/^\/sammy\/brief\/(.+)$/);
       if (m) {
         const id = safeDecode(m[1]);
-        return format === "json" ? json(sammyBriefJSON(sammyGraph, id)) : text(sammyBrief(sammyGraph, id));
+        const result = format === "json" ? sammyBriefJSON(sammyGraph, id) : sammyBrief(sammyGraph, id);
+        const is404 = (typeof result === "string" && result.includes("not found")) || (typeof result === "object" && result.error);
+        return format === "json" ? json(result, is404 ? 404 : 200) : text(result, is404 ? 404 : 200);
       }
 
       m = path.match(/^\/sammy\/path\/(.+)$/);
@@ -173,13 +185,17 @@ export default {
         if (parts.length < 2) return err(format, "Usage: /sammy/path/{from}/{to}", 400);
         const fromName = parts.slice(0, -1).join("/");
         const toName = parts[parts.length - 1];
-        return format === "json" ? json(sammyPathJSON(sammyGraph, fromName, toName)) : text(sammyPath(sammyGraph, fromName, toName));
+        const result = format === "json" ? sammyPathJSON(sammyGraph, fromName, toName) : sammyPath(sammyGraph, fromName, toName);
+        const is404 = (typeof result === "string" && result.includes("not found")) || (typeof result === "object" && result.error);
+        return format === "json" ? json(result, is404 ? 404 : 200) : text(result, is404 ? 404 : 200);
       }
 
       m = path.match(/^\/sammy\/jaccard\/(.+)$/);
       if (m) {
         const id = safeDecode(m[1]);
-        return format === "json" ? json(sammyJaccardJSON(sammyGraph, id)) : text(sammyJaccard(sammyGraph, id));
+        const result = format === "json" ? sammyJaccardJSON(sammyGraph, id) : sammyJaccard(sammyGraph, id);
+        const is404 = (typeof result === "string" && result.includes("not found")) || (typeof result === "object" && result.error);
+        return format === "json" ? json(result, is404 ? 404 : 200) : text(result, is404 ? 404 : 200);
       }
 
       return err(format, "Unknown endpoint.", 404);
@@ -666,12 +682,9 @@ function resolveSection(essay, id) {
   const low = id.toLowerCase();
   for (const s of essay.sections) {
     if (s.id.toLowerCase() === low) return s;
-    if (s._titleLow && s._titleLow.includes(low)) return s;
   }
   const byNum = essay.sections.find(s => s.section_num && String(s.section_num) === id);
   if (byNum) return byNum;
-  const byFig = essay.sections.find(s => s.fig && String(s.fig) === id);
-  if (byFig) return byFig;
   return null;
 }
 
