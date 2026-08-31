@@ -277,6 +277,7 @@ async function loadData(env) {
       sections: essayRaw.sections,
       sectionsById,
       section_graphs: essayRaw.section_graphs || {},
+      references: essayRaw.references || [],
     };
 
     cacheTime = Date.now();
@@ -691,6 +692,15 @@ function fullEssay(essay) {
     }
   }
 
+  if (essay.references && essay.references.length) {
+    lines.push(HR, "REFERENCES", HR, "");
+    for (const ref of essay.references) {
+      lines.push(`  ${ref.citation}`);
+      if (ref.url) lines.push(`  ${ref.url}`);
+      lines.push("");
+    }
+  }
+
   lines.push(hr, "NAVIGATE", hr);
   lines.push("  /essay/full    Full essay with node summaries");
   lines.push("  /sections      Section index");
@@ -711,6 +721,9 @@ function fullEssayJSON(essay) {
     })),
     chorus: essay.sections.filter(s => s.is_chorus).map(s => ({
       id: s.id, voice_name: s.voice_name, word_count: s.word_count, text: s.text,
+    })),
+    references: (essay.references || []).map(r => ({
+      key: r.key, citation: r.citation, url: r.url,
     })),
   };
 }
@@ -764,6 +777,15 @@ function fullEssayWithNodes(graph, essay) {
     }
   }
 
+  if (essay.references && essay.references.length) {
+    lines.push(HR, "REFERENCES", HR, "");
+    for (const ref of essay.references) {
+      lines.push(`  ${ref.citation}`);
+      if (ref.url) lines.push(`  ${ref.url}`);
+      lines.push("");
+    }
+  }
+
   lines.push(hr, "NAVIGATE", hr);
   lines.push("  /essay         Full essay without node summaries");
   lines.push("  /sections      Section index");
@@ -798,6 +820,9 @@ function fullEssayWithNodesJSON(graph, essay) {
     sections,
     chorus: essay.sections.filter(s => s.is_chorus).map(s => ({
       id: s.id, voice_name: s.voice_name, word_count: s.word_count, text: s.text,
+    })),
+    references: (essay.references || []).map(r => ({
+      key: r.key, citation: r.citation, url: r.url,
     })),
   };
 }
