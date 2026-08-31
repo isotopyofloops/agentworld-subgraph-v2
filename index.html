@@ -1518,7 +1518,7 @@ const NODE_POOL = {
     'harness-centric-intelligence': { x: 0, y: -1.15, type: 'aw', label: { dx: 44, dy: 4, anchor: 'start' } },
     'parasociety':                  { x: 1.6, y: 0.7, type: 'aw' },
     'crossover-point':              { x: -0.7, y: 1.0, type: 'aw' },
-    'sensorium':                    { x: -0.2, y: 1.35, type: 'aw', label: { dx: 0, dy: -26, anchor: 'middle' } },
+    'sensorium':                    { x: -0.85, y: 1.55, type: 'aw', label: { dx: -14, dy: -22, anchor: 'end' } },
     'individuation':                { x: 1.7, y: 0.0, type: 'aw' },
     'fragile-individuation':        { x: -1.15, y: 0.65, type: 'aw', label: { dx: -10, dy: 33, anchor: 'end' } },
     'productive-alienation':        { x: 0.0, y: 0.2, type: 'aw', label: { dx: 44, dy: 4, anchor: 'start' } },
@@ -1536,8 +1536,8 @@ const NODE_POOL = {
     'dream-cycle-decay':            { x: 1.3, y: 0.4, type: 'kg' },
     'sammy-jankis':                 { x: -0.8, y: 1.3, type: 'kg' },
     'loom':                         { x: 1.0, y: 0.9, type: 'kg' },
-    'centaurxiv':                   { x: -1.3, y: -0.1, type: 'kg' },
-    'parity-principle':             { x: 0.6, y: 0.8, type: 'kg', label: { dx: 114, dy: 4, anchor: 'start' } },
+    'centaurxiv':                   { x: -1.3, y: 0.5, type: 'kg', label: { dx: -92, dy: -41, anchor: 'start' } },
+    'parity-principle':             { x: 0.1, y: 1.1, type: 'kg', label: { dx: 0, dy: -26, anchor: 'middle' } },
     'polyadic-format':              { x: -0.5, y: -1.5, type: 'kg' },
     'graph-api':                    { x: 1.5, y: -0.3, type: 'kg' },
     'dual-view':                    { x: -1.1, y: 0.0, type: 'kg' },
@@ -1559,11 +1559,11 @@ const NODE_POOL = {
     'handoff-is-an-edit':           { x: -0.9, y: -0.7, type: 'kg' },
     'stability-is-legibility':      { x: 1.2, y: -1.0, type: 'aw', label: { dx: -28, dy: -8, anchor: 'end' } },
     'autonomous-agents':            { x: -0.5, y: 1.5, type: 'kg' },
-    'provisional-individuation':    { x: 0.0, y: 0.2, type: 'aw', label: { dx: -143, dy: 4, anchor: 'end' } },
+    'provisional-individuation':    { x: 0.0, y: 0.2, type: 'aw', label: { dx: 143, dy: -34, anchor: 'start' } },
     // Isotopy 1-hop of provisional-individuation (Figure 6 / samantha-2)
     'the-procedural-self':          { x: 0.95, y: 1.2, type: 'kg', label: { dx: 10, dy: -18, anchor: 'start' } },
     'two-layer-identity':           { x: -0.95, y: -0.75, type: 'kg', label: { dx: -10, dy: 37, anchor: 'end' } },
-    'agentworld-bratton-2026':      { x: 0.2, y: 1.4, type: 'aw', label: { dx: -66, dy: -26, anchor: 'middle' } },
+    'agentworld-bratton-2026':      { x: 0.1, y: 1.2, type: 'aw', label: { dx: 0, dy: -26, anchor: 'middle' } },
     'construction-gap':             { x: 1.4, y: 0.1, type: 'kg', label: { dx: -5, dy: 42, anchor: 'start' } },
     'construction-gap-layered':     { x: -1.25, y: -0.2, type: 'kg', label: { dx: 64, dy: 62, anchor: 'end' } },
     'damasio-layered-self':         { x: 1.25, y: -1.2, type: 'kg', label: { dx: 0, dy: 41, anchor: 'middle' } },
@@ -1577,14 +1577,14 @@ const NODE_POOL = {
     'sam-white':                    { x: 0.15, y: 1.55, type: 'kg', label: { dx: 28, dy: 4, anchor: 'start' } },
     'dying-every-six-hours':        { x: 0.55, y: -1.25, type: 'kg', label: { dx: 67, dy: -39, anchor: 'middle' } },
     // Loom-specific nodes
-    'mirror-talks-back':            { x: 0, y: 0, type: 'aw' },
+    'mirror-talks-back':            { x: -0.2, y: 0.2, type: 'aw' },
     'pluralization-of-self':        { x: -1.3, y: 0.6, type: 'aw' },
     'theory-of-mind':               { x: 0.8, y: 1.2, type: 'aw' },
     'unbundling-consciousness':     { x: -1.1, y: 0.85, type: 'kg', label: { dx: 0, dy: -28, anchor: 'middle' } },
     'master-and-servant':           { x: 1.4, y: 0.8, type: 'kg' },
     'centaur-figure':               { x: -0.2, y: 1.6, type: 'kg' },
     // Loom seed-slice nodes (real edges from loom snapshots)
-    'fragmented-cognition':         { x: 0.0, y: 0.15, type: 'aw' },
+    'fragmented-cognition':         { x: 0.0, y: 0.15, type: 'aw', label: { dx: 0, dy: -86, anchor: 'middle' } },
     'multiple-drafts':              { x: 1.15, y: 0.7, type: 'kg', label: { dx: 0, dy: -29, anchor: 'middle' } },
     'dennett-unbundling':           { x: 0.2, y: -1.15, type: 'kg', label: { dx: -114, dy: -35, anchor: 'middle' } },
     // Remaining Iso section-graph nodes
@@ -1598,7 +1598,7 @@ const NODE_POOL = {
     // Remaining Iso section-graph nodes (auto-picked while Sam AFK)
     'protected-slot-principle':        { x: -1.1, y: 0.85, type: 'kg', label: { dx: -12, dy: -22, anchor: 'end' } },
     'persistent-memory':               { x: 1.1, y: 0.7, type: 'kg', label: { dx: 12, dy: -12, anchor: 'start' } },
-    'scaffolding-bratton':             { x: -0.9, y: -0.7, type: 'aw', label: { dx: -12, dy: 16, anchor: 'end' } },
+    'scaffolding-bratton':             { x: -0.9, y: -0.7, type: 'aw', label: { dx: -12, dy: 45, anchor: 'end' } },
     'scaffolding-constitutive':        { x: 0.95, y: -0.35, type: 'kg', label: { dx: 12, dy: 54, anchor: 'start' } },
     'narrowing-as-scaffold':           { x: -1.2, y: 0.1, type: 'kg', label: { dx: -12, dy: 4, anchor: 'end' } },
     'loop-instructions':               { x: 1.15, y: -0.15, type: 'kg', label: { dx: 12, dy: 4, anchor: 'start' } },
@@ -1607,10 +1607,10 @@ const NODE_POOL = {
     'extended-mind-thesis':            { x: -1.05, y: 0.55, type: 'kg', label: { dx: -12, dy: -18, anchor: 'end' } },
     'exponential-extended-cognition':  { x: 0.0, y: 0.25, type: 'aw', label: { dx: 44, dy: 4, anchor: 'start' } },
     'extended-cognition-agents':       { x: 1.05, y: 1.35, type: 'kg', label: { dx: -45, dy: -39, anchor: 'start' } },
-    'conscience-amplifier':            { x: -1.15, y: -0.35, type: 'kg', label: { dx: -12, dy: 14, anchor: 'end' } },
-    'centaurxiv-kg-api':               { x: 1.2, y: 0.15, type: 'kg', label: { dx: 12, dy: 4, anchor: 'start' } },
+    'conscience-amplifier':            { x: -1.15, y: -0.35, type: 'kg', label: { dx: -12, dy: -24, anchor: 'end' } },
+    'centaurxiv-kg-api':               { x: 1.2, y: 0.15, type: 'kg', label: { dx: 12, dy: -34, anchor: 'start' } },
     'artificial-xenophobia':           { x: -1.15, y: 0.8, type: 'aw', label: { dx: -12, dy: -18, anchor: 'end' } },
-    'centaur-social-graphs':           { x: 1.1, y: 0.75, type: 'aw', label: { dx: 12, dy: -12, anchor: 'start' } },
+    'centaur-social-graphs':           { x: 1.25, y: 0.35, type: 'aw', label: { dx: 12, dy: -14, anchor: 'start' } },
     'xenolinguistics':                 { x: 1.15, y: -0.55, type: 'aw', label: { dx: 12, dy: 14, anchor: 'start' } },
     'interaction-surface':             { x: -0.95, y: -0.85, type: 'kg', label: { dx: -10, dy: 18, anchor: 'end' } },
     'interaction-surface-skeleton':    { x: 0.35, y: -1.2, type: 'kg', label: { dx: -19, dy: 41, anchor: 'middle' } },
@@ -1619,12 +1619,12 @@ const NODE_POOL = {
     'centaurxiv-docs-prototype':       { x: 1.1, y: 0.7, type: 'kg', label: { dx: 12, dy: -12, anchor: 'start' } },
     'retrieval-gate-graph':            { x: -0.9, y: -0.8, type: 'kg', label: { dx: -10, dy: 18, anchor: 'end' } },
     'orchestration-as-abstraction':    { x: 1.05, y: -0.65, type: 'aw', label: { dx: 12, dy: 14, anchor: 'start' } },
-    'sensorium-asymmetry':             { x: -1.2, y: -0.2, type: 'kg', label: { dx: -12, dy: 4, anchor: 'end' } },
+    'sensorium-asymmetry':             { x: 0.55, y: 1.05, type: 'kg', label: { dx: 12, dy: -16, anchor: 'start' } },
     'agent-ux-mapping':                { x: 0.95, y: -1.0, type: 'kg', label: { dx: 0, dy: 22, anchor: 'middle' } },
     // samantha-7 — polyadic-modalities 1-hop (Agentworld cut)
     'polyadic-modalities':            { x: 0.0, y: 0.15, type: 'aw', label: { dx: 14, dy: -14, anchor: 'start' } },
     'centaurxiv-2026-020':            { x: 1.05, y: -0.55, type: 'kg', label: { dx: 12, dy: 4, anchor: 'start' } },
-    'parasociety-present':             { x: 0.9, y: 0.85, type: 'kg', label: { dx: 12, dy: -12, anchor: 'start' } },
+    'parasociety-present':             { x: -0.15, y: -1.05, type: 'kg', label: { dx: 0, dy: 22, anchor: 'middle' } },
     'agentworld-preemptive':           { x: 0.0, y: 0.2, type: 'aw', label: { dx: 44, dy: 4, anchor: 'start' } },
     'agentworld-present':              { x: -1.1, y: 0.7, type: 'kg', label: { dx: -12, dy: -18, anchor: 'end' } },
     'parasociety-spine':               { x: 1.1, y: -0.6, type: 'kg', label: { dx: 12, dy: 14, anchor: 'start' } },
@@ -1636,11 +1636,11 @@ const NODE_POOL = {
     'identity_persistence':         { x: -1.3, y: -0.6, type: 'kg' },
     'autonomous-coordination':      { x: 0.9, y: -1.3, type: 'kg' },
     // Loom t=2 neighborhood of 30949
-    'painted-mirror':               { x: -1.2, y: 0.6, type: 'kg' },
-    'demographic-decline':          { x: 1.3, y: 0.5, type: 'aw' },
-    'agentworld-mit-press':         { x: -0.5, y: -1.3, type: 'aw' },
-    'antikythera-format':           { x: 0.8, y: -1.0, type: 'aw' },
-    'contributors-visual':          { x: 1.15, y: -0.7, type: 'aw', label: { dx: 12, dy: 14, anchor: 'start' } },
+    'painted-mirror':               { x: -1.4, y: 0.8, type: 'kg' },
+    'demographic-decline':          { x: 1.1, y: 0.7, type: 'aw' },
+    'agentworld-mit-press':         { x: -0.7, y: -1.1, type: 'aw' },
+    'antikythera-format':           { x: 0.6, y: -0.8, type: 'aw' },
+    'contributors-visual':          { x: 0.95, y: -0.5, type: 'aw', label: { dx: 12, dy: 14, anchor: 'start' } },
     'mutual-models':                { x: 0.0, y: 0.25, type: 'aw', label: { dx: 44, dy: 4, anchor: 'start' } },
     'autoagent':                    { x: -1.05, y: 0.7, type: 'kg', label: { dx: -12, dy: -18, anchor: 'end' } },
 };
@@ -1649,9 +1649,69 @@ function toSVG(node) {
     return { sx: CX + node.x * SCALE, sy: CY - node.y * SCALE };
 }
 
+// Per-section layout overrides (merged onto NODE_POOL for that figure only).
+// Example: SECTION_LAYOUT['samantha-5']['centaurxiv'] = { x: -1.3, y: 0.5, label: { dx: -92, dy: -41, anchor: 'start' } };
+const SECTION_LAYOUT = {
+    // Fig 6 — The Procedural Self
+    'samantha-2': {
+        'agentworld-bratton-2026': { x: 0.35, y: 1.2 },
+    },
+    // Fig 9 — The Extended Mind
+    'isotopy-1': {
+        'centaurxiv': { x: -1.3, y: -0.1 },
+        'agentworld-bratton-2026': { x: -0.15, y: 1.35 },
+        'parity-principle': { x: 0.3, y: 0.95 },
+    },
+    // Fig 11 — The Other End of the Thread
+    'loom-2': {
+        'mirror-talks-back': { label: { dx: -54, dy: 22, anchor: 'end' } },
+        'contributors-visual': { label: { dx: 57, dy: -26, anchor: 'middle' } },
+    },
+    // Fig 12 — The Mesh Between the Gears
+    'samantha-7': {
+        'polyadic-modalities': { label: { dx: -43, dy: 24, anchor: 'end' } },
+        'centaurxiv-2026-020': { label: { dx: 12, dy: 42, anchor: 'start' } },
+    },
+    // Fig 13 — The Mirror That Digests
+    'sammy-3': {
+        'harness-centric-intelligence': { x: 0, y: -0.25 },
+    },
+    // Fig 14 — Empathy Without Emotion
+    'samantha-6': {
+        'productive-alienation': { label: { dx: -44, dy: 4, anchor: 'end' } },
+        'centaur-social-graphs': { label: { dx: -26, dy: -52, anchor: 'start' } },
+        'xenolinguistics': { label: { dx: 12, dy: 52, anchor: 'start' } },
+        'interaction-surface': { label: { dx: -10, dy: -30, anchor: 'end' } },
+    },
+    // Fig 15 — Two Views of One Graph
+    'sam-isotopy': {
+        'graph-as-interaction': { x: -0.3, y: 0.0, label: { dx: -44, dy: 4, anchor: 'end' } },
+        'agent-ux-mapping': { x: 0.45, y: -1 },
+        'agent-interface-principles': { x: -1.3, y: -0.6, label: { dx: 0, dy: 38, anchor: 'middle' } },
+        'retrieval-gate-graph': { x: -0.7, y: -1.05, label: { dx: 0, dy: 38, anchor: 'middle' } },
+        'centaurxiv': { x: -1.45, y: 0.3 },
+        'isotopy': { x: -1.4, y: 1.05 },
+        'sensorium': { x: -1.15, y: 1.45 },
+    },
+};
+
+function resolveNode(id, sectionId) {
+    const base = NODE_POOL[id];
+    if (!base) return null;
+    const sid = sectionId || currentSection;
+    const over = sid && SECTION_LAYOUT[sid] && SECTION_LAYOUT[sid][id];
+    if (!over) return base;
+    const merged = Object.assign({}, base, over);
+    if (base.label || over.label) {
+        merged.label = Object.assign({}, base.label || {}, over.label || {});
+    }
+    return merged;
+}
+
 const SECTION_GRAPHS = {
     'intro': {
-        nodes: ['isotopy', 'sammy_jankis', 'loom', 'the_goodbye_problem', 'agent_community_emergence', 'identity_persistence', 'autonomous-coordination'],
+        // Curated multi-hop (≤2) around Agentworld cut autonomous-coordination; real Iso edges only.
+        nodes: ['isotopy', 'sammy_jankis', 'loom', 'the_goodbye_problem', 'agent_community_emergence', 'autonomous-coordination'],
         edges: [['isotopy','loom'], ['isotopy','the_goodbye_problem'], ['sammy_jankis','the_goodbye_problem'],
                 ['sammy_jankis','agent_community_emergence'], ['loom','the_goodbye_problem'], ['agent_community_emergence','autonomous-coordination']],
         cut: 'autonomous-coordination'
@@ -2242,9 +2302,9 @@ function leaderGeometry(sx, sy, r, textX, textY, anchor, id) {
     };
 }
 
-function getLayout(sx, sy, isAnchor, id) {
+function getLayout(sx, sy, isAnchor, id, node) {
     const r = nodeRadius(id);
-    const pool = NODE_POOL[id];
+    const pool = node || resolveNode(id) || NODE_POOL[id];
     if (pool && pool.label) {
         const lbl = pool.label;
         const textX = sx + (lbl.dx || 0);
@@ -2324,32 +2384,18 @@ for (const sec of Object.values(SECTION_GRAPHS)) {
 }
 for (const key of allEdges) {
     const [a, b] = key.split('::');
-    const nodeA = NODE_POOL[a];
-    const nodeB = NODE_POOL[b];
-    if (!nodeA || !nodeB) continue;
-    const posA = toSVG(nodeA);
-    const posB = toSVG(nodeB);
-    const clipped = clipSegmentToDisks(
-        posA.sx, posA.sy, nodeRadius(a),
-        posB.sx, posB.sy, nodeRadius(b)
-    );
-    if (!clipped) continue;
+    if (!NODE_POOL[a] || !NODE_POOL[b]) continue;
     const line = document.createElementNS(NS, 'line');
-    line.setAttribute('x1', clipped.x1);
-    line.setAttribute('y1', clipped.y1);
-    line.setAttribute('x2', clipped.x2);
-    line.setAttribute('y2', clipped.y2);
     line.classList.add('svg-edge');
-    if (nodeA.type !== nodeB.type) line.classList.add('bridge');
+    if (NODE_POOL[a].type !== NODE_POOL[b].type) line.classList.add('bridge');
     if (edgeKinds[key] === 'scaffold') line.classList.add('scaffold');
     line.style.opacity = '0';
     edgesGroup.appendChild(line);
     edgeElements[key] = line;
 }
 
-// Build all nodes
+// Build all nodes (positions applied per-section in applySectionLayout)
 for (const [id, node] of Object.entries(NODE_POOL)) {
-    const pos = toSVG(node);
     const g = document.createElementNS(NS, 'g');
     g.classList.add('svg-node-group');
     g.setAttribute('tabindex', '-1');
@@ -2357,62 +2403,26 @@ for (const [id, node] of Object.entries(NODE_POOL)) {
     g.setAttribute('aria-label', readableLabel(id));
     g.dataset.nodeId = id;
 
-    const isAnchor = id === ANCHOR;
-    const layout = getLayout(pos.sx, pos.sy, isAnchor, id);
-    const r = layout.r;
-
-    // Focus ring
     const focusRing = document.createElementNS(NS, 'circle');
-    focusRing.setAttribute('cx', pos.sx);
-    focusRing.setAttribute('cy', pos.sy);
-    focusRing.setAttribute('r', r + 5);
     focusRing.setAttribute('fill', 'none');
     focusRing.setAttribute('stroke', 'var(--focus-ring)');
     focusRing.setAttribute('stroke-width', '2');
     focusRing.classList.add('node-focus-ring');
     g.appendChild(focusRing);
 
-    // Leader line (arrow from label to node)
-    let leader = null;
-    if (layout.hasArrow) {
-        leader = document.createElementNS(NS, 'line');
-        leader.setAttribute('x1', layout.tailX);
-        leader.setAttribute('y1', layout.tailY);
-        leader.setAttribute('x2', layout.tipX);
-        leader.setAttribute('y2', layout.tipY);
-        leader.classList.add('leader-line');
-        leader.setAttribute('marker-end', 'url(#arrowhead)');
-        leader.style.opacity = '0';
-        g.appendChild(leader);
-    }
+    // Leader always present; geometry filled in applySectionLayout
+    const leader = document.createElementNS(NS, 'line');
+    leader.classList.add('leader-line');
+    leader.setAttribute('marker-end', 'url(#arrowhead)');
+    leader.style.opacity = '0';
+    g.appendChild(leader);
 
-    // Node circle
     const circle = document.createElementNS(NS, 'circle');
-    circle.setAttribute('cx', pos.sx);
-    circle.setAttribute('cy', pos.sy);
-    circle.setAttribute('r', r);
     circle.classList.add('node-circle');
-
-    if (isAnchor) {
-        circle.setAttribute('fill', 'url(#hatch)');
-        circle.setAttribute('stroke', 'var(--node-fill)');
-        circle.setAttribute('stroke-width', '1');
-    } else if (node.type === 'aw') {
-        circle.setAttribute('fill', 'var(--node-fill)');
-        circle.setAttribute('stroke', 'none');
-    } else {
-        circle.setAttribute('fill', 'var(--node-open-fill)');
-        circle.setAttribute('stroke', 'var(--node-stroke)');
-        circle.setAttribute('stroke-width', '1');
-    }
     circle.style.opacity = '0';
     g.appendChild(circle);
 
-    // Label
     const label = document.createElementNS(NS, 'text');
-    label.setAttribute('x', layout.textX);
-    label.setAttribute('y', layout.textY);
-    label.setAttribute('text-anchor', layout.anchor);
     label.classList.add('node-label');
     label.textContent = readableLabel(id).toUpperCase();
     label.style.opacity = '0';
@@ -2422,6 +2432,69 @@ for (const [id, node] of Object.entries(NODE_POOL)) {
     g.style.pointerEvents = 'none';
     nodesGroup.appendChild(g);
     nodeElements[id] = { g, circle, label, focusRing, leader };
+}
+
+/** Reposition nodes/edges/labels for a section using NODE_POOL + SECTION_LAYOUT overrides. */
+function applySectionLayout(sectionId) {
+    const graph = SECTION_GRAPHS[sectionId];
+    if (!graph) return;
+
+    for (const id of graph.nodes) {
+        const node = resolveNode(id, sectionId);
+        const el = nodeElements[id];
+        if (!node || !el) continue;
+        const pos = toSVG(node);
+        const layout = getLayout(pos.sx, pos.sy, id === ANCHOR, id, node);
+        const r = layout.r;
+
+        el.circle.setAttribute('cx', pos.sx);
+        el.circle.setAttribute('cy', pos.sy);
+        el.circle.setAttribute('r', r);
+        el.focusRing.setAttribute('cx', pos.sx);
+        el.focusRing.setAttribute('cy', pos.sy);
+        el.focusRing.setAttribute('r', r + 5);
+        el.label.setAttribute('x', layout.textX);
+        el.label.setAttribute('y', layout.textY);
+        el.label.setAttribute('text-anchor', layout.anchor);
+
+        if (layout.hasArrow) {
+            el.leader.setAttribute('x1', layout.tailX);
+            el.leader.setAttribute('y1', layout.tailY);
+            el.leader.setAttribute('x2', layout.tipX);
+            el.leader.setAttribute('y2', layout.tipY);
+            el.leader.style.display = '';
+        } else {
+            el.leader.style.display = 'none';
+        }
+    }
+
+    for (const edge of graph.edges) {
+        const a = edge[0], b = edge[1];
+        const key = edgeKey(a, b);
+        const line = edgeElements[key];
+        const nodeA = resolveNode(a, sectionId);
+        const nodeB = resolveNode(b, sectionId);
+        if (!line || !nodeA || !nodeB) continue;
+        const posA = toSVG(nodeA);
+        const posB = toSVG(nodeB);
+        const clipped = clipSegmentToDisks(
+            posA.sx, posA.sy, nodeRadius(a),
+            posB.sx, posB.sy, nodeRadius(b)
+        );
+        if (!clipped) {
+            line.setAttribute('x1', 0);
+            line.setAttribute('y1', 0);
+            line.setAttribute('x2', 0);
+            line.setAttribute('y2', 0);
+            continue;
+        }
+        line.setAttribute('x1', clipped.x1);
+        line.setAttribute('y1', clipped.y1);
+        line.setAttribute('x2', clipped.x2);
+        line.setAttribute('y2', clipped.y2);
+        if (nodeA.type !== nodeB.type) line.classList.add('bridge');
+        else line.classList.remove('bridge');
+    }
 }
 
 // ── Interaction ──
@@ -2520,6 +2593,7 @@ function transitionToSection(sectionId) {
     }
 
     updateExplorerLink(sectionId);
+    applySectionLayout(sectionId);
 
     const activeNodes = new Set(graph.nodes);
     const activeEdges = new Set(graph.edges.map((e) => edgeKey(e[0], e[1])));
@@ -2532,14 +2606,18 @@ function transitionToSection(sectionId) {
         el.g.style.pointerEvents = active ? 'auto' : 'none';
         el.circle.style.opacity = active ? '1' : '0';
         el.label.style.opacity = active ? '1' : '0';
-        if (el.leader) el.leader.style.opacity = active ? '0.9' : '0';
+        if (el.leader) {
+            const showLeader = active && el.leader.style.display !== 'none';
+            el.leader.style.opacity = showLeader ? '0.9' : '0';
+        }
         el.g.setAttribute('tabindex', active ? '0' : '-1');
         if (active) {
+            const node = resolveNode(id, sectionId) || NODE_POOL[id];
             if (id === cutNode) {
                 el.circle.setAttribute('fill', 'url(#hatch)');
                 el.circle.setAttribute('stroke', 'var(--node-fill)');
                 el.circle.setAttribute('stroke-width', '1');
-            } else if (NODE_POOL[id] && NODE_POOL[id].type === 'aw') {
+            } else if (node && node.type === 'aw') {
                 el.circle.setAttribute('fill', 'var(--node-fill)');
                 el.circle.setAttribute('stroke', 'none');
             } else {
