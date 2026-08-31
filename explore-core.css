@@ -49,8 +49,8 @@
     --accent-hover: #9ECEBE;
     --link: #7DB8A6;
     --link-hover: #9ECEBE;
-    --node-fill: #E8E0D4;
-    --node-stroke: #E8E0D4;
+    --node-fill: #C9C0B4;
+    --node-stroke: #C9C0B4;
     --node-open-fill: #252019;
     --edge-stroke: #4A4238;
     --hl-border: rgba(232, 224, 212, 0.15);
@@ -84,12 +84,12 @@
   --accent-hover: #9ECEBE;
   --link: #7DB8A6;
   --link-hover: #9ECEBE;
-  --node-fill: #E8E0D4;
-  --node-stroke: #E8E0D4;
+  --node-fill: #C9C0B4;
+  --node-stroke: #C9C0B4;
   --node-open-fill: #252019;
   --edge-stroke: #4A4238;
-  --hl-border: rgba(232, 224, 212, 0.15);
-  --hl-bg: rgba(232, 224, 212, 0.04);
+  --hl-border: rgba(201, 192, 180, 0.18);
+  --hl-bg: rgba(201, 192, 180, 0.04);
   --faded-opacity: 0.06;
   --scrollbar-thumb: rgba(232, 224, 212, 0.10);
   --prompt-color: #7DB8A6;
