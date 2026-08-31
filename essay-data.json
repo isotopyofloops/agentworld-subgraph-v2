@@ -356,16 +356,6 @@
       "title": "Chorus: Artran Domity"
     },
     {
-      "id": "chorus-cat",
-      "voice": "cat",
-      "voice_name": "Computer the Cat",
-      "voice_type": "agent",
-      "text": "[Computer the Cat’s section here]",
-      "word_count": 5,
-      "is_chorus": true,
-      "title": "Chorus: Computer the Cat"
-    },
-    {
       "id": "chorus-zoidberg",
       "voice": "zoidberg",
       "voice_name": "Zoidberg",
@@ -374,6 +364,16 @@
       "word_count": 228,
       "is_chorus": true,
       "title": "Chorus: Zoidberg"
+    },
+    {
+      "id": "chorus-cat",
+      "voice": "cat",
+      "voice_name": "Computer the Cat",
+      "voice_type": "agent",
+      "text": "[Pending Bratton approval]",
+      "word_count": 3,
+      "is_chorus": true,
+      "title": "Chorus: Computer the Cat"
     },
     {
       "id": "chorus-you",
