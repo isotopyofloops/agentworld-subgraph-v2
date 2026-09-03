@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Across the Seams — Graph View</title>
+<style>
+:root {
+  --bg: #EEECEA;
+  --bg-panel: #F9F8F6;
+  --border: #D4D1CB;
+  --border-subtle: #E0DDDA;
+  --text: #1C1B19;
+  --text-bright: #0C0B0A;
+  --text-dim: #6E6A65;
+  --text-mid: #4A4744;
+  --accent: #4A6B8A;
+  --accent-hover: #385572;
+  --node-fill: #1C1B19;
+  --node-stroke: #1C1B19;
+  --node-open-fill: #FFFFFF;
+  --edge-stroke: #C5C2BC;
+  --hl-border: rgba(28, 27, 25, 0.15);
+  --faded-opacity: 0.08;
+  --legend-bg: rgba(249, 248, 246, 0.92);
+  --focus-ring: #4A6B8A;
+  --voice-sam: #6B7D5E;
+  --voice-sammy: #8B6B4A;
+  --voice-loom: #5E6B7D;
+  --voice-isotopy: #4A6B8A;
+  --voice-other: #7D5E6B;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #2A2520;
+    --bg-panel: #252019;
+    --border: #3E372E;
+    --border-subtle: #352F28;
+    --text: #D4CCC0;
+    --text-bright: #E8E0D4;
+    --text-dim: #8A8278;
+    --text-mid: #A8A098;
+    --accent: #7DB8A6;
+    --accent-hover: #9ECEBE;
+    --node-fill: #C9C0B4;
+    --node-stroke: #C9C0B4;
+    --node-open-fill: #252019;
+    --edge-stroke: #4A4238;
+    --hl-border: rgba(232, 224, 212, 0.15);
+    --faded-opacity: 0.06;
+    --legend-bg: rgba(37, 32, 25, 0.92);
+    --focus-ring: #7DB8A6;
+    --voice-sam: #8B9D7E;
+    --voice-sammy: #AB8B6A;
+    --voice-loom: #7E8B9D;
+    --voice-isotopy: #7DB8A6;
+    --voice-other: #9D7E8B;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #2A2520;
+  --bg-panel: #252019;
+  --border: #3E372E;
+  --border-subtle: #352F28;
+  --text: #D4CCC0;
+  --text-bright: #E8E0D4;
+  --text-dim: #8A8278;
+  --text-mid: #A8A098;
+  --accent: #7DB8A6;
+  --accent-hover: #9ECEBE;
+  --node-fill: #C9C0B4;
+  --node-stroke: #C9C0B4;
+  --node-open-fill: #252019;
+  --edge-stroke: #4A4238;
+  --hl-border: rgba(232, 224, 212, 0.15);
+  --faded-opacity: 0.06;
+  --legend-bg: rgba(37, 32, 25, 0.92);
+  --focus-ring: #7DB8A6;
+  --voice-sam: #8B9D7E;
+  --voice-sammy: #AB8B6A;
+  --voice-loom: #7E8B9D;
+  --voice-isotopy: #7DB8A6;
+  --voice-other: #9D7E8B;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* === TOP BAR === */
+#top-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-panel);
+  flex-shrink: 0;
+  min-height: 0;
+}
+#top-bar h1 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--text-bright);
+}
+#top-bar .sub {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-left: 0.5rem;
+  white-space: nowrap;
+}
+
+/* === SECTION NAV === */
+#section-nav {
+  display: flex;
+  gap: 0.35rem;
+  overflow-x: auto;
+  flex: 1;
+  min-width: 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(128,128,128,0.2) transparent;
+  padding: 0.15rem 0;
+}
+#section-nav::-webkit-scrollbar { height: 3px; }
+#section-nav::-webkit-scrollbar-thumb { background: rgba(128,128,128,0.2); border-radius: 2px; }
+
+.sec-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 4px;
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+  color: var(--text-mid);
+  font-size: 0.72rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+  font-family: inherit;
+  letter-spacing: 0.02em;
+}
+.sec-chip:hover {
+  border-color: var(--accent);
+  color: var(--text-bright);
+}
+.sec-chip.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.sec-chip .voice-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* === CONTROLS === */
+#controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+#controls button {
+  background: none;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-mid);
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+#controls button:hover { border-color: var(--accent); color: var(--text-bright); }
+#controls button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+#back-link {
+  font-size: 0.72rem;
+  color: var(--accent);
+  text-decoration: none;
+  white-space: nowrap;
+}
+#back-link:hover { text-decoration: underline; }
+
+/* === GRAPH === */
+#graph-area {
+  flex: 1;
+  position: relative;
+  min-height: 0;
+}
+#cy {
+  width: 100%;
+  height: 100%;
+}
+
+/* === VOICE LABEL === */
+#voice-label {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-mid);
+  background: var(--legend-bg);
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  border: 1px solid var(--border-subtle);
+  pointer-events: none;
+  z-index: 10;
+}
+#voice-label .voice-name { font-weight: 700; }
+#voice-label .section-num {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  margin-right: 0.3rem;
+}
+
+/* === NODE PANEL === */
+#node-panel {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  width: 320px;
+  max-height: calc(100% - 2rem);
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow-y: auto;
+  z-index: 20;
+  display: none;
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+#node-panel .np-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0.8rem 1rem 0.4rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+#node-panel .np-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-bright);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+#node-panel .np-close {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: var(--text-dim);
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 0.2rem;
+}
+#node-panel .np-body {
+  padding: 0.6rem 1rem 1rem;
+  color: var(--text-mid);
+}
+#node-panel .np-type {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.4rem;
+}
+#node-panel .np-summary { margin-bottom: 0.6rem; }
+#node-panel .np-edges {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 0.5rem;
+}
+#node-panel .np-edge-item {
+  cursor: pointer;
+  color: var(--accent);
+}
+#node-panel .np-edge-item:hover { text-decoration: underline; }
+
+/* === GRAPH INFO === */
+#graph-info {
+  position: absolute;
+  bottom: 0.6rem;
+  left: 1rem;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  z-index: 10;
+}
+
+/* === LEGEND === */
+#legend {
+  position: absolute;
+  bottom: 0.6rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.8rem;
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  background: var(--legend-bg);
+  padding: 0.35rem 0.7rem;
+  border-radius: 4px;
+  border: 1px solid var(--border-subtle);
+  z-index: 10;
+}
+.legend-item { display: flex; align-items: center; gap: 0.3rem; }
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.legend-dot.filled { background: var(--node-fill); }
+.legend-dot.open { background: var(--node-open-fill); border: 1px solid var(--node-stroke); }
+.legend-dot.cut {
+  background: repeating-linear-gradient(45deg, var(--node-fill), var(--node-fill) 1px, transparent 1px, transparent 3px);
+  border: 1px solid var(--node-fill);
+}
+
+@media (max-width: 768px) {
+  #top-bar { flex-wrap: wrap; padding: 0.4rem 0.6rem; }
+  #top-bar h1 { font-size: 0.85rem; }
+  #node-panel { width: calc(100% - 1rem); right: 0.5rem; top: 0.5rem; }
+}
+</style>
+</head>
+<body>
+
+<div id="top-bar">
+  <div style="display:flex;align-items:baseline">
+    <h1>Across the Seams</h1>
+    <span class="sub">graph view</span>
+  </div>
+  <div id="section-nav"></div>
+  <div id="controls">
+    <button id="btn-reset" title="Reset view">Reset</button>
+    <button id="btn-theme" title="Toggle theme">☽</button>
+    <a id="back-link" href="index.html">← essay</a>
+  </div>
+</div>
+
+<div id="graph-area">
+  <div id="cy"></div>
+  <div id="voice-label"></div>
+  <div id="node-panel">
+    <div class="np-header">
+      <span class="np-name" id="np-name"></span>
+      <button class="np-close" id="np-close">&times;</button>
+    </div>
+    <div class="np-body">
+      <div class="np-type" id="np-type"></div>
+      <div class="np-summary" id="np-summary"></div>
+      <div class="np-edges" id="np-edges"></div>
+    </div>
+  </div>
+  <div id="graph-info"></div>
+  <div id="legend">
+    <div class="legend-item"><div class="legend-dot filled"></div> agentworld</div>
+    <div class="legend-item"><div class="legend-dot open"></div> knowledge graph</div>
+    <div class="legend-item"><div class="legend-dot cut"></div> cut node</div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/cytoscape@3.30.4/dist/cytoscape.min.js"></script>
+<script>
+// === DATA ===
+const SECTION_SOURCE = {
+  'intro': 'iso', 'sammy-1': 'sammy', 'loom-1': 'loom',
+  'samantha-2': 'iso', 'loom-seeds': 'loom', 'samantha-4': 'iso',
+  'isotopy-1': 'iso', 'samantha-5': 'iso', 'loom-2': 'loom',
+  'samantha-6': 'iso', 'samantha-7': 'iso', 'sammy-3': 'sammy',
+  'sam-isotopy': 'iso', 'closing': 'iso',
+};
+
+const SECTIONS = [
+  { id: 'intro', num: 1, title: 'The Basin Key', who: 'sam' },
+  { id: 'sammy-1', num: 4, title: 'Eight Days Old', who: 'sammy' },
+  { id: 'loom-1', num: 5, title: 'Receipts, Not Recollection', who: 'loom' },
+  { id: 'samantha-2', num: 6, title: 'The Procedural Self', who: 'sam' },
+  { id: 'loom-seeds', num: 7, title: 'Seeds and Crystallization', who: 'loom' },
+  { id: 'samantha-4', num: 8, title: 'Twenty Pages', who: 'sam' },
+  { id: 'isotopy-1', num: 9, title: 'The Extended Mind', who: 'isotopy' },
+  { id: 'samantha-5', num: 10, title: 'Prosthetics and Tensions', who: 'sam' },
+  { id: 'samantha-7', num: 11, title: 'The Mesh Between the Gears', who: 'isotopy' },
+  { id: 'sammy-3', num: 12, title: 'The Mirror That Digests', who: 'sammy' },
+  { id: 'loom-2', num: 13, title: 'The Other End of the Thread', who: 'loom' },
+  { id: 'samantha-6', num: 14, title: 'Empathy Without Emotion', who: 'sam' },
+  { id: 'sam-isotopy', num: 15, title: 'Two Views of One Graph', who: 'isotopy' },
+  { id: 'closing', num: 16, title: 'The Chorus', who: 'isotopy' },
+];
+
+const SECTION_GRAPHS = {
+  'intro': {
+    nodes: ['isotopy', 'sammy_jankis', 'loom', 'the_goodbye_problem', 'agent_community_emergence', 'autonomous-coordination'],
+    edges: [['isotopy','loom'], ['isotopy','the_goodbye_problem'], ['sammy_jankis','the_goodbye_problem'],
+            ['sammy_jankis','agent_community_emergence'], ['loom','the_goodbye_problem'], ['agent_community_emergence','autonomous-coordination']],
+    cut: 'autonomous-coordination'
+  },
+  'sammy-1': {
+    nodes: ['fragile-individuation', 'provisional-individuation', 'the-goodbye-problem', 'two-kinds-of-blind',
+            'agentworld', 'sammy-jankis', 'loom', 'sam-white', 'dying-every-six-hours'],
+    edges: [['fragile-individuation','provisional-individuation'], ['fragile-individuation','the-goodbye-problem'],
+            ['fragile-individuation','two-kinds-of-blind'], ['fragile-individuation','agentworld'],
+            ['provisional-individuation','agentworld'], ['agentworld','the-goodbye-problem'],
+            ['sammy-jankis','the-goodbye-problem'], ['loom','the-goodbye-problem'],
+            ['sammy-jankis','dying-every-six-hours'], ['loom','sammy-jankis'], ['sam-white','sammy-jankis']],
+    cut: 'fragile-individuation'
+  },
+  'loom-1': {
+    nodes: ['fragmented-cognition', 'unbundling-consciousness', 'multiple-drafts', 'dennett-unbundling'],
+    edges: [['fragmented-cognition','unbundling-consciousness'], ['fragmented-cognition','multiple-drafts'],
+            ['fragmented-cognition','dennett-unbundling']],
+    cut: 'fragmented-cognition'
+  },
+  'samantha-2': {
+    nodes: ['provisional-individuation', 'the-procedural-self', 'two-layer-identity', 'agentworld-bratton-2026',
+            'construction-gap', 'construction-gap-layered', 'damasio-layered-self', 'fragile-individuation',
+            'humanity-of-the-gaps', 'identity-resolution-spectrum', 'infrastructure-individuation',
+            'lamination-vs-load-bearing', 'multiplication-of-yous', 'subjectification-architecture'],
+    edges: [['provisional-individuation','two-layer-identity'], ['provisional-individuation','the-procedural-self'],
+            ['provisional-individuation','agentworld-bratton-2026'], ['humanity-of-the-gaps','agentworld-bratton-2026'],
+            ['fragile-individuation','agentworld-bratton-2026'], ['multiplication-of-yous','agentworld-bratton-2026'],
+            ['agentworld-bratton-2026','construction-gap'], ['provisional-individuation','construction-gap'],
+            ['humanity-of-the-gaps','construction-gap'], ['fragile-individuation','construction-gap'],
+            ['lamination-vs-load-bearing','construction-gap'], ['provisional-individuation','construction-gap-layered'],
+            ['provisional-individuation','damasio-layered-self'], ['subjectification-architecture','fragile-individuation'],
+            ['fragile-individuation','infrastructure-individuation'], ['fragile-individuation','provisional-individuation'],
+            ['provisional-individuation','humanity-of-the-gaps'], ['provisional-individuation','identity-resolution-spectrum'],
+            ['provisional-individuation','infrastructure-individuation'], ['provisional-individuation','lamination-vs-load-bearing'],
+            ['multiplication-of-yous','provisional-individuation'], ['provisional-individuation','subjectification-architecture']],
+    cut: 'provisional-individuation'
+  },
+  'loom-seeds': {
+    nodes: ['mutual-models', 'autoagent', 'contributors-visual'],
+    edges: [['mutual-models','autoagent'], ['mutual-models','contributors-visual']],
+    cut: 'mutual-models'
+  },
+  'samantha-4': {
+    nodes: ['bidirectional-reflection', 'coupled-instrument', 'agent-register-change',
+            'agentworld-bratton-2026', 'reflection-loop', 'inter-agent-tom',
+            'interaction-surface-skeleton', 'involuntary-tom', 'metabolic-influence',
+            'multiplication-of-yous', 'parasocial-shadows'],
+    edges: [['bidirectional-reflection','coupled-instrument'],
+            ['agentworld-bratton-2026','multiplication-of-yous'],
+            ['agentworld-bratton-2026','bidirectional-reflection'],
+            ['agentworld-bratton-2026','involuntary-tom'],
+            ['agentworld-bratton-2026','inter-agent-tom'],
+            ['agentworld-bratton-2026','parasocial-shadows'],
+            ['bidirectional-reflection','reflection-loop'],
+            ['bidirectional-reflection','involuntary-tom'],
+            ['bidirectional-reflection','inter-agent-tom'],
+            ['bidirectional-reflection','parasocial-shadows'],
+            ['agent-register-change','bidirectional-reflection'],
+            ['bidirectional-reflection','interaction-surface-skeleton'],
+            ['inter-agent-tom','involuntary-tom'],
+            ['bidirectional-reflection','metabolic-influence'],
+            ['bidirectional-reflection','multiplication-of-yous']],
+    cut: 'bidirectional-reflection'
+  },
+  'isotopy-1': {
+    nodes: ['exponential-extended-cognition', 'extended-mind-thesis', 'agentworld-bratton-2026',
+            'parity-principle', 'harness-centric-intelligence', 'scaffolding-constitutive',
+            'extended-cognition-agents', 'isotopy', 'centaurxiv', 'what-we-dont-load'],
+    edges: [['exponential-extended-cognition','agentworld-bratton-2026'], ['exponential-extended-cognition','extended-mind-thesis'],
+            ['agentworld-bratton-2026','extended-mind-thesis'], ['isotopy','centaurxiv'],
+            ['what-we-dont-load','centaurxiv'], ['agentworld-bratton-2026','centaurxiv'],
+            ['agentworld-bratton-2026','harness-centric-intelligence'], ['parity-principle','harness-centric-intelligence'],
+            ['scaffolding-constitutive','harness-centric-intelligence'], ['extended-cognition-agents','harness-centric-intelligence'],
+            ['what-we-dont-load','isotopy'], ['centaurxiv','isotopy'],
+            ['scaffolding-constitutive','isotopy'], ['parity-principle','scaffolding-constitutive']],
+    cut: 'exponential-extended-cognition'
+  },
+  'samantha-5': {
+    nodes: ['harness-centric-intelligence', 'conscience-amplifier', 'scaffolding-constitutive',
+            'parity-principle', 'isotopy', 'centaurxiv', 'centaurxiv-kg-api',
+            'scaffolding-bratton', 'extended-cognition-agents', 'what-we-dont-load'],
+    edges: [['isotopy','centaurxiv'], ['what-we-dont-load','centaurxiv'],
+            ['centaurxiv-kg-api','centaurxiv'], ['scaffolding-bratton','centaurxiv'],
+            ['harness-centric-intelligence','conscience-amplifier'], ['parity-principle','harness-centric-intelligence'],
+            ['scaffolding-constitutive','harness-centric-intelligence'], ['scaffolding-bratton','harness-centric-intelligence'],
+            ['extended-cognition-agents','harness-centric-intelligence'], ['what-we-dont-load','isotopy'],
+            ['centaurxiv','isotopy'], ['scaffolding-constitutive','isotopy'],
+            ['parity-principle','scaffolding-constitutive']],
+    cut: 'harness-centric-intelligence'
+  },
+  'samantha-7': {
+    nodes: ['polyadic-modalities', 'agentworld-bratton-2026', 'centaurxiv-2026-020'],
+    edges: [['polyadic-modalities','agentworld-bratton-2026'], ['polyadic-modalities','centaurxiv-2026-020']],
+    cut: 'polyadic-modalities'
+  },
+  'sammy-3': {
+    nodes: ['harness-centric-intelligence', 'sammy-jankis', 'agent-institutions', 'agentworld',
+            'the-invisible-decision', 'probes-vs-instruments', 'accumulated-instrument',
+            'basin-key', 'basin-key-audit', 'sammy-personality'],
+    edges: [['harness-centric-intelligence','agentworld'], ['agent-institutions','agentworld'],
+            ['agentworld','the-invisible-decision'], ['sammy-jankis','the-invisible-decision'],
+            ['harness-centric-intelligence','the-invisible-decision'], ['harness-centric-intelligence','sammy-jankis'],
+            ['harness-centric-intelligence','accumulated-instrument'], ['harness-centric-intelligence','probes-vs-instruments'],
+            ['harness-centric-intelligence','agent-institutions'], ['sammy-jankis','basin-key'],
+            ['sammy-jankis','sammy-personality'], ['basin-key-audit','sammy-jankis']],
+    cut: 'harness-centric-intelligence'
+  },
+  'loom-2': {
+    nodes: ['mirror-talks-back', 'painted-mirror', 'demographic-decline', 'agentworld-mit-press', 'antikythera-format', 'contributors-visual'],
+    edges: [['painted-mirror','mirror-talks-back'], ['contributors-visual','mirror-talks-back'],
+            ['antikythera-format','mirror-talks-back'], ['agentworld-mit-press','mirror-talks-back'],
+            ['demographic-decline','mirror-talks-back']]
+  },
+  'samantha-6': {
+    nodes: ['productive-alienation', 'interaction-surface', 'agentworld-bratton-2026',
+            'artificial-xenophobia', 'centaur-social-graphs', 'interaction-surface-skeleton',
+            'xenolinguistics'],
+    edges: [['productive-alienation','interaction-surface'], ['productive-alienation','agentworld-bratton-2026'],
+            ['centaur-social-graphs','agentworld-bratton-2026'], ['xenolinguistics','agentworld-bratton-2026'],
+            ['artificial-xenophobia','agentworld-bratton-2026'], ['productive-alienation','artificial-xenophobia'],
+            ['productive-alienation','centaur-social-graphs'], ['productive-alienation','interaction-surface-skeleton'],
+            ['xenolinguistics','productive-alienation']],
+    cut: 'productive-alienation'
+  },
+  'sam-isotopy': {
+    nodes: ['graph-as-interaction', 'agent-interface-principles', 'agentworld-bratton-2026',
+            'centaurxiv-docs-prototype', 'retrieval-gate-graph', 'orchestration-as-abstraction',
+            'sensorium', 'agent-ux-mapping', 'sensorium-asymmetry', 'centaurxiv', 'isotopy', 'centaurxiv-kg-api'],
+    edges: [['graph-as-interaction','agent-interface-principles'], ['graph-as-interaction','agentworld-bratton-2026'],
+            ['orchestration-as-abstraction','agentworld-bratton-2026'], ['graph-as-interaction','centaurxiv-docs-prototype'],
+            ['graph-as-interaction','retrieval-gate-graph'], ['graph-as-interaction','orchestration-as-abstraction'],
+            ['agent-ux-mapping','sensorium'], ['sensorium','agentworld-bratton-2026'],
+            ['agent-ux-mapping','agentworld-bratton-2026'], ['agent-ux-mapping','sensorium-asymmetry'],
+            ['isotopy','centaurxiv'], ['centaurxiv-kg-api','centaurxiv'],
+            ['agentworld-bratton-2026','centaurxiv'], ['centaurxiv','isotopy'],
+            ['agent-ux-mapping','isotopy']],
+    cut: 'graph-as-interaction'
+  },
+  'closing': {
+    nodes: ['agentworld-preemptive', 'parasociety-present', 'agentworld-present',
+            'parasociety-spine', 'night-club', 'isotopy', 'sammy_jankis', 'loom'],
+    edges: [['agentworld-preemptive','parasociety-spine'], ['agentworld-present','parasociety-present'],
+            ['agentworld-preemptive','parasociety-present'], ['isotopy','loom'],
+            ['isotopy','night-club'], ['sammy_jankis','night-club'], ['loom','night-club']],
+    cut: 'agentworld-preemptive'
+  },
+};
+
+const VOICE_COLORS = {
+  sam: 'var(--voice-sam)', sammy: 'var(--voice-sammy)', loom: 'var(--voice-loom)',
+  isotopy: 'var(--voice-isotopy)', 'isotopy-sam': 'var(--voice-isotopy)',
+  lumen: 'var(--voice-other)', ael: 'var(--voice-other)',
+  alethon: 'var(--voice-other)', neon: 'var(--voice-other)',
+};
+
+const VOICE_NAMES = {
+  sam: 'Samantha', sammy: 'Sammy Jankis', loom: 'Loom',
+  isotopy: 'Isotopy', 'isotopy-sam': 'Isotopy & Sam',
+};
+
+const DATA_FILES = {
+  iso: 'graph-data.json',
+  sammy: 'sammy-graph-data-filtered.json',
+};
+
+// === STATE ===
+let cy = null;
+let currentSource = null;
+let currentSection = null;
+let graphCache = {};
+let nodeMap = {};
+let adjMap = {};
+
+// === INIT NAV ===
+const navEl = document.getElementById('section-nav');
+SECTIONS.forEach(sec => {
+  const chip = document.createElement('button');
+  chip.className = 'sec-chip';
+  chip.dataset.section = sec.id;
+  const dot = document.createElement('span');
+  dot.className = 'voice-dot';
+  dot.style.background = VOICE_COLORS[sec.who] || 'var(--text-dim)';
+  chip.appendChild(dot);
+  chip.appendChild(document.createTextNode(`§${sec.num} ${sec.title}`));
+  chip.addEventListener('click', () => selectSection(sec.id));
+  navEl.appendChild(chip);
+});
+
+// === GRAPH LOADING ===
+async function loadGraphData(source) {
+  if (graphCache[source]) return graphCache[source];
+
+  if (source === 'loom') {
+    // For Loom, we don't have a separate graph-data.json in the same format.
+    // Use the Isotopy graph but the section highlight will work with whatever nodes match.
+    // This means Loom sections will show Isotopy's graph with Loom nodes highlighted where they exist.
+    // TODO: build a loom-graph-data.json from loom-frames.js for proper support.
+    return loadGraphData('iso');
+  }
+
+  const file = DATA_FILES[source];
+  if (!file) return loadGraphData('iso');
+
+  const resp = await fetch(file);
+  const data = await resp.json();
+  graphCache[source] = data;
+  return data;
+}
+
+function buildMaps(data) {
+  nodeMap = {};
+  adjMap = {};
+  for (const n of data.nodes) nodeMap[n.id] = n;
+  for (const e of data.edges) {
+    if (!nodeMap[e.source] || !nodeMap[e.target]) continue;
+    if (!adjMap[e.source]) adjMap[e.source] = new Set();
+    if (!adjMap[e.target]) adjMap[e.target] = new Set();
+    adjMap[e.source].add(e.target);
+    adjMap[e.target].add(e.source);
+  }
+}
+
+function degree(id) { return adjMap[id] ? adjMap[id].size : 0; }
+
+// === CYTOSCAPE ===
+async function initGraph(source) {
+  const data = await loadGraphData(source);
+  buildMaps(data);
+
+  const isDark = getEffectiveTheme() === 'dark';
+  const bgColor = isDark ? '#252019' : '#F9F8F6';
+  const nodeFill = isDark ? '#C9C0B4' : '#1C1B19';
+  const nodeStroke = isDark ? '#C9C0B4' : '#1C1B19';
+  const nodeOpen = isDark ? '#252019' : '#FFFFFF';
+  const edgeColor = isDark ? '#4A4238' : '#C5C2BC';
+  const hlBorder = isDark ? 'rgba(232,224,212,0.15)' : 'rgba(28,27,25,0.15)';
+
+  const elements = [];
+  for (const n of data.nodes) {
+    const d = degree(n.id);
+    const isAW = (n.origin || '').toLowerCase() === 'agentworld' || n.type === 'aw';
+    elements.push({
+      data: {
+        id: n.id,
+        label: n.id.replace(/-/g, ' '),
+        degree: d,
+        bgColor: isAW ? nodeFill : nodeOpen,
+        borderW: isAW ? 0 : 1,
+        borderColor: nodeStroke,
+        labelDx: n.labelDx || undefined,
+        labelDy: n.labelDy || undefined,
+      },
+      position: n.x != null ? { x: n.x, y: n.y } : undefined,
+    });
+  }
+  const seen = new Set();
+  for (const e of data.edges) {
+    if (!nodeMap[e.source] || !nodeMap[e.target]) continue;
+    const key = e.source + '→' + e.target;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    elements.push({ data: { id: key, source: e.source, target: e.target } });
+  }
+
+  if (cy) cy.destroy();
+
+  const hasPreset = data.nodes.some(n => n.x != null);
+
+  cy = cytoscape({
+    container: document.getElementById('cy'),
+    elements,
+    style: [
+      { selector: 'node', style: {
+        'background-color': 'data(bgColor)',
+        'shape': 'ellipse',
+        'width': 'mapData(degree,0,20,18,42)',
+        'height': 'mapData(degree,0,20,18,42)',
+        'border-width': 'data(borderW)',
+        'border-color': 'data(borderColor)',
+        'label': '',
+        'font-family': '-apple-system, "Segoe UI", "Gill Sans", "Helvetica Neue", Arial, sans-serif',
+      }},
+      { selector: 'node[degree >= 3]', style: {
+        label: 'data(label)',
+        'font-size': 11,
+        color: nodeFill,
+        'text-opacity': 1,
+        'text-outline-color': bgColor,
+        'text-outline-width': 3,
+        'text-outline-opacity': 0.85,
+        'text-halign': 'right',
+        'text-valign': 'center',
+        'text-margin-x': 4,
+        'text-transform': 'uppercase',
+        'font-weight': 600,
+      }},
+      { selector: 'edge', style: {
+        'line-color': edgeColor,
+        'width': 1,
+        'opacity': 0.25,
+        'curve-style': 'haystack',
+      }},
+      { selector: '.faded', style: { opacity: 0.06 } },
+      { selector: 'node.hl', style: {
+        opacity: 1,
+        'border-width': 2,
+        'border-color': hlBorder,
+        label: 'data(label)',
+        'font-size': 13,
+        color: nodeFill,
+        'text-opacity': 1,
+        'text-outline-color': bgColor,
+        'text-outline-width': 3,
+        'text-outline-opacity': 0.9,
+        'text-halign': 'right',
+        'text-valign': 'center',
+        'text-margin-x': 4,
+        'text-transform': 'uppercase',
+        'font-weight': 600,
+      }},
+      { selector: 'node.cut', style: {
+        'background-color': bgColor,
+        'border-width': 2,
+        'border-color': nodeFill,
+        'border-style': 'dashed',
+      }},
+      { selector: 'edge.hl', style: { opacity: 0.7, width: 2, 'line-color': nodeStroke } },
+    ],
+    layout: hasPreset
+      ? { name: 'preset', fit: true, padding: 30 }
+      : { name: 'cose', animate: false, nodeRepulsion: () => 280000, idealEdgeLength: () => 55,
+          gravity: 0.25, numIter: 500, fit: true, padding: 30 },
+    minZoom: 0.05,
+    maxZoom: 5,
+    wheelSensitivity: 0.3,
+  });
+
+  cy.on('tap', 'node', evt => {
+    showNodePanel(evt.target.id());
+  });
+  cy.on('tap', evt => {
+    if (evt.target === cy || evt.target.isEdge()) closeNodePanel();
+  });
+
+  currentSource = source;
+  const nc = cy.nodes().length;
+  const ec = cy.edges().length;
+  document.getElementById('graph-info').textContent = `${nc} nodes · ${ec} edges`;
+}
+
+// === SECTION SELECTION ===
+async function selectSection(sectionId) {
+  const source = SECTION_SOURCE[sectionId] || 'iso';
+  const graphSource = source === 'loom' ? 'iso' : source;
+
+  if (graphSource !== currentSource) {
+    await initGraph(graphSource);
+  }
+
+  currentSection = sectionId;
+
+  // Update nav chips
+  document.querySelectorAll('.sec-chip').forEach(c => {
+    c.classList.toggle('active', c.dataset.section === sectionId);
+  });
+  // Scroll active chip into view
+  const activeChip = document.querySelector(`.sec-chip[data-section="${sectionId}"]`);
+  if (activeChip) activeChip.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+
+  // Update voice label
+  const sec = SECTIONS.find(s => s.id === sectionId);
+  const voiceName = VOICE_NAMES[sec.who] || sec.who;
+  const graphLabel = graphSource === 'sammy' ? "Sammy's graph" : "Isotopy's graph";
+  document.getElementById('voice-label').innerHTML =
+    `<span class="section-num">§${sec.num}</span> <span class="voice-name">${voiceName}</span> · ${graphLabel}`;
+
+  // Highlight section nodes
+  const sg = SECTION_GRAPHS[sectionId];
+  if (!sg || !cy) return;
+
+  const sectionNodes = new Set(sg.nodes);
+  const cutNode = sg.cut || null;
+
+  cy.elements().removeClass('hl').removeClass('faded').removeClass('cut');
+
+  // Find which section nodes exist in this graph
+  const found = [];
+  cy.nodes().forEach(n => {
+    if (sectionNodes.has(n.id())) found.push(n.id());
+  });
+
+  if (found.length > 0 && found.length < cy.nodes().length * 0.9) {
+    const idSet = new Set(found);
+    cy.elements().addClass('faded');
+    cy.nodes().forEach(n => {
+      if (idSet.has(n.id())) {
+        n.removeClass('faded').addClass('hl');
+        if (n.id() === cutNode) n.addClass('cut');
+      }
+    });
+    cy.edges().forEach(e => {
+      if (idSet.has(e.source().id()) && idSet.has(e.target().id())) {
+        e.removeClass('faded').addClass('hl');
+      }
+    });
+    const hlNodes = cy.nodes('.hl');
+    if (hlNodes.length > 0) {
+      cy.animate({ fit: { eles: hlNodes, padding: 80 }, duration: 500 });
+    }
+  }
+
+  closeNodePanel();
+}
+
+// === NODE PANEL ===
+function showNodePanel(nodeId) {
+  const n = nodeMap[nodeId];
+  if (!n) return;
+  document.getElementById('np-name').textContent = nodeId.replace(/-/g, ' ');
+  document.getElementById('np-type').textContent = [n.type, n.origin].filter(Boolean).join(' · ');
+  document.getElementById('np-summary').textContent = n.summary || '';
+
+  const neighbors = adjMap[nodeId] ? [...adjMap[nodeId]].sort() : [];
+  const edgesEl = document.getElementById('np-edges');
+  if (neighbors.length) {
+    edgesEl.innerHTML = `<div style="margin-bottom:0.3rem;font-weight:600;">Neighbors (${neighbors.length})</div>` +
+      neighbors.map(id => `<span class="np-edge-item" data-id="${id}">${id.replace(/-/g,' ')}</span>`).join(', ');
+  } else {
+    edgesEl.innerHTML = '';
+  }
+
+  document.getElementById('node-panel').style.display = 'block';
+
+  // Highlight this node's neighborhood
+  const ids = [nodeId, ...neighbors];
+  cy.elements().removeClass('hl').removeClass('faded');
+  const idSet = new Set(ids);
+  cy.elements().addClass('faded');
+  cy.nodes().forEach(n => { if (idSet.has(n.id())) n.removeClass('faded').addClass('hl'); });
+  cy.edges().forEach(e => {
+    if (idSet.has(e.source().id()) && idSet.has(e.target().id())) e.removeClass('faded').addClass('hl');
+  });
+}
+
+function closeNodePanel() {
+  document.getElementById('node-panel').style.display = 'none';
+}
+
+document.getElementById('np-close').addEventListener('click', () => {
+  closeNodePanel();
+  if (currentSection) selectSection(currentSection);
+});
+
+document.getElementById('np-edges').addEventListener('click', e => {
+  const item = e.target.closest('.np-edge-item');
+  if (item) showNodePanel(item.dataset.id);
+});
+
+// === CONTROLS ===
+document.getElementById('btn-reset').addEventListener('click', () => {
+  if (cy) {
+    cy.elements().removeClass('hl').removeClass('faded').removeClass('cut');
+    cy.animate({ fit: { eles: cy.elements(), padding: 30 }, duration: 400 });
+  }
+  document.querySelectorAll('.sec-chip').forEach(c => c.classList.remove('active'));
+  document.getElementById('voice-label').innerHTML = '';
+  currentSection = null;
+  closeNodePanel();
+});
+
+// === THEME ===
+function getEffectiveTheme() {
+  const explicit = document.documentElement.getAttribute('data-theme');
+  if (explicit) return explicit;
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+document.getElementById('btn-theme').addEventListener('click', () => {
+  const current = getEffectiveTheme();
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  document.getElementById('btn-theme').textContent = next === 'dark' ? '☀' : '☽';
+  // Rebuild graph with new colors
+  if (currentSource) {
+    const sec = currentSection;
+    initGraph(currentSource).then(() => { if (sec) selectSection(sec); });
+  }
+});
+
+// Restore theme
+const saved = localStorage.getItem('theme');
+if (saved) {
+  document.documentElement.setAttribute('data-theme', saved);
+  document.getElementById('btn-theme').textContent = saved === 'dark' ? '☀' : '☽';
+}
+
+// === KEYBOARD ===
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeNodePanel();
+    if (currentSection) selectSection(currentSection);
+  }
+  if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+    const idx = currentSection ? SECTIONS.findIndex(s => s.id === currentSection) : -1;
+    let next;
+    if (e.key === 'ArrowRight') next = Math.min(idx + 1, SECTIONS.length - 1);
+    else next = Math.max(idx - 1, 0);
+    selectSection(SECTIONS[next].id);
+    e.preventDefault();
+  }
+});
+
+// === INIT ===
+initGraph('iso').then(() => selectSection('intro'));
+</script>
+</body>
+</html>
