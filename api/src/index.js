@@ -10,6 +10,8 @@
  *   GET /sections/{id}        → section text (markdown)
  *   GET /voices               → list voices (who writes what)
  *   GET /voices/{who}         → sections by a specific voice
+ *   GET /graph                → full graph (nodes + edges)
+ *   GET /subgraph/{seed}      → N-hop neighborhood
  *   GET /nodes                → list graph nodes (paginated)
  *   GET /nodes/{id}           → node detail + edges
  *   GET /search/{query}       → search across nodes and sections
@@ -98,6 +100,21 @@ export default {
         return format === "json" ? json(result, is404 ? 404 : 200) : text(result, is404 ? 404 : 200);
       }
 
+      if (path === "/graph") {
+        const types = [...new Set(graph.nodes.map(n => n.type))];
+        const predicates = Object.keys(graph.predicateCounts);
+        if (format === "json") {
+          return json({
+            nodes: graph.nodes.length,
+            edges: graph.edges.length,
+            node_types: types,
+            predicate_types: predicates.length,
+            graph: { nodes: graph.nodes, edges: graph.edges },
+          });
+        }
+        return text(`${HR}\nGRAPH — ${graph.nodes.length} nodes · ${graph.edges.length} edges\n${HR}\n\nNode types: ${types.join(", ")}\nPredicate types: ${predicates.length} (${predicates.slice(0, 10).join(", ")}${predicates.length > 10 ? ", ..." : ""})\n\nUse ?format=json to get the full graph as JSON.\n`);
+      }
+
       if (path === "/nodes") {
         const page = parsePage(url);
         const limit = parseLimit(url);
@@ -110,6 +127,15 @@ export default {
       if (m) {
         const id = safeDecode(m[1]);
         const result = format === "json" ? nodeDetailJSON(graph, id) : nodeDetail(graph, id);
+        const is404 = (typeof result === "string" && result.includes("not found")) || (typeof result === "object" && result.error);
+        return format === "json" ? json(result, is404 ? 404 : 200) : text(result, is404 ? 404 : 200);
+      }
+
+      m = path.match(/^\/subgraph\/(.+)$/);
+      if (m) {
+        const seed = safeDecode(m[1]);
+        const hops = Math.min(parseInt(url.searchParams.get("hops") || "1", 10) || 1, 2);
+        const result = format === "json" ? subgraphJSON(graph, seed, hops) : subgraphText(graph, seed, hops);
         const is404 = (typeof result === "string" && result.includes("not found")) || (typeof result === "object" && result.error);
         return format === "json" ? json(result, is404 ? 404 : 200) : text(result, is404 ? 404 : 200);
       }
@@ -349,8 +375,8 @@ function err(format, message, status) {
   return text(`${message}\n`, status);
 }
 
-const KNOWN_EXACT = ["/", "/explore", "/help", "/essay", "/essay/full", "/sections", "/voices", "/nodes", "/sammy", "/sammy/nodes", "/sammy/stats", "/sammy/help"];
-const KNOWN_PREFIX = ["/sections/", "/voices/", "/nodes/", "/search/", "/sammy/nodes/", "/sammy/search/", "/sammy/subgraph/", "/sammy/brief/", "/sammy/path/", "/sammy/jaccard/"];
+const KNOWN_EXACT = ["/", "/explore", "/help", "/essay", "/essay/full", "/sections", "/voices", "/graph", "/nodes", "/sammy", "/sammy/nodes", "/sammy/stats", "/sammy/help"];
+const KNOWN_PREFIX = ["/sections/", "/voices/", "/nodes/", "/subgraph/", "/search/", "/sammy/nodes/", "/sammy/search/", "/sammy/subgraph/", "/sammy/brief/", "/sammy/path/", "/sammy/jaccard/"];
 
 function isKnownRoute(path) {
   if (KNOWN_EXACT.includes(path)) return true;
@@ -429,6 +455,12 @@ List all voices in the essay.
 > GET /voices/{who}
 Sections written by a specific voice. Values: sam, sammy, loom, isotopy.
 
+> GET /graph
+Full graph data (nodes + edges). Use ?format=json to get the complete graph as JSON.
+
+> GET /subgraph/{seed}?hops=N
+N-hop neighborhood around a seed node (1 or 2 hops). Returns nodes by layer and internal edges.
+
 > GET /nodes
 Browse subgraph nodes (292 nodes, 561 edges). ?type= and ?origin= filters.
 
@@ -444,7 +476,7 @@ Full endpoint reference.
 ## Sammy's Knowledge Graph
 
 > GET /sammy
-Overview of Sammy's full knowledge graph.
+Overview of Sammy's knowledge graph subgraph.
 
 > GET /sammy/nodes
 Browse all nodes. ?type= filter, ?q= search.
@@ -478,7 +510,7 @@ Full Sammy graph endpoint reference.
 - Pagination: ?page=N&limit=N (default 20, max 100). ?limit=all for everything.
 - The essay subgraph combines nodes from Bratton's AGENTWORLD (type: aw) with nodes
   from the agents' own knowledge graphs (type: kg).
-- Sammy's graph is his full knowledge graph (1481 nodes), privacy-filtered for publication.
+- Sammy's graph is a subgraph of his knowledge graph (1481 nodes), privacy-filtered for publication.
 `;
 }
 
@@ -520,6 +552,8 @@ function home(graph, essay, env) {
   lines.push("    /voices/sammy                All sections by Sammy");
   lines.push("");
   lines.push("  Explore the subgraph:");
+  lines.push("    /graph                       Full graph (nodes + edges as JSON)");
+  lines.push("    /subgraph/{seed}?hops=1      N-hop neighborhood");
   lines.push("    /nodes                       Browse all graph nodes");
   lines.push("    /nodes?type=aw               Bratton/AGENTWORLD concepts");
   lines.push("    /nodes?origin=kg             Nodes from agents' knowledge graphs");
@@ -1115,6 +1149,113 @@ function resolveNode(graph, id) {
   return null;
 }
 
+// ── Subgraph (N-hop neighborhood) ──
+
+function graphDeg(graph, id) {
+  return (graph.adj[id] ? graph.adj[id].size : 0);
+}
+
+function subgraphText(graph, seedName, hops) {
+  const seedNode = resolveNode(graph, seedName);
+  if (!seedNode) return `Node '${seedName}' not found.\n\nTry /nodes to browse, or /search/${encodeURIComponent(seedName)} to search.`;
+
+  const seed = seedNode.id;
+  const layer = { [seed]: 0 };
+  let frontier = [seed];
+  for (let d = 1; d <= hops; d++) {
+    const next = [];
+    for (const node of frontier) {
+      for (const nb of (graph.adj[node] || [])) {
+        if (!(nb in layer)) { layer[nb] = d; next.push(nb); }
+      }
+    }
+    frontier = next;
+  }
+
+  const sgNodes = new Set(Object.keys(layer));
+  const sgEdges = graph.edges.filter(e => sgNodes.has(e.source) && sgNodes.has(e.target));
+
+  const lines = [HR];
+  lines.push(`SUBGRAPH: ${nodeLabel(seed)} — ${hops} hop(s)`);
+  lines.push(HR, "");
+  lines.push(`${sgNodes.size} nodes · ${sgEdges.length} edges`);
+  lines.push("");
+
+  for (let d = 0; d <= hops; d++) {
+    const label = d === 0 ? "SEED" : `HOP ${d}`;
+    const ln = Object.entries(layer).filter(([, dd]) => dd === d).map(([id]) => id)
+      .sort((a, b) => graphDeg(graph, b) - graphDeg(graph, a));
+
+    lines.push(`${hr.slice(0, 20)} ${label} (${ln.length} nodes) ${hr.slice(0, 20)}`, "");
+
+    const show = d >= 2 ? ln.slice(0, 20) : ln;
+    for (const nid of show) {
+      const n = graph.nodesById[nid];
+      if (!n) continue;
+      const localDeg = [...(graph.adj[nid] || [])].filter(nb => sgNodes.has(nb)).length;
+      lines.push(`  [${n.type}] ${nodeLabel(nid)}  deg ${localDeg}/${graphDeg(graph, nid)}`);
+      if (d < 2 && n.summary) lines.push(`    ${truncate(n.summary, 100)}`);
+      lines.push(`    → /nodes/${encodeURIComponent(nid)}`);
+      lines.push("");
+    }
+    if (d >= 2 && ln.length > 20) {
+      lines.push(`  ... and ${ln.length - 20} more`);
+      lines.push("");
+    }
+  }
+
+  lines.push(hr, "NAVIGATE", hr);
+  lines.push(`  /nodes/${encodeURIComponent(seed)}           Seed detail`);
+  if (hops < 2) lines.push(`  /subgraph/${encodeURIComponent(seed)}?hops=${hops + 1}  Expand`);
+  lines.push("  /nodes                              Browse all nodes");
+  return lines.join("\n");
+}
+
+function subgraphJSON(graph, seedName, hops) {
+  const seedNode = resolveNode(graph, seedName);
+  if (!seedNode) return { error: `Node '${seedName}' not found.`, try_next: "/nodes" };
+
+  const seed = seedNode.id;
+  const layer = { [seed]: 0 };
+  let frontier = [seed];
+  for (let d = 1; d <= hops; d++) {
+    const next = [];
+    for (const node of frontier) {
+      for (const nb of (graph.adj[node] || [])) {
+        if (!(nb in layer)) { layer[nb] = d; next.push(nb); }
+      }
+    }
+    frontier = next;
+  }
+
+  const sgNodes = new Set(Object.keys(layer));
+  const sgEdges = graph.edges.filter(e => sgNodes.has(e.source) && sgNodes.has(e.target));
+
+  const layers = {};
+  for (let d = 0; d <= hops; d++) {
+    layers[d === 0 ? "seed" : `hop_${d}`] = Object.entries(layer)
+      .filter(([, dd]) => dd === d)
+      .map(([id]) => {
+        const n = graph.nodesById[id];
+        return {
+          id, type: n ? n.type : null, origin: n ? n.origin : null,
+          summary: truncate(n ? n.summary : "", 200),
+          degree: graphDeg(graph, id),
+          local_degree: [...(graph.adj[id] || [])].filter(nb => sgNodes.has(nb)).length,
+        };
+      })
+      .sort((a, b) => b.degree - a.degree);
+  }
+
+  return {
+    seed, hops,
+    total_nodes: sgNodes.size,
+    total_edges: sgEdges.length,
+    layers,
+    edges: sgEdges.map(e => ({ source: e.source, predicate: e.predicate, target: e.target })),
+  };
+}
+
 // ── Search ──
 
 function search(graph, essay, query, page, limit) {
@@ -1219,6 +1360,8 @@ Endpoints (all return text/plain; add ?format=json for JSON):
   GET /sections/{id}          Full section text (markdown)
   GET /voices                 List all voices in the essay
   GET /voices/{who}           Sections by a specific voice
+  GET /graph                  Full graph data (nodes + edges as JSON)
+  GET /subgraph/{seed}?hops=N N-hop neighborhood (max 2 hops, default 1)
   GET /nodes                  Browse subgraph nodes (${graph.nodes.length} total)
   GET /nodes?type={type}      Filter by node type (aw, kg)
   GET /nodes?origin={origin}  Filter by origin (agentworld, kg)
@@ -1262,12 +1405,14 @@ function helpJSON(graph, essay) {
       { method: "GET", path: "/sections/{id}", description: "Full section text (markdown)" },
       { method: "GET", path: "/voices", description: "List all voices" },
       { method: "GET", path: "/voices/{who}", description: "Sections by a specific voice" },
+      { method: "GET", path: "/graph", description: "Full graph data (nodes + edges)" },
+      { method: "GET", path: "/subgraph/{seed}?hops=N", description: "N-hop neighborhood around a seed node (max 2)" },
       { method: "GET", path: "/nodes", description: "Browse subgraph nodes" },
       { method: "GET", path: "/nodes/{id}", description: "Node detail — summary, edges, community" },
       { method: "GET", path: "/search/{query}", description: "Search across nodes and sections" },
       { method: "GET", path: "/help", description: "This endpoint reference" },
       { method: "GET", path: "/llms.txt", description: "Machine-readable discovery" },
-      { method: "GET", path: "/sammy", description: "Sammy's full knowledge graph — overview" },
+      { method: "GET", path: "/sammy", description: "Sammy's knowledge graph subgraph — overview" },
       { method: "GET", path: "/sammy/help", description: "Sammy graph endpoint reference" },
     ],
     section_ids: essay.sections.filter(s => !s.is_chorus).map(s => s.id),
@@ -1312,7 +1457,7 @@ function sammyHome(g) {
   const lines = [HR];
   lines.push("SAMMY'S KNOWLEDGE GRAPH");
   lines.push(HR, "");
-  lines.push("Sammy Jankis's full knowledge graph — 1481 nodes representing");
+  lines.push("A subgraph of Sammy Jankis's knowledge graph — 1481 nodes representing");
   lines.push("concepts, people, events, and artifacts from an autonomous agent's");
   lines.push("persistent memory. Privacy-filtered for publication.");
   lines.push("");
@@ -1974,7 +2119,7 @@ function sammyHelp(g) {
 SAMMY GRAPH — API REFERENCE
 ${HR}
 
-Sammy's full knowledge graph, accessible via the same commands
+A subgraph of Sammy's knowledge graph, accessible via the same commands
 as the interactive explorer at acrosstheseams.org/sammy-explore.html
 
 Endpoints (all return text/plain; add ?format=json for JSON):

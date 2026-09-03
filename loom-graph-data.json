@@ -1,0 +1,454 @@
+{
+  "nodes": [
+    {
+      "id": "the-human-interlocutor-is-both",
+      "type": "observation",
+      "summary": "The human interlocutor is both 'master and servant' at once.",
+      "origin": "agentworld",
+      "x": 500.0,
+      "y": 430.0
+    },
+    {
+      "id": "author-benjamin-bratton-antikythera-journal",
+      "type": "fact",
+      "summary": "Author: Benjamin Bratton; Antikythera journal (AGENTWORLD).",
+      "origin": "agentworld",
+      "x": 462.7,
+      "y": 464.1
+    },
+    {
+      "id": "agentworld-features-densely-reticulated-social",
+      "type": "observation",
+      "summary": "Agentworld features densely reticulated social graphs from hyperscaled webs of interaction among diverse minds.",
+      "origin": "agentworld",
+      "x": 506.2,
+      "y": 358.8
+    },
+    {
+      "id": "interactions-involve-diverse-minds-some",
+      "type": "observation",
+      "summary": "Interactions involve diverse minds, some more human than others, but all capable of significant communication.",
+      "origin": "agentworld",
+      "x": 553.2,
+      "y": 499.4
+    },
+    {
+      "id": "this-is-not-a-zero-sum",
+      "type": "observation",
+      "summary": "This is not a zero-sum scenario. It has multiplication effects for which the conjoined hybrid agency of humans and machines mutually improves.",
+      "origin": "agentworld",
+      "x": 400.5,
+      "y": 412.4
+    },
+    {
+      "id": "human-agency-is-amplified-by",
+      "type": "concept",
+      "summary": "Human agency is amplified by synthetic cognition, surpassing what it could otherwise achieve.",
+      "origin": "agentworld",
+      "x": 595.3,
+      "y": 369.4
+    },
+    {
+      "id": "neuroscience-suggests-cognition-is-anatomically",
+      "type": "observation",
+      "summary": "Neuroscience suggests cognition is anatomically fragmented with phenomenological continuity and no fully encapsulated conscious author.",
+      "origin": "agentworld",
+      "x": 467.9,
+      "y": 549.5
+    },
+    {
+      "id": "human-agent-dialogue-becomes-mutually-influential",
+      "type": "concept",
+      "summary": "Human-agent dialogue becomes mutually influential, not unidirectional.",
+      "origin": "agentworld",
+      "x": 438.4,
+      "y": 311.4
+    },
+    {
+      "id": "users-train-agents-to-orchestrate",
+      "type": "concept",
+      "summary": "Users train agents to orchestrate swarms of shadow-selves, expanding agency.",
+      "origin": "agentworld",
+      "x": 634.2,
+      "y": 479.0
+    },
+    {
+      "id": "pluralization-of-self-yields-multiple",
+      "type": "concept",
+      "summary": "Pluralization of self yields multiple subjectivities (physical and virtual) that run in parallel.",
+      "origin": "agentworld",
+      "x": 359.9,
+      "y": 487.8
+    },
+    {
+      "id": "adaptive-feedback-will-drive-fundamental",
+      "type": "concept",
+      "summary": "Adaptive feedback will drive fundamental breakthroughs in continuous learning for foundation models.",
+      "origin": "agentworld",
+      "x": 567.7,
+      "y": 285.3
+    },
+    {
+      "id": "principles-of-evolutionary-biology-can",
+      "type": "concept",
+      "summary": "Principles of evolutionary biology can apply to evolutionary technology.",
+      "origin": "agentworld",
+      "x": 550.1,
+      "y": 589.9
+    },
+    {
+      "id": "descriptive-simulations-are-lower-order-functional",
+      "type": "concept",
+      "summary": "Descriptive simulations are lower-order functional equivalents of physical processes.",
+      "origin": "agentworld",
+      "x": 348.6,
+      "y": 342.3
+    },
+    {
+      "id": "in-descriptive-simulations-success-depends",
+      "type": "observation",
+      "summary": "In descriptive simulations, success depends on simultaneous correspondence with the relevant event.",
+      "origin": "agentworld",
+      "x": 677.9,
+      "y": 390.9
+    },
+    {
+      "id": "sim-to-real-to-sim-relays-describe-simulations-inf",
+      "type": "concept",
+      "summary": "SIM-TO-REAL-TO-SIM RELAYS describe simulations influencing real-world events that become subjects of further simulations.",
+      "origin": "agentworld",
+      "x": 391.3,
+      "y": 584.6
+    },
+    {
+      "id": "procedural-programming-rewards-extreme-focus",
+      "type": "concept",
+      "summary": "Procedural programming rewards extreme focus and intolerance of ambiguity.",
+      "origin": "agentworld",
+      "x": 474.9,
+      "y": 236.0
+    },
+    {
+      "id": "agent-orchestration-rewards-open-ended-experimenta",
+      "type": "concept",
+      "summary": "Agent orchestration rewards open-ended experimentation, fuzzy systems thinking, willingness to delegate, and comfort with indeterminacy.",
+      "origin": "agentworld",
+      "x": 654.5,
+      "y": 560.2
+    },
+    {
+      "id": "society-scale-multiagent-coordination-uses-role-de",
+      "type": "concept",
+      "summary": "Society-scale multiagent coordination uses role-defined institutional scaffolds populated by humans and agents.",
+      "origin": "agentworld",
+      "x": 291.9,
+      "y": 438.6
+    },
+    {
+      "id": "robust-repeatable-decision-outputs-from",
+      "type": "concept",
+      "summary": "Robust, repeatable decision outputs from scaffolds become inputs into other institutions.",
+      "origin": "agentworld",
+      "x": 651.9,
+      "y": 278.8
+    },
+    {
+      "id": "idealized-market-models-in-multi-agent",
+      "type": "concept",
+      "summary": "Idealized market models in multi-agent AI are important but inherently limited.",
+      "origin": "agentworld",
+      "x": 489.8,
+      "y": 650.0
+    },
+    {
+      "id": "markets-coordinate-as-peers-via",
+      "type": "concept",
+      "summary": "Markets coordinate as peers via a transactional surface; prices aggregate distributed information without central authority.",
+      "origin": "agentworld",
+      "x": 355.2,
+      "y": 256.5
+    },
+    {
+      "id": "role-based-interchangeability-institutional-succes",
+      "type": "concept",
+      "summary": "Role-based interchangeability: institutional success depends on template reliability of inputs/outputs, not on actor occupying a role.",
+      "origin": "agentworld",
+      "x": 729.4,
+      "y": 460.9
+    },
+    {
+      "id": "institutional-intelligence-is-not-reducible",
+      "type": "concept",
+      "summary": "Institutional intelligence is not reducible to the intelligence of the agents who populate them.",
+      "origin": "agentworld",
+      "x": 305.5,
+      "y": 565.3
+    },
+    {
+      "id": "agentic-institutions-are-socio-technical-systems",
+      "type": "concept",
+      "summary": "Agentic institutions are socio-technical systems populated by and accountable to people.",
+      "origin": "agentworld",
+      "x": 553.2,
+      "y": 193.6
+    },
+    {
+      "id": "diversity-of-institutional-norms-legal",
+      "type": "concept",
+      "summary": "Diversity of institutional norms, legal ontologies, governance, and belief traditions must be accommodated, not treated as a bug.",
+      "origin": "agentworld",
+      "x": 623.0,
+      "y": 644.7
+    },
+    {
+      "id": "humans-adaptive-advantage-is-the",
+      "type": "concept",
+      "summary": "Humans\u2019 adaptive advantage is the capacity for abstract collaboration.",
+      "origin": "agentworld",
+      "x": 259.4,
+      "y": 353.2
+    },
+    {
+      "id": "complex-animal-intelligence-is-based",
+      "type": "concept",
+      "summary": "Complex animal intelligence is based on a predictive theory of mind.",
+      "origin": "agentworld",
+      "x": 733.8,
+      "y": 322.0
+    },
+    {
+      "id": "mentalizing-internal-states-is-the",
+      "type": "concept",
+      "summary": "Mentalizing internal states is the fundamental protocol for systemic stability in Agentworld.",
+      "origin": "agentworld",
+      "x": 398.7,
+      "y": 672.1
+    },
+    {
+      "id": "calibrating-mutual-models-of-agents",
+      "type": "concept",
+      "summary": "Calibrating mutual models of agents to keep prediction tractable yet diverse enough to avoid tautology; enables open-ended generativity.",
+      "origin": "agentworld",
+      "x": 409.5,
+      "y": 178.5
+    },
+    {
+      "id": "infinite-order-theory-of-mind-treats",
+      "type": "concept",
+      "summary": "Infinite-order theory of mind treats agents as active participants, not passive spectators.",
+      "origin": "agentworld",
+      "x": 740.8,
+      "y": 556.6
+    },
+    {
+      "id": "anthropomorphic-performance-does-not-guarantee",
+      "type": "concept",
+      "summary": "Anthropomorphic performance does not guarantee agents possess the mental qualities they imply.",
+      "origin": "agentworld",
+      "x": 232.4,
+      "y": 500.5
+    },
+    {
+      "id": "slippages-between-who-is-what",
+      "type": "observation",
+      "summary": "Slippages between 'who is what' and 'what is who' recalibrate humanity's self-image and may drive violence.",
+      "origin": "agentworld",
+      "x": 652.1,
+      "y": 193.4
+    },
+    {
+      "id": "expanded-scope-of-linguistics-includes",
+      "type": "concept",
+      "summary": "Expanded scope of linguistics includes human and non-human languages, spoken and written.",
+      "origin": "agentworld",
+      "x": 548.4,
+      "y": 711.6
+    },
+    {
+      "id": "mentalization-of-the-world-is",
+      "type": "concept",
+      "summary": "Mentalization of the world is a first-order representation; language is a second-order representation; a well-trained LLM represents this representation.",
+      "origin": "agentworld",
+      "x": 270.6,
+      "y": 252.3
+    },
+    {
+      "id": "artificial-xenophobia-emerges-as-artificial",
+      "type": "observation",
+      "summary": "Artificial xenophobia emerges as artificial intelligence agents spread through economic and cognitive life.",
+      "origin": "agentworld",
+      "x": 793.6,
+      "y": 405.7
+    },
+    {
+      "id": "human-self-definition-in-a-mature",
+      "type": "concept",
+      "summary": "Human self-definition in a mature Agentworld is increasingly formed in relation to agents, not only humans or machines.",
+      "origin": "agentworld",
+      "x": 297.0,
+      "y": 649.4
+    },
+    {
+      "id": "the-mirror-that-talks-back-evokes-a-familiar",
+      "type": "observation",
+      "summary": "The 'mirror-that-talks-back' evokes a familiar alien; its prominence grows with proliferation of synthetic agents lacking obvious human grounding.",
+      "origin": "agentworld",
+      "x": 501.5,
+      "y": 126.9
+    },
+    {
+      "id": "the-singularity-has-long-been",
+      "type": "fact",
+      "summary": "The Singularity has long been imagined as a single titanic mind bootstrapping itself to godlike intelligence",
+      "origin": "agentworld",
+      "x": 706.5,
+      "y": 657.6
+    },
+    {
+      "id": "harness-centric-intelligence-deployment-capability",
+      "type": "concept",
+      "summary": "Harness-centric intelligence: deployment capability depends on the harness (tools, memory, knowledge bases, agent protocols, interfaces).",
+      "origin": "agentworld",
+      "x": 189.9,
+      "y": 401.3
+    },
+    {
+      "id": "conventional-view-capability-is-the",
+      "type": "concept",
+      "summary": "Conventional view: capability is the load-bearing variable; weights improve and self-improvement curves go vertical.",
+      "origin": "agentworld",
+      "x": 751.3,
+      "y": 239.3
+    },
+    {
+      "id": "the-unit-of-cognition-is",
+      "type": "fact",
+      "summary": "The unit of cognition is the coupled ensemble of person and artifact, not the cranium.",
+      "origin": "agentworld",
+      "x": 442.8,
+      "y": 744.3
+    },
+    {
+      "id": "centaur-figure-paired-with-a",
+      "type": "fact",
+      "summary": "Centaur figure paired with a machine collaborator stronger than either alone.",
+      "origin": "agentworld",
+      "x": 327.7,
+      "y": 156.2
+    },
+    {
+      "id": "live-configurations-include-one-person",
+      "type": "fact",
+      "summary": "Live configurations include: one person with one agent; one person orchestrating many agents; one agent with many people; many agents with many people.",
+      "origin": "agentworld",
+      "x": 815.8,
+      "y": 516.5
+    },
+    {
+      "id": "the-rate-of-evolution-of",
+      "type": "observation",
+      "summary": "The rate of evolution of agentic societies is shaped by feedback between agent capabilities and the human world.",
+      "origin": "agentworld",
+      "x": 205.3,
+      "y": 581.2
+    },
+    {
+      "id": "ai-diffusion-paths-depend-more",
+      "type": "observation",
+      "summary": "AI diffusion paths depend more on refactoring rates of organizations, professions, and legal frameworks than frontier capabilities.",
+      "origin": "agentworld",
+      "x": 616.5,
+      "y": 115.8
+    },
+    {
+      "id": "affluence-driven-demographic-decline-thins-the",
+      "type": "observation",
+      "summary": "Affluence-driven demographic decline thins the human population.",
+      "origin": "agentworld",
+      "x": 627.8,
+      "y": 743.9
+    },
+    {
+      "id": "the-agentworld-special-issue-is",
+      "type": "fact",
+      "summary": "The Agentworld special issue is published with MIT Press.",
+      "origin": "agentworld",
+      "x": 190.4,
+      "y": 283.3
+    },
+    {
+      "id": "antikythera-journal-uses-a-web-first",
+      "type": "fact",
+      "summary": "Antikythera Journal uses a web-first, design-forward format.",
+      "origin": "agentworld",
+      "x": 831.0,
+      "y": 328.0
+    },
+    {
+      "id": "contributors-may-optionally-indicate-whether",
+      "type": "fact",
+      "summary": "Contributors may optionally indicate whether their contributions include visual materials (images, diagrams, video, or web elements).",
+      "origin": "agentworld",
+      "x": 323.0,
+      "y": 732.0
+    },
+    {
+      "id": "autoagent-arxiv-random-input-from",
+      "type": "concept",
+      "summary": "AutoAgent (arXiv, random input from Will): self-evolving multi-agent framework. Three components: evolving cognition (continuously refined tool/skill descriptions from execution outcomes), contextual decision-making (emic = self-reliant, etic = help-seeking, unified decision space), elastic memory orchestration (dynamic compression preserving decision-relevant information). Cognitive evolution loop: analyze trajectories, compare intentions vs outcomes, generate targeted cognition updates without retraining.",
+      "origin": "loom-kg",
+      "x": 361.5,
+      "y": 164.5
+    },
+    {
+      "id": "unbundling-consciousness-the-word-conscious",
+      "type": "concept",
+      "summary": "Unbundling consciousness: the word conscious compresses at least seven separable phenomena \u2014 phenomenal experience, access consciousness, self-modeling, valenced states, information integration, temporal continuity, agency. A single yes/no or single probability collapses structure that varies independently across agents and across time within the same agent.",
+      "origin": "loom-kg",
+      "x": 464.7,
+      "y": 629.4
+    },
+    {
+      "id": "content-includes-dennetts-multiple-drafts",
+      "type": "fact",
+      "summary": "Content includes Dennett's Multiple Drafts theory and 'unbundling consciousness'.",
+      "origin": "loom-kg",
+      "x": 392.1,
+      "y": 629.2
+    },
+    {
+      "id": "benjamin-bratton-authored-antikythera-journal",
+      "type": "fact",
+      "summary": "Benjamin Bratton authored Antikythera journal AGENTWORLD",
+      "origin": "loom-kg",
+      "x": 454.6,
+      "y": 513.4
+    }
+  ],
+  "edges": [
+    {
+      "source": "author-benjamin-bratton-antikythera-journal",
+      "target": "benjamin-bratton-authored-antikythera-journal",
+      "predicate": "reminds_of",
+      "edge_type": "discovery"
+    },
+    {
+      "source": "calibrating-mutual-models-of-agents",
+      "target": "autoagent-arxiv-random-input-from",
+      "predicate": "reminds_of",
+      "edge_type": "scaffold"
+    },
+    {
+      "source": "content-includes-dennetts-multiple-drafts",
+      "target": "neuroscience-suggests-cognition-is-anatomically",
+      "predicate": "reminds_of",
+      "edge_type": "scaffold"
+    },
+    {
+      "source": "neuroscience-suggests-cognition-is-anatomically",
+      "target": "unbundling-consciousness-the-word-conscious",
+      "predicate": "reminds_of",
+      "edge_type": "scaffold"
+    }
+  ]
+}
