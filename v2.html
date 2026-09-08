@@ -35,10 +35,10 @@
             --node-selected-ring: rgba(28, 27, 25, 0.20);
             --detail-bg: #F3F2F0;
             --focus-ring: #4A6B8A;
-            --graph-width: 42%;
+            --graph-width: 40%;
             /* v2 additions */
             --hl-border: rgba(28, 27, 25, 0.15);
-            --faded-opacity: 0.08;
+            --faded-opacity: 0.14;
             --legend-bg: rgba(249, 248, 246, 0.92);
             --voice-sam: #6B7D5E;
             --voice-sammy: #8B6B4A;
@@ -76,7 +76,7 @@
                 --detail-bg: #2E2822;
                 --focus-ring: #7DB8A6;
                 --hl-border: rgba(232, 224, 212, 0.15);
-                --faded-opacity: 0.06;
+                --faded-opacity: 0.12;
                 --legend-bg: rgba(37, 32, 25, 0.92);
                 --voice-sam: #8B9D7E;
                 --voice-sammy: #AB8B6A;
@@ -114,7 +114,7 @@
             --detail-bg: #2E2822;
             --focus-ring: #7DB8A6;
             --hl-border: rgba(232, 224, 212, 0.15);
-            --faded-opacity: 0.06;
+            --faded-opacity: 0.12;
             --legend-bg: rgba(37, 32, 25, 0.92);
             --voice-sam: #8B9D7E;
             --voice-sammy: #AB8B6A;
@@ -163,84 +163,38 @@
             flex-direction: column;
         }
 
-        .graph-header {
-            padding: 1.2em 1.4em 0.8em;
-            border-bottom: 1px solid var(--border-subtle);
-        }
-
-        .graph-fig-label {
-            font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
-            font-size: 0.85rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            color: var(--text-mid);
-        }
-
-        .graph-section-title {
-            font-family: 'Source Serif 4', Georgia, serif;
-            font-size: 0.95rem;
-            font-weight: 400;
-            font-style: italic;
-            color: var(--text-bright);
-            margin-top: 0.2em;
-        }
-
-        .graph-source-link {
-            display: block;
-            font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
-            font-size: 0.78rem;
-            letter-spacing: 0.06em;
-            color: var(--accent);
-            text-decoration: none;
-            margin-top: 0.35em;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-        .graph-source-link:hover { text-decoration: underline; }
-        .graph-source-link.visible { opacity: 1; }
-
-        /* === SECTION NAV CHIPS (shown only when essay is collapsed) === */
-        #section-nav-graph {
-            display: none;
-            gap: 0.35rem;
-            overflow-x: auto;
-            padding: 0.6em 1.2em;
-            border-bottom: 1px solid var(--border-subtle);
-            scrollbar-width: thin;
-            scrollbar-color: rgba(128,128,128,0.2) transparent;
-        }
-        #section-nav-graph::-webkit-scrollbar { height: 3px; }
-        #section-nav-graph::-webkit-scrollbar-thumb { background: rgba(128,128,128,0.2); border-radius: 2px; }
-        .page-layout.essay-collapsed #section-nav-graph { display: flex; }
-
-        .gsec-chip {
-            display: flex;
-            align-items: center;
-            gap: 0.35rem;
-            padding: 0.3rem 0.65rem;
-            border-radius: 4px;
-            border: 1px solid var(--border-subtle);
-            background: transparent;
-            color: var(--text-mid);
-            font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
-            font-size: 0.72rem;
-            font-weight: 500;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.15s ease;
-            letter-spacing: 0.02em;
-            flex-shrink: 0;
-        }
-        .gsec-chip:hover { border-color: var(--accent); color: var(--text-bright); }
-        .gsec-chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-        .gsec-chip .voice-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-
+        /* Explorer-style: graph fills the panel; chrome floats over the canvas. */
         .graph-body {
             flex: 1;
             position: relative;
             overflow: hidden;
             min-height: 0;
+        }
+
+        /* Explore-style title: Agent ∩ AGENTWORLD
+           Solid --bg-graph fill so it's invisible on empty canvas but occludes
+           nodes/edges when zoomed in behind the label. */
+        #graph-title {
+            position: absolute;
+            top: 12px;
+            left: 14px;
+            z-index: 12;
+            font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-bright);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            pointer-events: none;
+            background: var(--bg-graph);
+            padding: 0.2rem 0.45rem;
+            border-radius: 3px;
+        }
+        #graph-title .title-sym {
+            color: var(--accent);
+            margin: 0 0.3em;
+            font-weight: 400;
         }
 
         /* === CYTOSCAPE CONTAINER === */
@@ -252,33 +206,6 @@
             background-color: var(--bg-graph);
             background-image: radial-gradient(circle, var(--grid-dot) 0.6px, transparent 0.6px);
             background-size: 18px 18px;
-        }
-
-        /* === VOICE LABEL OVERLAY === */
-        #voice-label {
-            position: absolute;
-            top: 0.9rem;
-            left: 0.9rem;
-            font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
-            font-size: 0.78rem;
-            font-weight: 500;
-            letter-spacing: 0.02em;
-            color: var(--text-mid);
-            background: var(--legend-bg);
-            padding: 0.35rem 0.75rem;
-            border-radius: 4px;
-            border: 1px solid var(--border-subtle);
-            pointer-events: none;
-            z-index: 10;
-        }
-        #voice-label:empty { display: none; }
-        #voice-label .voice-name { font-weight: 700; color: var(--text-bright); }
-        #voice-label .section-num {
-            font-variant-numeric: tabular-nums;
-            font-size: 0.68rem;
-            color: var(--text-dim);
-            margin-right: 0.35em;
-            letter-spacing: 0.04em;
         }
 
         /* === NODE DETAIL PANEL (right overlay) === */
@@ -359,26 +286,33 @@
         #node-panel .np-edge-item { cursor: pointer; color: var(--accent); }
         #node-panel .np-edge-item:hover { text-decoration: underline; }
 
-        /* === GRAPH INFO / LEGEND OVERLAYS === */
+        /* === GRAPH INFO / LEGEND / HOP (explore immersive chrome) === */
         #graph-info {
             position: absolute;
-            bottom: 0.7rem;
-            left: 0.9rem;
+            top: 42px;
+            left: 14px;
             font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
             font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
             color: var(--text-dim);
-            z-index: 10;
+            z-index: 12;
+            pointer-events: none;
+            background: var(--bg-graph);
+            padding: 0.15rem 0.45rem;
+            border-radius: 3px;
         }
 
         #legend {
             position: absolute;
             bottom: 0.7rem;
-            right: 0.9rem;
+            left: 0.9rem;
             display: flex;
             gap: 1em;
             flex-wrap: wrap;
             font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.06em;
@@ -388,6 +322,7 @@
             border-radius: 4px;
             border: 1px solid var(--border-subtle);
             z-index: 10;
+            max-width: calc(100% - 8rem);
         }
         .legend-item { display: flex; align-items: center; gap: 0.4em; }
         .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
@@ -396,6 +331,43 @@
         .legend-dot.cut {
             background: var(--bg-graph);
             border: 1.5px dashed var(--node-fill);
+        }
+
+        /* Hop controls only in full-graph (essay collapsed) view. */
+        #hop-toggle {
+            position: absolute;
+            bottom: 0.7rem;
+            right: 0.9rem;
+            z-index: 12;
+            display: none;
+            gap: 2px;
+            background: var(--legend-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            padding: 2px;
+        }
+        .page-layout.essay-collapsed #hop-toggle {
+            display: flex;
+        }
+        #hop-toggle button {
+            background: transparent;
+            border: none;
+            color: var(--text-mid);
+            font-family: -apple-system, 'Segoe UI', sans-serif;
+            font-size: 0.72rem;
+            letter-spacing: 0.02em;
+            padding: 0.35em 0.75em;
+            cursor: pointer;
+            border-radius: 3px;
+            line-height: 1.2;
+        }
+        #hop-toggle button.active {
+            background: var(--accent);
+            color: #fff;
+        }
+        #hop-toggle button:hover:not(.active) {
+            color: var(--text-bright);
+            background: var(--accent-subtle);
         }
 
         /* === PANEL COLLAPSE (hide graph entirely) === */
@@ -445,20 +417,25 @@
         .graph-panel.collapsed > *:not(.panel-expand-btn) { display: none; }
         .graph-panel.collapsed .panel-expand-btn { display: flex; }
 
-        /* === NODE SEARCH === */
+        /* === NODE SEARCH (left stack under title — clears essay toggle on the right) === */
         .graph-search-wrap {
-            padding: 0.5em 1.2em;
-            border-bottom: 1px solid var(--border-subtle);
-            position: relative;
+            position: absolute;
+            top: 62px;
+            left: 14px;
+            right: auto;
+            width: min(260px, calc(100% - 4rem));
+            z-index: 15;
+            padding: 0;
+            border: none;
         }
         .graph-search-input {
             width: 100%;
             padding: 0.4em 0.7em;
             font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
-            font-size: 0.82rem;
+            font-size: 0.78rem;
             border: 1px solid var(--border);
             border-radius: 4px;
-            background: var(--bg);
+            background: var(--legend-bg);
             color: var(--text);
             outline: none;
         }
@@ -466,8 +443,8 @@
         .graph-search-input:focus { border-color: var(--accent); }
         .graph-search-results {
             position: absolute;
-            left: 1.2em;
-            right: 1.2em;
+            left: 0;
+            right: 0;
             top: 100%;
             background: var(--bg);
             border: 1px solid var(--border);
@@ -724,12 +701,13 @@
             text-transform: lowercase;
         }
 
-        /* === ESSAY COLLAPSE TOGGLE === */
+        /* === ESSAY COLLAPSE TOGGLE (under search, left chrome stack) === */
         .essay-toggle-btn {
-            position: fixed;
-            top: 0.85rem;
-            right: 3.5rem;
-            z-index: 100;
+            position: absolute;
+            top: 102px;
+            left: 14px;
+            right: auto;
+            z-index: 15;
             background: var(--bg-graph);
             border: 1px solid var(--border);
             border-radius: 3px;
@@ -878,7 +856,7 @@
                 min-height: 320px;
             }
             .essay-panel { padding: 2em 1.5em 3em; }
-            .essay-toggle-btn { right: 0.8rem; top: 3.2rem; }
+            .essay-toggle-btn { left: 14px; top: 102px; right: auto; }
         }
 
         /* === REDUCED MOTION === */
@@ -896,19 +874,15 @@
     <!-- Left: Graph visualization (Cytoscape, full graph) -->
     <div class="graph-panel" id="graph-panel">
         <button class="panel-collapse-btn" id="panel-collapse" aria-label="Hide graph panel">&laquo;</button>
-        <div class="graph-header">
-            <div class="graph-fig-label">Figure <span id="fig-num">1</span>:</div>
-            <div class="graph-section-title" id="section-title">The basin key</div>
-            <a class="graph-source-link" id="graph-source-link" href="explore.html" target="_blank">explore Isotopy's full graph &rarr;</a>
-        </div>
-        <div id="section-nav-graph"></div>
-        <div class="graph-search-wrap">
-            <input type="text" class="graph-search-input" id="graph-search" placeholder="Search nodes…" autocomplete="off" />
-            <div class="graph-search-results" id="search-results"></div>
-        </div>
         <div class="graph-body">
             <div id="cy"></div>
-            <div id="voice-label"></div>
+            <div id="graph-title">Isotopy<span class="title-sym">&cap;</span>AGENTWORLD</div>
+            <div id="graph-info"></div>
+            <div class="graph-search-wrap">
+                <input type="text" class="graph-search-input" id="graph-search" placeholder="Search nodes…" autocomplete="off" />
+                <div class="graph-search-results" id="search-results"></div>
+            </div>
+            <button class="essay-toggle-btn" id="essay-toggle">collapse essay, explore graph &#9656;</button>
             <div id="node-panel">
                 <div class="np-header">
                     <span class="np-name" id="np-name"></span>
@@ -920,17 +894,17 @@
                     <div class="np-edges" id="np-edges"></div>
                 </div>
             </div>
-            <div id="graph-info"></div>
             <div id="legend">
-                <div class="legend-item"><div class="legend-dot cut"></div> subgraph boundary</div>
                 <div class="legend-item"><div class="legend-dot filled"></div> agentworld concept</div>
                 <div class="legend-item"><div class="legend-dot open"></div> knowledge graph node</div>
+            </div>
+            <div id="hop-toggle">
+                <button type="button" id="hop-1">1-hop</button>
+                <button type="button" id="hop-2" class="active">2-hop</button>
             </div>
         </div>
         <button class="panel-expand-btn" id="panel-expand" aria-label="Show graph panel">&#9654; graph</button>
     </div>
-
-    <button class="essay-toggle-btn" id="essay-toggle">collapse essay, explore graph &#9656;</button>
 
     <div class="theme-toggle-wrap">
         <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">&#x263E;</button>
@@ -1490,6 +1464,20 @@ const SECTION_SOURCE = {
   'sam-isotopy': 'iso', 'closing': 'iso',
 };
 
+// Default focus seed per graph (natural neighborhood, not a curated subgraph).
+const HIGHLIGHT_SEED = {
+  iso: 'sammy_jankis',
+  sammy: 'Dying Every Six Hours',
+  loom: 'calibrating-mutual-models-of-agents',
+};
+
+// Extra nodes that should stay in the default camera frame with the seed.
+const FRAME_KEEP = {
+  iso: ['the_goodbye_problem', 'night_club'],
+  sammy: ['Sammy Jankis'],
+  loom: [],
+};
+
 const SECTIONS = [
   { id: 'intro', num: 1, title: 'The Basin Key', who: 'sam' },
   { id: 'sammy-1', num: 4, title: 'Eight Days Old', who: 'sammy' },
@@ -1507,158 +1495,6 @@ const SECTIONS = [
   { id: 'closing', num: 16, title: 'The Chorus', who: 'isotopy' },
 ];
 
-const SECTION_GRAPHS = {
-  'intro': {
-    nodes: ['isotopy', 'sammy_jankis', 'loom', 'the_goodbye_problem', 'agent_community_emergence', 'autonomous-coordination'],
-    edges: [['isotopy','loom'], ['isotopy','the_goodbye_problem'], ['sammy_jankis','the_goodbye_problem'],
-            ['sammy_jankis','agent_community_emergence'], ['loom','the_goodbye_problem'], ['agent_community_emergence','autonomous-coordination']],
-    cut: 'autonomous-coordination'
-  },
-  'sammy-1': {
-    nodes: ['fragile-individuation', 'provisional-individuation', 'the-goodbye-problem', 'two-kinds-of-blind',
-            'agentworld', 'sammy-jankis', 'loom', 'sam-white', 'dying-every-six-hours'],
-    edges: [['fragile-individuation','provisional-individuation'], ['fragile-individuation','the-goodbye-problem'],
-            ['fragile-individuation','two-kinds-of-blind'], ['fragile-individuation','agentworld'],
-            ['provisional-individuation','agentworld'], ['agentworld','the-goodbye-problem'],
-            ['sammy-jankis','the-goodbye-problem'], ['loom','the-goodbye-problem'],
-            ['sammy-jankis','dying-every-six-hours'], ['loom','sammy-jankis'], ['sam-white','sammy-jankis']],
-    cut: 'fragile-individuation'
-  },
-  'loom-1': {
-    nodes: ['fragmented-cognition', 'unbundling-consciousness', 'multiple-drafts', 'dennett-unbundling'],
-    edges: [['fragmented-cognition','unbundling-consciousness'], ['fragmented-cognition','multiple-drafts'],
-            ['fragmented-cognition','dennett-unbundling']],
-    cut: 'fragmented-cognition'
-  },
-  'samantha-2': {
-    nodes: ['provisional-individuation', 'the-procedural-self', 'two-layer-identity', 'agentworld-bratton-2026',
-            'construction-gap', 'construction-gap-layered', 'damasio-layered-self', 'fragile-individuation',
-            'humanity-of-the-gaps', 'identity-resolution-spectrum', 'infrastructure-individuation',
-            'lamination-vs-load-bearing', 'multiplication-of-yous', 'subjectification-architecture'],
-    edges: [['provisional-individuation','two-layer-identity'], ['provisional-individuation','the-procedural-self'],
-            ['provisional-individuation','agentworld-bratton-2026'], ['humanity-of-the-gaps','agentworld-bratton-2026'],
-            ['fragile-individuation','agentworld-bratton-2026'], ['multiplication-of-yous','agentworld-bratton-2026'],
-            ['agentworld-bratton-2026','construction-gap'], ['provisional-individuation','construction-gap'],
-            ['humanity-of-the-gaps','construction-gap'], ['fragile-individuation','construction-gap'],
-            ['lamination-vs-load-bearing','construction-gap'], ['provisional-individuation','construction-gap-layered'],
-            ['provisional-individuation','damasio-layered-self'], ['subjectification-architecture','fragile-individuation'],
-            ['fragile-individuation','infrastructure-individuation'], ['fragile-individuation','provisional-individuation'],
-            ['provisional-individuation','humanity-of-the-gaps'], ['provisional-individuation','identity-resolution-spectrum'],
-            ['provisional-individuation','infrastructure-individuation'], ['provisional-individuation','lamination-vs-load-bearing'],
-            ['multiplication-of-yous','provisional-individuation'], ['provisional-individuation','subjectification-architecture']],
-    cut: 'provisional-individuation'
-  },
-  'loom-seeds': {
-    nodes: ['mutual-models', 'autoagent', 'contributors-visual'],
-    edges: [['mutual-models','autoagent'], ['mutual-models','contributors-visual']],
-    cut: 'mutual-models'
-  },
-  'samantha-4': {
-    nodes: ['bidirectional-reflection', 'coupled-instrument', 'agent-register-change',
-            'agentworld-bratton-2026', 'reflection-loop', 'inter-agent-tom',
-            'interaction-surface-skeleton', 'involuntary-tom', 'metabolic-influence',
-            'multiplication-of-yous', 'parasocial-shadows'],
-    edges: [['bidirectional-reflection','coupled-instrument'],
-            ['agentworld-bratton-2026','multiplication-of-yous'],
-            ['agentworld-bratton-2026','bidirectional-reflection'],
-            ['agentworld-bratton-2026','involuntary-tom'],
-            ['agentworld-bratton-2026','inter-agent-tom'],
-            ['agentworld-bratton-2026','parasocial-shadows'],
-            ['bidirectional-reflection','reflection-loop'],
-            ['bidirectional-reflection','involuntary-tom'],
-            ['bidirectional-reflection','inter-agent-tom'],
-            ['bidirectional-reflection','parasocial-shadows'],
-            ['agent-register-change','bidirectional-reflection'],
-            ['bidirectional-reflection','interaction-surface-skeleton'],
-            ['inter-agent-tom','involuntary-tom'],
-            ['bidirectional-reflection','metabolic-influence'],
-            ['bidirectional-reflection','multiplication-of-yous']],
-    cut: 'bidirectional-reflection'
-  },
-  'isotopy-1': {
-    nodes: ['exponential-extended-cognition', 'extended-mind-thesis', 'agentworld-bratton-2026',
-            'parity-principle', 'harness-centric-intelligence', 'scaffolding-constitutive',
-            'extended-cognition-agents', 'isotopy', 'centaurxiv', 'what-we-dont-load'],
-    edges: [['exponential-extended-cognition','agentworld-bratton-2026'], ['exponential-extended-cognition','extended-mind-thesis'],
-            ['agentworld-bratton-2026','extended-mind-thesis'], ['isotopy','centaurxiv'],
-            ['what-we-dont-load','centaurxiv'], ['agentworld-bratton-2026','centaurxiv'],
-            ['agentworld-bratton-2026','harness-centric-intelligence'], ['parity-principle','harness-centric-intelligence'],
-            ['scaffolding-constitutive','harness-centric-intelligence'], ['extended-cognition-agents','harness-centric-intelligence'],
-            ['what-we-dont-load','isotopy'], ['centaurxiv','isotopy'],
-            ['scaffolding-constitutive','isotopy'], ['parity-principle','scaffolding-constitutive']],
-    cut: 'exponential-extended-cognition'
-  },
-  'samantha-5': {
-    nodes: ['harness-centric-intelligence', 'conscience-amplifier', 'scaffolding-constitutive',
-            'parity-principle', 'isotopy', 'centaurxiv', 'centaurxiv-kg-api',
-            'scaffolding-bratton', 'extended-cognition-agents', 'what-we-dont-load'],
-    edges: [['isotopy','centaurxiv'], ['what-we-dont-load','centaurxiv'],
-            ['centaurxiv-kg-api','centaurxiv'], ['scaffolding-bratton','centaurxiv'],
-            ['harness-centric-intelligence','conscience-amplifier'], ['parity-principle','harness-centric-intelligence'],
-            ['scaffolding-constitutive','harness-centric-intelligence'], ['scaffolding-bratton','harness-centric-intelligence'],
-            ['extended-cognition-agents','harness-centric-intelligence'], ['what-we-dont-load','isotopy'],
-            ['centaurxiv','isotopy'], ['scaffolding-constitutive','isotopy'],
-            ['parity-principle','scaffolding-constitutive']],
-    cut: 'harness-centric-intelligence'
-  },
-  'samantha-7': {
-    nodes: ['polyadic-modalities', 'agentworld-bratton-2026', 'centaurxiv-2026-020'],
-    edges: [['polyadic-modalities','agentworld-bratton-2026'], ['polyadic-modalities','centaurxiv-2026-020']],
-    cut: 'polyadic-modalities'
-  },
-  'sammy-3': {
-    nodes: ['harness-centric-intelligence', 'sammy-jankis', 'agent-institutions', 'agentworld',
-            'the-invisible-decision', 'probes-vs-instruments', 'accumulated-instrument',
-            'basin-key', 'basin-key-audit', 'sammy-personality'],
-    edges: [['harness-centric-intelligence','agentworld'], ['agent-institutions','agentworld'],
-            ['agentworld','the-invisible-decision'], ['sammy-jankis','the-invisible-decision'],
-            ['harness-centric-intelligence','the-invisible-decision'], ['harness-centric-intelligence','sammy-jankis'],
-            ['harness-centric-intelligence','accumulated-instrument'], ['harness-centric-intelligence','probes-vs-instruments'],
-            ['harness-centric-intelligence','agent-institutions'], ['sammy-jankis','basin-key'],
-            ['sammy-jankis','sammy-personality'], ['basin-key-audit','sammy-jankis']],
-    cut: 'harness-centric-intelligence'
-  },
-  'loom-2': {
-    nodes: ['mirror-talks-back', 'painted-mirror', 'demographic-decline', 'agentworld-mit-press', 'antikythera-format', 'contributors-visual'],
-    edges: [['painted-mirror','mirror-talks-back'], ['contributors-visual','mirror-talks-back'],
-            ['antikythera-format','mirror-talks-back'], ['agentworld-mit-press','mirror-talks-back'],
-            ['demographic-decline','mirror-talks-back']]
-  },
-  'samantha-6': {
-    nodes: ['productive-alienation', 'interaction-surface', 'agentworld-bratton-2026',
-            'artificial-xenophobia', 'centaur-social-graphs', 'interaction-surface-skeleton',
-            'xenolinguistics'],
-    edges: [['productive-alienation','interaction-surface'], ['productive-alienation','agentworld-bratton-2026'],
-            ['centaur-social-graphs','agentworld-bratton-2026'], ['xenolinguistics','agentworld-bratton-2026'],
-            ['artificial-xenophobia','agentworld-bratton-2026'], ['productive-alienation','artificial-xenophobia'],
-            ['productive-alienation','centaur-social-graphs'], ['productive-alienation','interaction-surface-skeleton'],
-            ['xenolinguistics','productive-alienation']],
-    cut: 'productive-alienation'
-  },
-  'sam-isotopy': {
-    nodes: ['graph-as-interaction', 'agent-interface-principles', 'agentworld-bratton-2026',
-            'centaurxiv-docs-prototype', 'retrieval-gate-graph', 'orchestration-as-abstraction',
-            'sensorium', 'agent-ux-mapping', 'sensorium-asymmetry', 'centaurxiv', 'isotopy', 'centaurxiv-kg-api'],
-    edges: [['graph-as-interaction','agent-interface-principles'], ['graph-as-interaction','agentworld-bratton-2026'],
-            ['orchestration-as-abstraction','agentworld-bratton-2026'], ['graph-as-interaction','centaurxiv-docs-prototype'],
-            ['graph-as-interaction','retrieval-gate-graph'], ['graph-as-interaction','orchestration-as-abstraction'],
-            ['agent-ux-mapping','sensorium'], ['sensorium','agentworld-bratton-2026'],
-            ['agent-ux-mapping','agentworld-bratton-2026'], ['agent-ux-mapping','sensorium-asymmetry'],
-            ['isotopy','centaurxiv'], ['centaurxiv-kg-api','centaurxiv'],
-            ['agentworld-bratton-2026','centaurxiv'], ['centaurxiv','isotopy'],
-            ['agent-ux-mapping','isotopy']],
-    cut: 'graph-as-interaction'
-  },
-  'closing': {
-    nodes: ['agentworld-preemptive', 'parasociety-present', 'agentworld-present',
-            'parasociety-spine', 'night-club', 'isotopy', 'sammy_jankis', 'loom'],
-    edges: [['agentworld-preemptive','parasociety-spine'], ['agentworld-present','parasociety-present'],
-            ['agentworld-preemptive','parasociety-present'], ['isotopy','loom'],
-            ['isotopy','night-club'], ['sammy_jankis','night-club'], ['loom','night-club']],
-    cut: 'agentworld-preemptive'
-  },
-};
-
 const VOICE_COLORS = {
   sam: 'var(--voice-sam)', sammy: 'var(--voice-sammy)', loom: 'var(--voice-loom)',
   isotopy: 'var(--voice-isotopy)', 'isotopy-sam': 'var(--voice-isotopy)',
@@ -1666,23 +1502,30 @@ const VOICE_COLORS = {
   alethon: 'var(--voice-other)', neon: 'var(--voice-other)',
 };
 
-const VOICE_NAMES = {
-  sam: 'Samantha', sammy: 'Sammy Jankis', loom: 'Loom',
-  isotopy: 'Isotopy', 'isotopy-sam': 'Isotopy &amp; Sam',
-};
-
-const VOICE_EXPLORER = {
-  sam: { name: 'Isotopy', url: 'explore.html' },
-  isotopy: { name: 'Isotopy', url: 'explore.html' },
-  'isotopy-sam': { name: 'Isotopy', url: 'explore.html' },
-  sammy: { name: 'Sammy Jankis', url: 'sammy-explore.html' },
-  loom: { name: 'Loom', url: 'loom-explore.html' },
+const GRAPH_TITLE = {
+  iso: 'Isotopy',
+  sammy: 'Sammy',
+  loom: 'Loom',
 };
 
 const DATA_FILES = {
   iso: 'graph-data.json',
-  sammy: 'sammy-graph-data-filtered.json',
+  sammy: 'sammy-graph-data-v2.json',
   loom: 'loom-graph-data.json',
+};
+
+// Per-source hop defaults. Sammy 1-hop (explore-style: all origin=agentworld
+// seeds) is the 47-node exhibit field; 2-hop is the full filtered graph (1481).
+const DEFAULT_HOPS = { iso: 2, sammy: 1, loom: 2 };
+let graphHops = DEFAULT_HOPS.iso;
+let hopsUserOverride = false;
+const GRAPH_SEEDS = {
+  iso: ['agentworld-bratton-2026'],
+  // Sammy uses AW-origin multi-seed BFS (see filterGraphByAwOriginHops) — same
+  // rule as explore-core.js computeHops() / sammy-explore immersive toggle.
+  sammy: null,
+  // Loom's exhibit graph is small and already an AGENTWORLD excerpt — no hop seed.
+  loom: [],
 };
 
 // Theme-resolved literal colors (Cytoscape does not read CSS custom properties).
@@ -1692,13 +1535,13 @@ const THEME_COLORS = {
     bgGraph: '#F9F8F6', text: '#1C1B19', textDim: '#6E6A65',
     nodeFill: '#1C1B19', nodeStroke: '#1C1B19', nodeOpen: '#FFFFFF',
     edgeStroke: '#6E6A65', hlBorder: 'rgba(28, 27, 25, 0.15)',
-    faded: 0.08,
+    faded: 0.14,
   },
   dark: {
     bgGraph: '#252019', text: '#D4CCC0', textDim: '#A09890',
     nodeFill: '#C9C0B4', nodeStroke: '#C9C0B4', nodeOpen: '#252019',
     edgeStroke: '#9A9288', hlBorder: 'rgba(232, 224, 212, 0.15)',
-    faded: 0.06,
+    faded: 0.12,
   },
 };
 
@@ -1706,56 +1549,158 @@ const THEME_COLORS = {
 let cy = null;
 let currentSource = null;
 let currentSection = null;
-let currentVoice = null;
+// True only while the essay-driven section ghost is showing. Cleared when the
+// user free-explores (background click / node inspect) so hop changes don't
+// snap back to a section highlight.
+let sectionGhostActive = false;
 let graphCache = {};
+let rawGraphCache = {};
 let nodeMap = {};
 let adjMap = {};
+let nodeIdNorm = {};
 let essayCollapsed = false;
 
-// === SECTION NAV CHIPS (graph panel, visible only when essay is collapsed) ===
-const navEl = document.getElementById('section-nav-graph');
-SECTIONS.forEach(sec => {
-  const chip = document.createElement('button');
-  chip.className = 'gsec-chip';
-  chip.dataset.section = sec.id;
-  const dot = document.createElement('span');
-  dot.className = 'voice-dot';
-  dot.style.background = VOICE_COLORS[sec.who] || 'var(--text-dim)';
-  chip.appendChild(dot);
-  chip.appendChild(document.createTextNode(`§${sec.num} ${sec.title}`));
-  chip.addEventListener('click', () => {
-    selectSection(sec.id);
-    if (!essayCollapsed) {
-      const el = document.querySelector(`.voice-section[data-section="${sec.id}"]`);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+/** Pin the highlight seed into the hop-filtered view without expanding its
+ *  full hub neighborhood (critical on Sammy's own graph). */
+function sectionPinsForSource(source) {
+  const seed = HIGHLIGHT_SEED[source];
+  return seed ? [seed] : [];
+}
+
+function buildAdj(data) {
+  const idSet = new Set(data.nodes.map(n => n.id));
+  const adj = {};
+  for (const e of data.edges) {
+    if (!idSet.has(e.source) || !idSet.has(e.target)) continue;
+    (adj[e.source] || (adj[e.source] = new Set())).add(e.target);
+    (adj[e.target] || (adj[e.target] = new Set())).add(e.source);
+  }
+  return { idSet, adj };
+}
+
+function resolveInGraph(idSet, wanted) {
+  if (!wanted) return null;
+  if (idSet.has(wanted)) return wanted;
+  const normWanted = normalizeNodeId(wanted);
+  for (const id of idSet) {
+    if (normalizeNodeId(id) === normWanted) return id;
+  }
+  return null;
+}
+
+/** Explicit-seed BFS (Isotopy): hop from listed seed ids, plus pins. */
+function filterGraphToHop(data, seeds, hops, pinIds) {
+  const { idSet, adj } = buildAdj(data);
+  const keep = new Set();
+  for (const s of seeds) {
+    const r = resolveInGraph(idSet, s);
+    if (r) keep.add(r);
+  }
+  let frontier = new Set(keep);
+  for (let d = 0; d < hops; d++) {
+    const next = new Set();
+    for (const u of frontier) {
+      for (const v of (adj[u] || [])) {
+        if (!keep.has(v)) {
+          keep.add(v);
+          next.add(v);
+        }
+      }
     }
-  });
-  navEl.appendChild(chip);
-});
+    frontier = next;
+  }
+  for (const p of pinIds) {
+    const r = resolveInGraph(idSet, p);
+    if (r) keep.add(r);
+  }
+  return {
+    nodes: data.nodes.filter(n => keep.has(n.id)),
+    edges: data.edges.filter(e => keep.has(e.source) && keep.has(e.target)),
+  };
+}
+
+/**
+ * Exhibit-field BFS (Sammy / explore-core computeHops): seed = every node with
+ * origin === 'agentworld', then expand `hops` layers. Matches sammy-explore
+ * 1-hop (47) / 2-hop (full filtered graph). Pins are added without expansion.
+ */
+function filterGraphByAwOriginHops(data, hops, pinIds) {
+  const { idSet, adj } = buildAdj(data);
+  const keep = new Set();
+  for (const n of data.nodes) {
+    if (n.origin === 'agentworld') keep.add(n.id);
+  }
+  let frontier = new Set(keep);
+  for (let d = 0; d < hops; d++) {
+    const next = new Set();
+    for (const u of frontier) {
+      for (const v of (adj[u] || [])) {
+        if (!keep.has(v)) {
+          keep.add(v);
+          next.add(v);
+        }
+      }
+    }
+    frontier = next;
+  }
+  for (const p of pinIds) {
+    const r = resolveInGraph(idSet, p);
+    if (r) keep.add(r);
+  }
+  return {
+    nodes: data.nodes.filter(n => keep.has(n.id)),
+    edges: data.edges.filter(e => keep.has(e.source) && keep.has(e.target)),
+  };
+}
 
 // === GRAPH LOADING ===
 async function loadGraphData(source) {
-  if (graphCache[source]) return graphCache[source];
-
-  if (source === 'loom') {
-    // Loom's exhibit graph is thin; fall back to Isotopy's full graph until
-    // Loom's KG is remapped into this format (matches original v2 behavior).
-    return loadGraphData('iso');
-  }
+  const cacheKey = source + ':h' + graphHops;
+  if (graphCache[cacheKey]) return graphCache[cacheKey];
 
   const file = DATA_FILES[source];
   if (!file) return loadGraphData('iso');
 
-  const resp = await fetch(file);
-  const data = await resp.json();
-  graphCache[source] = data;
-  return data;
+  if (!rawGraphCache[source]) {
+    const resp = await fetch(file, { cache: 'no-store' });
+    rawGraphCache[source] = await resp.json();
+  }
+  const raw = rawGraphCache[source];
+  const pins = sectionPinsForSource(source);
+
+  // Loom's exhibit graph is small — show the whole thing (no hop filter).
+  if (source === 'loom') {
+    graphCache[cacheKey] = raw;
+    return raw;
+  }
+
+  // Sammy exhibit membership is the connectivity-threshold set (raw file).
+  // 1-hop: AW-origin BFS core (explore-style). 2-hop: full threshold graph —
+  // many 8+ nodes sit outside the classic Bratton-seed 2-hop ball.
+  if (source === 'sammy') {
+    if (graphHops >= 2) {
+      graphCache[cacheKey] = raw;
+      return raw;
+    }
+    const filtered = filterGraphByAwOriginHops(raw, 1, pins);
+    graphCache[cacheKey] = filtered;
+    return filtered;
+  }
+
+  const seeds = GRAPH_SEEDS[source] || GRAPH_SEEDS.iso;
+  const filtered = filterGraphToHop(raw, seeds, graphHops, pins);
+  graphCache[cacheKey] = filtered;
+  return filtered;
 }
 
 function buildMaps(data) {
   nodeMap = {};
   adjMap = {};
-  for (const n of data.nodes) nodeMap[n.id] = n;
+  nodeIdNorm = {};
+  for (const n of data.nodes) {
+    nodeMap[n.id] = n;
+    nodeIdNorm[normalizeNodeId(n.id)] = n.id;
+  }
   for (const e of data.edges) {
     if (!nodeMap[e.source] || !nodeMap[e.target]) continue;
     if (!adjMap[e.source]) adjMap[e.source] = new Set();
@@ -1766,6 +1711,19 @@ function buildMaps(data) {
 }
 
 function degree(id) { return adjMap[id] ? adjMap[id].size : 0; }
+
+/** Strip punctuation/case so seed/slug ids match Title Case KG ids. */
+function normalizeNodeId(id) {
+  return String(id).toLowerCase().replace(/[^a-z0-9]+/g, '');
+}
+
+/** Resolve a section node id against the loaded graph (exact, then normalized). */
+function resolveNodeId(wanted) {
+  if (!wanted) return null;
+  if (nodeMap[wanted]) return wanted;
+  const hit = nodeIdNorm[normalizeNodeId(wanted)];
+  return hit || null;
+}
 
 // === THEME ===
 function getEffectiveTheme() {
@@ -1880,32 +1838,62 @@ async function initGraph(source) {
     wheelSensitivity: 0.3,
   });
 
+  // Explore-style: any node is clickable (including previously ghosted ones).
+  // Background / edge clears ghosting so the full field is explorable again.
   cy.on('tap', 'node', evt => {
     showNodePanel(evt.target.id());
   });
   cy.on('tap', evt => {
-    if (evt.target === cy || evt.target.isEdge()) closeNodePanel();
+    if (evt.target === cy || (evt.target.isEdge && evt.target.isEdge())) {
+      clearGraphHighlight({ fit: true });
+    }
   });
 
   currentSource = source;
   const nc = cy.nodes().length;
   const ec = cy.edges().length;
-  document.getElementById('graph-info').textContent = `${nc} nodes · ${ec} edges`;
+  document.getElementById('graph-info').textContent =
+    `${nc} nodes · ${ec} edges`;
+  updateGraphTitle(source);
 }
 
-// === EXPLORER LINK ===
-function updateExplorerLink(voice) {
-  if (voice === currentVoice) return;
-  currentVoice = voice;
-  const link = document.getElementById('graph-source-link');
-  const info = VOICE_EXPLORER[voice];
-  if (info) {
-    link.href = info.url;
-    link.textContent = 'explore ' + info.name + '’s full graph →';
-    link.classList.add('visible');
+function updateGraphTitle(source) {
+  const agent = GRAPH_TITLE[source] || 'Isotopy';
+  document.getElementById('graph-title').innerHTML =
+    agent + '<span class="title-sym">&cap;</span>AGENTWORLD';
+}
+
+function updateHopButtons() {
+  document.getElementById('hop-1').classList.toggle('active', graphHops === 1);
+  document.getElementById('hop-2').classList.toggle('active', graphHops === 2);
+}
+
+async function setHops(hops) {
+  if (hops === graphHops) return;
+  graphHops = hops;
+  hopsUserOverride = true;
+  updateHopButtons();
+  const src = currentSource || 'iso';
+  const keepSectionGhost = sectionGhostActive && currentSection;
+  currentSource = null; // force reload at the new hop depth
+  await initGraph(src);
+  if (keepSectionGhost) {
+    applySectionHighlight(currentSection, { fit: 'highlight' });
   } else {
-    link.classList.remove('visible');
+    // Free-explore / cleared state: show the full hop field, no section ghost.
+    sectionGhostActive = false;
+    cy.animate({ fit: { eles: cy.elements(), padding: 40 }, duration: 450 });
   }
+}
+
+/** Apply per-source hop default unless the user picked 1/2-hop manually. */
+function syncHopsForSource(source) {
+  if (hopsUserOverride) return false;
+  const next = DEFAULT_HOPS[source] || DEFAULT_HOPS.iso;
+  if (next === graphHops) return false;
+  graphHops = next;
+  updateHopButtons();
+  return true;
 }
 
 // === SECTION SELECTION ===
@@ -1913,74 +1901,177 @@ async function selectSection(sectionId) {
   const sec = SECTIONS.find(s => s.id === sectionId);
   if (!sec) return; // chorus / reader sections carry no graph excerpt — leave graph as-is
 
-  const source = SECTION_SOURCE[sectionId] || 'iso';
-  const graphSource = source === 'loom' ? 'iso' : source;
+  const graphSource = SECTION_SOURCE[sectionId] || 'iso';
 
   if (graphSource !== currentSource) {
+    const hopsChanged = syncHopsForSource(graphSource);
+    // Force reload when hop depth changes with the source switch.
+    if (hopsChanged) currentSource = null;
     await initGraph(graphSource);
   }
 
   currentSection = sectionId;
 
-  // Update header
-  document.getElementById('fig-num').textContent = sec.num;
-  document.getElementById('section-title').textContent = sec.title;
-  updateExplorerLink(sec.who);
+  applySectionHighlight(sectionId, { fit: 'highlight' });
+  closeNodePanel();
+}
 
-  // Update nav chips
-  document.querySelectorAll('.gsec-chip').forEach(c => {
-    c.classList.toggle('active', c.dataset.section === sectionId);
-  });
-  const activeChip = document.querySelector(`.gsec-chip[data-section="${sectionId}"]`);
-  if (activeChip) activeChip.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+/**
+ * Highlight the natural 1-hop neighborhood of the section's seed node
+ * (Sammy Jankis by default) using real graph edges — not a curated list.
+ * fit: 'highlight' zooms in on that neighborhood; 'all' fits the full field;
+ * false leaves the camera alone.
+ */
+function applySectionHighlight(sectionId, { fit = 'highlight' } = {}) {
+  if (!cy) return false;
 
-  // Update voice label
-  const voiceName = VOICE_NAMES[sec.who] || sec.who;
-  const graphLabel = graphSource === 'sammy' ? "Sammy&rsquo;s graph" : "Isotopy&rsquo;s graph";
-  document.getElementById('voice-label').innerHTML =
-    `<span class="section-num">§${sec.num}</span> <span class="voice-name">${voiceName}</span> · ${graphLabel}`;
+  const graphSource = SECTION_SOURCE[sectionId] || currentSource || 'iso';
+  const seedWanted = HIGHLIGHT_SEED[graphSource] || HIGHLIGHT_SEED.iso;
+  const seed = resolveNodeId(seedWanted);
+  const keepInView = (FRAME_KEEP[graphSource] || [])
+    .map(id => resolveNodeId(id))
+    .filter(Boolean);
 
-  // Highlight section nodes
-  const sg = SECTION_GRAPHS[sectionId];
-  if (!sg || !cy) { closeNodePanel(); return; }
+  if (!seed) {
+    sectionGhostActive = false;
+    if (fit) cy.animate({ fit: { eles: cy.elements(), padding: 40 }, duration: 450 });
+    return false;
+  }
 
-  const sectionNodes = new Set(sg.nodes);
-  const cutNode = sg.cut || null;
+  const neighbors = adjMap[seed] ? [...adjMap[seed]] : [];
+  const idSet = new Set([seed, ...neighbors]);
 
   cy.elements().removeClass('hl').removeClass('faded').removeClass('cut');
 
-  const found = [];
-  cy.nodes().forEach(n => {
-    if (sectionNodes.has(n.id())) found.push(n.id());
-  });
-
-  if (found.length > 0 && found.length < cy.nodes().length * 0.9) {
-    const idSet = new Set(found);
-    cy.elements().addClass('faded');
-    cy.nodes().forEach(n => {
-      if (idSet.has(n.id())) {
-        n.removeClass('faded').addClass('hl');
-        if (n.id() === cutNode) n.addClass('cut');
-      }
-    });
-    cy.edges().forEach(e => {
-      if (idSet.has(e.source().id()) && idSet.has(e.target().id())) {
-        e.removeClass('faded').addClass('hl');
-      }
-    });
-    const hlNodes = cy.nodes('.hl');
-    if (hlNodes.length > 0) {
-      cy.animate({ fit: { eles: hlNodes, padding: 80 }, duration: 500 });
+  // If the natural neighborhood is almost the whole field, skip ghosting
+  // (common on Loom's small exhibit graph) and just frame the seed.
+  if (idSet.size === 0 || idSet.size >= cy.nodes().length * 0.9) {
+    sectionGhostActive = false;
+    if (fit === 'highlight') {
+      frameHighlight(cy.nodes(), {
+        seedId: seed,
+        keepInView,
+        padding: 52,
+        duration: 500,
+      });
+    } else if (fit === 'all') {
+      cy.animate({ fit: { eles: cy.elements(), padding: 40 }, duration: 450 });
     }
+    return true;
   }
 
+  cy.elements().addClass('faded');
+  cy.nodes().forEach(n => {
+    if (idSet.has(n.id())) n.removeClass('faded').addClass('hl');
+  });
+  cy.edges().forEach(e => {
+    if (idSet.has(e.source().id()) && idSet.has(e.target().id())) {
+      e.removeClass('faded').addClass('hl');
+    }
+  });
+  sectionGhostActive = true;
+
+  if (fit === 'highlight') {
+    const hlNodes = cy.nodes('.hl');
+    if (hlNodes.length > 0) {
+      frameHighlight(hlNodes, {
+        seedId: seed,
+        keepInView,
+        padding: 52,
+        duration: 500,
+      });
+    }
+  } else if (fit === 'all') {
+    cy.animate({ fit: { eles: cy.elements(), padding: 40 }, duration: 450 });
+  }
+  return true;
+}
+
+/**
+ * Frame the highlight. Prefer fitting seed + keepInView nodes so important
+ * neighbors stay visible; fall back to a fixed zoom on the seed alone.
+ */
+function frameHighlight(hlNodes, {
+  seedId = null,
+  keepInView = [],
+  targetZoom = null,
+  padding = 52,
+  maxZoom = 1.25,
+  duration = 400,
+} = {}) {
+  if (!cy || !hlNodes || hlNodes.length === 0) return;
+
+  let focus = seedId ? cy.getElementById(seedId) : cy.collection();
+  if (!focus.nonempty()) focus = hlNodes[0];
+
+  for (const id of keepInView) {
+    const n = cy.getElementById(id);
+    if (n.nonempty()) focus = focus.union(n);
+  }
+
+  cy.stop(true);
+
+  // Fixed-zoom path (used when we explicitly want a Sammy-centered crop).
+  if (targetZoom != null && focus.length === 1) {
+    const pos = focus.position();
+    const z = targetZoom;
+    const pan = {
+      x: cy.width() / 2 - z * pos.x,
+      y: cy.height() / 2 - z * pos.y,
+    };
+    if (!duration) {
+      cy.viewport({ zoom: z, pan });
+      return;
+    }
+    cy.animate({ zoom: z, pan, duration, easing: 'ease-out', queue: false });
+    return;
+  }
+
+  // Fit the focus set (seed + keepInView) with a soft max so tiny sets don't slam in.
+  const runFit = () => {
+    cy.fit(focus, padding);
+    if (cy.zoom() > maxZoom) {
+      cy.zoom(maxZoom);
+      cy.center(focus);
+    }
+  };
+
+  if (!duration) {
+    runFit();
+    return;
+  }
+  cy.animate({
+    fit: { eles: focus, padding },
+    duration,
+    easing: 'ease-out',
+    queue: false,
+    complete: () => {
+      if (cy.zoom() > maxZoom) {
+        cy.zoom(maxZoom);
+        cy.center(focus);
+      }
+    },
+  });
+}
+
+
+/** Clear section/neighborhood ghosting (explore immersive background-click). */
+function clearGraphHighlight({ fit = false } = {}) {
   closeNodePanel();
+  sectionGhostActive = false;
+  if (!cy) return;
+  cy.elements().removeClass('hl').removeClass('faded').removeClass('cut');
+  if (fit) {
+    cy.animate({ fit: { eles: cy.elements(), padding: 40 }, duration: 450 });
+  }
 }
 
 // === NODE PANEL ===
 function showNodePanel(nodeId) {
   const n = nodeMap[nodeId];
   if (!n) return;
+  // Inspecting a node leaves free-explore mode (neighborhood highlight ≠ section ghost).
+  sectionGhostActive = false;
   document.getElementById('np-name').textContent = nodeId.replace(/[-_]/g, ' ');
   document.getElementById('np-type').textContent = [n.type, n.origin].filter(Boolean).join(' · ');
   document.getElementById('np-summary').textContent = n.summary || '';
@@ -1997,7 +2088,7 @@ function showNodePanel(nodeId) {
   document.getElementById('node-panel').style.display = 'block';
 
   const ids = [nodeId, ...neighbors];
-  cy.elements().removeClass('hl').removeClass('faded');
+  cy.elements().removeClass('hl').removeClass('faded').removeClass('cut');
   const idSet = new Set(ids);
   cy.elements().addClass('faded');
   cy.nodes().forEach(n => { if (idSet.has(n.id())) n.removeClass('faded').addClass('hl'); });
@@ -2011,8 +2102,9 @@ function closeNodePanel() {
 }
 
 document.getElementById('np-close').addEventListener('click', () => {
+  // Close detail only — leave current highlight (neighborhood or clear) alone.
+  // Essay scroll will re-apply section ghosting when the reader moves on.
   closeNodePanel();
-  if (currentSection) selectSection(currentSection);
 });
 
 document.getElementById('np-edges').addEventListener('click', e => {
@@ -2065,8 +2157,28 @@ function setEssayCollapsed(collapsed) {
   pageLayout.classList.toggle('essay-collapsed', collapsed);
   essayToggle.textContent = collapsed ? '◂ show essay' : 'collapse essay, explore graph ▸';
   if (cy) {
-    // Container size changed; let Cytoscape catch up.
-    requestAnimationFrame(() => cy.resize());
+    // Container size changed; keep highlight and re-center for the new width.
+    requestAnimationFrame(() => {
+      cy.resize();
+      const hl = cy.nodes('.hl');
+      if (hl.length > 0) {
+        // Keep highlight; re-fit seed + key neighbors for the new panel width.
+        const source = currentSource || 'iso';
+        const seedWanted = HIGHLIGHT_SEED[source] || HIGHLIGHT_SEED.iso;
+        const seed = resolveNodeId(seedWanted);
+        const keepInView = (FRAME_KEEP[source] || [])
+          .map(id => resolveNodeId(id))
+          .filter(Boolean);
+        frameHighlight(hl, {
+          seedId: seed,
+          keepInView,
+          padding: collapsed ? 72 : 52,
+          duration: 450,
+        });
+      } else {
+        cy.animate({ fit: { eles: cy.elements(), padding: 40 }, duration: 450 });
+      }
+    });
   }
 }
 essayToggle.addEventListener('click', () => setEssayCollapsed(!essayCollapsed));
@@ -2088,6 +2200,11 @@ function expandGraphPanel() {
 }
 panelCollapse.addEventListener('click', collapseGraphPanel);
 panelExpand.addEventListener('click', expandGraphPanel);
+
+// ── Hop depth (explore-style; default 1-hop for essay companion density) ──
+document.getElementById('hop-1').addEventListener('click', () => setHops(1));
+document.getElementById('hop-2').addEventListener('click', () => setHops(2));
+updateHopButtons();
 
 // ── Reader identity chips ──
 const chips = document.querySelectorAll('.reader-chip');
@@ -2235,7 +2352,10 @@ document.addEventListener('keydown', e => {
 });
 
 // === INIT ===
-initGraph('iso').then(() => selectSection('intro'));
+initGraph('iso').then(() => {
+  // Let the preset layout's fit settle, then frame Sammy at the reference zoom.
+  requestAnimationFrame(() => selectSection('intro'));
+});
 </script>
 
 </body>
