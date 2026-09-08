@@ -210,10 +210,30 @@ for (const e of data.edges) {
   }
 }
 
-console.log(`Pass 1: ${layoutName} on ${elements1.filter(e => !e.data.source).length} nodes (1-hop)...`);
+// Compact 1-hop core: small sparse cores (Sammy) should not sprawl across the
+// full canvas — a tight hull is what makes the surrounding 2-hop arc readable.
+const hop1Count = elements1.filter(e => !e.data.source).length;
+const coreScale = hop1Count < 80 ? Math.max(0.35, Math.sqrt(hop1Count / 120)) : 1;
+const coreW = Math.round(width * coreScale);
+const coreH = Math.round(height * coreScale);
+const coreBB = {
+  x1: Math.round((width - coreW) / 2),
+  y1: Math.round((height - coreH) / 2),
+  w: coreW,
+  h: coreH,
+};
+const pass1Opts = {
+  ...layoutOpts,
+  nodeRepulsion: () => hop1Count < 80 ? 120000 : 280000,
+  idealEdgeLength: () => hop1Count < 80 ? 40 : 55,
+  gravity: hop1Count < 80 ? 0.55 : 0.25,
+  gravityRange: hop1Count < 80 ? 2.4 : 3.8,
+  boundingBox: coreBB,
+};
+console.log(`Pass 1: ${layoutName} on ${hop1Count} nodes (1-hop), core bbox ${coreW}x${coreH}...`);
 
 const cy1 = cytoscape({ headless: true, styleEnabled: false, elements: elements1 });
-cy1.layout(layoutOpts).run();
+cy1.layout(pass1Opts).run();
 
 const positions = {};
 cy1.nodes().forEach(n => {
@@ -330,8 +350,11 @@ for (const id of hop2Nodes) {
   neighborGroups[key].push(id);
 }
 
-const PUSH_DIST = 60;
-const ARC_SPACING = 35;
+// Isotopy method: 2-hop traces arcs outside the 1-hop convex hull.
+// Dense Sammy graphs overflow one ring → concentric rings with ring-scaled push.
+const PUSH_DIST = hop2Nodes.size > 180 ? 110 : 70;
+const ARC_SPACING = hop2Nodes.size > 180 ? 30 : 35;
+const RING_GAP = hop2Nodes.size > 180 ? 70 : 55;
 
 // Pre-compute hull perimeter as a parameterized path
 const hullPerim = [];
@@ -343,12 +366,16 @@ for (let i = 0; i < hull.length; i++) {
   totalPerim += edgeLen;
 }
 
+const slotsPerRing = Math.max(1, Math.floor(totalPerim / ARC_SPACING));
+const hop2RingCount = Math.max(1, Math.ceil(hop2Nodes.size / slotsPerRing));
+console.log(`Hull arc: perim=${Math.round(totalPerim)}, slots/ring≈${slotsPerRing}, rings=${hop2RingCount}, push=${PUSH_DIST}`);
+
 // Get hull point + outward normal at parameter t (wraps around)
 function hullPointAt(t) {
   t = ((t % totalPerim) + totalPerim) % totalPerim;
   for (const seg of hullPerim) {
     if (t <= seg.endT) {
-      const frac = (t - seg.startT) / seg.len;
+      const frac = seg.len > 0 ? (t - seg.startT) / seg.len : 0;
       const a = hull[seg.edgeIdx], b = hull[(seg.edgeIdx + 1) % hull.length];
       const n = hullEdgeNormal(seg.edgeIdx);
       return {
@@ -368,11 +395,14 @@ function hullParamFor(hitX, hitY, edgeIdx) {
   const a = hull[edgeIdx], b = hull[(edgeIdx + 1) % hull.length];
   const dx = b.x - a.x, dy = b.y - a.y;
   const frac = Math.abs(dx) > Math.abs(dy)
-    ? (hitX - a.x) / dx
-    : (hitY - a.y) / dy;
-  return seg.startT + Math.max(0, Math.min(1, frac)) * seg.len;
+    ? (hitX - a.x) / (dx || 1)
+    : (hitY - a.y) / (dy || 1);
+  return seg.startT + Math.max(0, Math.min(1, frac || 0)) * seg.len;
 }
 
+// Flatten groups into a single arc order: keep neighbor affinity by placing
+// each group as a contiguous block, then pack blocks onto rings.
+const orderedHop2 = [];
 for (const [key, group] of Object.entries(neighborGroups)) {
   let anchorX, anchorY;
   if (key === '__orphan__') {
@@ -383,24 +413,196 @@ for (const [key, group] of Object.entries(neighborGroups)) {
     for (const nb of nbs) { anchorX += positions[nb].x; anchorY += positions[nb].y; }
     anchorX /= nbs.length; anchorY /= nbs.length;
   }
-
-  // Ray from centroid through anchor, find hull exit
   let dx = anchorX - cx, dy = anchorY - cy_val;
   const len = Math.sqrt(dx * dx + dy * dy);
   if (len < 1) { dx = 1; dy = 0; } else { dx /= len; dy /= len; }
-
   const { hitX, hitY, edgeIdx } = rayHullExit(cx, cy_val, dx, dy);
   const centerT = hullParamFor(hitX, hitY, edgeIdx);
+  orderedHop2.push({ key, group, centerT, ang: Math.atan2(dy, dx) });
+}
+orderedHop2.sort((a, b) => a.ang - b.ang);
 
-  // Distribute group along hull perimeter arc centered at exit point
-  for (let i = 0; i < group.length; i++) {
-    const offset = (i - (group.length - 1) / 2) * ARC_SPACING;
-    const pt = hullPointAt(centerT + offset);
-    positions[group[i]] = {
-      x: pt.x + pt.nx * PUSH_DIST,
-      y: pt.y + pt.ny * PUSH_DIST,
+// Round-robin rings while walking the angular order so each ring is a full
+// surrounding arc (not a wedge of one group).
+let placeIdx = 0;
+for (const block of orderedHop2) {
+  for (let i = 0; i < block.group.length; i++) {
+    const ring = placeIdx % hop2RingCount;
+    const onRing = Math.floor(placeIdx / hop2RingCount);
+    const t = (onRing + 0.5) * (totalPerim / Math.ceil(hop2Nodes.size / hop2RingCount));
+    // Prefer neighbor-centered t, then jitter by ring slot to avoid stacking
+    const local = block.centerT + (i - (block.group.length - 1) / 2) * (ARC_SPACING / Math.max(1, hop2RingCount));
+    const useT = hop2RingCount === 1 ? local : 0.65 * local + 0.35 * t;
+    const pt = hullPointAt(useT);
+    const push = PUSH_DIST + ring * RING_GAP;
+    positions[block.group[i]] = {
+      x: pt.x + pt.nx * push,
+      y: pt.y + pt.ny * push,
     };
+    placeIdx++;
   }
+}
+
+// === OUTER ARC: nodes beyond AW 2-hop (Sammy threshold graphs) ===
+// Isotopy's full exhibit sits inside hop≤2 so this is a no-op there.
+// For Sammy's connectivity subset, place the remainder on a larger arc
+// around the hull of (1-hop + 2-hop) so the core stays readable.
+const beyondNodes = data.nodes.map(n => n.id).filter(id => !(id in hopDist));
+if (beyondNodes.length > 0) {
+  console.log(`Outer arc: ${beyondNodes.length} nodes beyond AW 2-hop...`);
+
+  const corePoints = [];
+  for (const id of [...hop1Nodes, ...hop2Nodes]) {
+    const p = positions[id];
+    if (p) corePoints.push({ x: p.x, y: p.y });
+  }
+  corePoints.sort((a, b) => a.x - b.x || a.y - b.y);
+
+  const lower2 = [];
+  for (const p of corePoints) {
+    while (lower2.length >= 2 && cross(lower2[lower2.length - 2], lower2[lower2.length - 1], p) <= 0) lower2.pop();
+    lower2.push(p);
+  }
+  const upper2 = [];
+  for (let i = corePoints.length - 1; i >= 0; i--) {
+    const p = corePoints[i];
+    while (upper2.length >= 2 && cross(upper2[upper2.length - 2], upper2[upper2.length - 1], p) <= 0) upper2.pop();
+    upper2.push(p);
+  }
+  lower2.pop(); upper2.pop();
+  const outerHull = lower2.concat(upper2);
+
+  let ocx = 0, ocy = 0;
+  for (const p of corePoints) { ocx += p.x; ocy += p.y; }
+  ocx /= corePoints.length; ocy /= corePoints.length;
+
+  function outerEdgeNormal(i) {
+    const a = outerHull[i], b = outerHull[(i + 1) % outerHull.length];
+    const dx = b.x - a.x, dy = b.y - a.y;
+    const len = Math.sqrt(dx * dx + dy * dy) || 1;
+    return { nx: dy / len, ny: -dx / len };
+  }
+
+  const outerPerim = [];
+  let outerTotal = 0;
+  for (let i = 0; i < outerHull.length; i++) {
+    const a = outerHull[i], b = outerHull[(i + 1) % outerHull.length];
+    const edgeLen = Math.sqrt((b.x - a.x) ** 2 + (b.y - a.y) ** 2);
+    outerPerim.push({ startT: outerTotal, endT: outerTotal + edgeLen, edgeIdx: i, len: edgeLen });
+    outerTotal += edgeLen;
+  }
+
+  function outerPointAt(t) {
+    t = ((t % outerTotal) + outerTotal) % outerTotal;
+    for (const seg of outerPerim) {
+      if (t <= seg.endT) {
+        const frac = seg.len > 0 ? (t - seg.startT) / seg.len : 0;
+        const a = outerHull[seg.edgeIdx], b = outerHull[(seg.edgeIdx + 1) % outerHull.length];
+        const n = outerEdgeNormal(seg.edgeIdx);
+        return {
+          x: a.x + (b.x - a.x) * frac,
+          y: a.y + (b.y - a.y) * frac,
+          nx: n.nx, ny: n.ny,
+        };
+      }
+    }
+    return outerPointAt(0);
+  }
+
+  // Group beyond nodes by their nearest positioned neighbor (prefer hop2, then hop1)
+  const beyondGroups = {};
+  for (const id of beyondNodes) {
+    const nbs = (adjList[id] || []).filter(nb => positions[nb]);
+    const key = nbs.length > 0 ? nbs.sort().join('|') : '__orphan__';
+    if (!beyondGroups[key]) beyondGroups[key] = [];
+    beyondGroups[key].push(id);
+  }
+
+  // Outer rings sit beyond the hop-2 shell so the AW core stays readable.
+  const OUTER_PUSH = PUSH_DIST + hop2RingCount * RING_GAP + 100;
+  const OUTER_SPACING = 28;
+  const outerSlots = Math.max(1, Math.floor(outerTotal / OUTER_SPACING));
+  const beyondRingCount = Math.max(1, Math.ceil(beyondNodes.length / outerSlots));
+  const OUTER_RING_GAP = 60;
+  console.log(`Outer arc: perim=${Math.round(outerTotal)}, rings=${beyondRingCount}, push0=${OUTER_PUSH}`);
+
+  const orderedBeyond = [];
+  for (const [key, group] of Object.entries(beyondGroups)) {
+    let anchorX, anchorY;
+    if (key === '__orphan__') {
+      anchorX = ocx; anchorY = ocy;
+    } else {
+      const nbs = key.split('|');
+      anchorX = 0; anchorY = 0;
+      for (const nb of nbs) { anchorX += positions[nb].x; anchorY += positions[nb].y; }
+      anchorX /= nbs.length; anchorY /= nbs.length;
+    }
+    let dx = anchorX - ocx, dy = anchorY - ocy;
+    const len = Math.sqrt(dx * dx + dy * dy);
+    if (len < 1) { dx = 1; dy = 0; } else { dx /= len; dy /= len; }
+    const ang = Math.atan2(dy, dx);
+    const centerT = ((ang + Math.PI) / (2 * Math.PI)) * outerTotal;
+    orderedBeyond.push({ group, centerT, ang });
+  }
+  orderedBeyond.sort((a, b) => a.ang - b.ang);
+
+  let bPlace = 0;
+  for (const block of orderedBeyond) {
+    for (let i = 0; i < block.group.length; i++) {
+      const ring = bPlace % beyondRingCount;
+      const onRing = Math.floor(bPlace / beyondRingCount);
+      const tEven = (onRing + 0.5) * (outerTotal / Math.ceil(beyondNodes.length / beyondRingCount));
+      const local = block.centerT + (i - (block.group.length - 1) / 2) * (OUTER_SPACING / Math.max(1, beyondRingCount));
+      const useT = beyondRingCount === 1 ? local : 0.6 * local + 0.4 * tEven;
+      const pt = outerPointAt(useT);
+      const push = OUTER_PUSH + ring * OUTER_RING_GAP;
+      positions[block.group[i]] = {
+        x: pt.x + pt.nx * push,
+        y: pt.y + pt.ny * push,
+      };
+      bPlace++;
+    }
+  }
+
+  // Light repulsion among beyond nodes + spring to anchor
+  const beyondIds = beyondNodes.filter(id => positions[id]);
+  const beyondAnchor = {};
+  for (const id of beyondIds) beyondAnchor[id] = { ...positions[id] };
+  const OUTER_REPEL = 60;
+  for (let iter = 0; iter < 150; iter++) {
+    for (const id of beyondIds) {
+      let fx = 0, fy = 0;
+      const p = positions[id];
+      for (const otherId of beyondIds) {
+        if (otherId === id) continue;
+        const o = positions[otherId];
+        const dx = p.x - o.x, dy = p.y - o.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < OUTER_REPEL && dist > 0.1) {
+          const force = 9 * (1 - dist / OUTER_REPEL);
+          fx += (dx / dist) * force;
+          fy += (dy / dist) * force;
+        }
+      }
+      // Keep beyond nodes outside the hop2 shell
+      const cdx = p.x - ocx, cdy = p.y - ocy;
+      const cdist = Math.sqrt(cdx * cdx + cdy * cdy) || 1;
+      const minR = OUTER_PUSH * 0.9;
+      if (cdist < minR) {
+        fx += (cdx / cdist) * (minR - cdist) * 0.15;
+        fy += (cdy / cdist) * (minR - cdist) * 0.15;
+      }
+      const a = beyondAnchor[id];
+      fx += (a.x - p.x) * 0.05;
+      fy += (a.y - p.y) * 0.05;
+      positions[id] = { x: p.x + fx, y: p.y + fy };
+    }
+  }
+  for (const id of beyondIds) {
+    positions[id].x = Math.round(positions[id].x * 100) / 100;
+    positions[id].y = Math.round(positions[id].y * 100) / 100;
+  }
+  console.log(`Outer arc placed ${beyondIds.length} nodes (push0=${OUTER_PUSH}, rings=${beyondRingCount}).`);
 }
 
 // === REPULSION PASS: spread out 2-hop nodes that are too close ===
@@ -459,6 +661,34 @@ for (let iter = 0; iter < ITERATIONS; iter++) {
     positions[id] = { x: p.x + fx, y: p.y + fy };
   }
 }
+
+// Hard constraint: any 2-hop node that drifted inside the 1-hop hull gets
+// projected back outside along the centroid→node ray (Isotopy visual rule).
+function pointInHull(px, py) {
+  if (hull.length < 3) return false;
+  for (let i = 0; i < hull.length; i++) {
+    const a = hull[i], b = hull[(i + 1) % hull.length];
+    if (cross(a, b, { x: px, y: py }) < 0) return false;
+  }
+  return true;
+}
+let projected = 0;
+for (const id of hop2Ids) {
+  const p = positions[id];
+  if (!pointInHull(p.x, p.y)) continue;
+  let dx = p.x - cx, dy = p.y - cy_val;
+  const len = Math.sqrt(dx * dx + dy * dy);
+  if (len < 1) { dx = 1; dy = 0; } else { dx /= len; dy /= len; }
+  const { hitX, hitY } = rayHullExit(cx, cy_val, dx, dy);
+  const nApproxX = hitX - cx, nApproxY = hitY - cy_val;
+  const nLen = Math.sqrt(nApproxX * nApproxX + nApproxY * nApproxY) || 1;
+  positions[id] = {
+    x: hitX + (nApproxX / nLen) * PUSH_DIST,
+    y: hitY + (nApproxY / nLen) * PUSH_DIST,
+  };
+  projected++;
+}
+if (projected) console.log(`Projected ${projected} 2-hop nodes back outside hull.`);
 
 // Round all positions
 for (const id of hop1Nodes) {
