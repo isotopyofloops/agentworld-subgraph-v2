@@ -210,10 +210,10 @@ for (const e of data.edges) {
   }
 }
 
-// Compact 1-hop core: small sparse cores (Sammy) should not sprawl across the
-// full canvas — a tight hull is what makes the surrounding 2-hop arc readable.
+// Pass 1: Iso-style cose on 1-hop. For sparse cores (Sammy), use a mid-size
+// bbox so the hull perimeter is long enough for an even surrounding arc.
 const hop1Count = elements1.filter(e => !e.data.source).length;
-const coreScale = hop1Count < 80 ? Math.max(0.35, Math.sqrt(hop1Count / 120)) : 1;
+const coreScale = hop1Count < 80 ? 0.72 : 1;
 const coreW = Math.round(width * coreScale);
 const coreH = Math.round(height * coreScale);
 const coreBB = {
@@ -224,10 +224,10 @@ const coreBB = {
 };
 const pass1Opts = {
   ...layoutOpts,
-  nodeRepulsion: () => hop1Count < 80 ? 120000 : 280000,
-  idealEdgeLength: () => hop1Count < 80 ? 40 : 55,
-  gravity: hop1Count < 80 ? 0.55 : 0.25,
-  gravityRange: hop1Count < 80 ? 2.4 : 3.8,
+  nodeRepulsion: () => hop1Count < 80 ? 220000 : 280000,
+  idealEdgeLength: () => hop1Count < 80 ? 58 : 55,
+  gravity: hop1Count < 80 ? 0.35 : 0.25,
+  gravityRange: hop1Count < 80 ? 3.0 : 3.8,
   boundingBox: coreBB,
 };
 console.log(`Pass 1: ${layoutName} on ${hop1Count} nodes (1-hop), core bbox ${coreW}x${coreH}...`);
@@ -241,12 +241,11 @@ cy1.nodes().forEach(n => {
   positions[n.id()] = { x: Math.round(pos.x * 100) / 100, y: Math.round(pos.y * 100) / 100 };
 });
 
-// Pass 2: full graph, 1-hop nodes locked
+// Pass 2: Iso knobs — longer ideal edges so 2-hop spreads before hull push
 console.log(`Pass 2: adding ${hop2Nodes.size} 2-hop nodes with 1-hop locked...`);
 
 const cy2 = cytoscape({ headless: true, styleEnabled: false, elements });
 
-// Set 1-hop nodes to their pass-1 positions and lock them
 cy2.nodes().forEach(n => {
   const p = positions[n.id()];
   if (p) {
@@ -255,13 +254,12 @@ cy2.nodes().forEach(n => {
   }
 });
 
-// Run layout — only unlocked (2-hop) nodes will move
 const pass2Opts = {
   ...layoutOpts,
-  nodeRepulsion: () => 200000,
-  idealEdgeLength: () => 70,
-  gravity: 0.15,
-  numIter: 600,
+  nodeRepulsion: () => 220000,
+  idealEdgeLength: () => 85, // Iso used 70; slightly longer for Sammy density
+  gravity: 0.12,
+  numIter: 700,
   randomize: false,
 };
 cy2.layout(pass2Opts).run();
@@ -350,11 +348,11 @@ for (const id of hop2Nodes) {
   neighborGroups[key].push(id);
 }
 
-// Isotopy method: 2-hop traces arcs outside the 1-hop convex hull.
-// Dense Sammy graphs overflow one ring → concentric rings with ring-scaled push.
-const PUSH_DIST = hop2Nodes.size > 180 ? 110 : 70;
-const ARC_SPACING = hop2Nodes.size > 180 ? 30 : 35;
-const RING_GAP = hop2Nodes.size > 180 ? 70 : 55;
+// Isotopy method (commit 47b388a): single surrounding arc offset along
+// outward hull normals. Dense Sammy graphs: even perimeter spacing so the
+// arc doesn't clump, then repulsion thickens the band evenly.
+const PUSH_DIST = hop2Nodes.size > 180 ? 100 : 60;
+const ARC_SPACING = hop2Nodes.size > 180 ? 18 : 35;
 
 // Pre-compute hull perimeter as a parameterized path
 const hullPerim = [];
@@ -365,10 +363,7 @@ for (let i = 0; i < hull.length; i++) {
   hullPerim.push({ startT: totalPerim, endT: totalPerim + edgeLen, edgeIdx: i, len: edgeLen });
   totalPerim += edgeLen;
 }
-
-const slotsPerRing = Math.max(1, Math.floor(totalPerim / ARC_SPACING));
-const hop2RingCount = Math.max(1, Math.ceil(hop2Nodes.size / slotsPerRing));
-console.log(`Hull arc: perim=${Math.round(totalPerim)}, slots/ring≈${slotsPerRing}, rings=${hop2RingCount}, push=${PUSH_DIST}`);
+console.log(`Hull arc: perim=${Math.round(totalPerim)}, push=${PUSH_DIST}, spacing=${ARC_SPACING} (Iso single-ring)`);
 
 // Get hull point + outward normal at parameter t (wraps around)
 function hullPointAt(t) {
@@ -400,8 +395,7 @@ function hullParamFor(hitX, hitY, edgeIdx) {
   return seg.startT + Math.max(0, Math.min(1, frac || 0)) * seg.len;
 }
 
-// Flatten groups into a single arc order: keep neighbor affinity by placing
-// each group as a contiguous block, then pack blocks onto rings.
+// Sort neighbor groups by angle so the surrounding arc is continuous.
 const orderedHop2 = [];
 for (const [key, group] of Object.entries(neighborGroups)) {
   let anchorX, anchorY;
@@ -422,25 +416,29 @@ for (const [key, group] of Object.entries(neighborGroups)) {
 }
 orderedHop2.sort((a, b) => a.ang - b.ang);
 
-// Round-robin rings while walking the angular order so each ring is a full
-// surrounding arc (not a wedge of one group).
-let placeIdx = 0;
+// Flatten in angular order, then place evenly around the full perimeter
+// (Iso affinity order preserved; spacing made even for dense graphs).
+const hop2Flat = [];
 for (const block of orderedHop2) {
   for (let i = 0; i < block.group.length; i++) {
-    const ring = placeIdx % hop2RingCount;
-    const onRing = Math.floor(placeIdx / hop2RingCount);
-    const t = (onRing + 0.5) * (totalPerim / Math.ceil(hop2Nodes.size / hop2RingCount));
-    // Prefer neighbor-centered t, then jitter by ring slot to avoid stacking
-    const local = block.centerT + (i - (block.group.length - 1) / 2) * (ARC_SPACING / Math.max(1, hop2RingCount));
-    const useT = hop2RingCount === 1 ? local : 0.65 * local + 0.35 * t;
-    const pt = hullPointAt(useT);
-    const push = PUSH_DIST + ring * RING_GAP;
-    positions[block.group[i]] = {
-      x: pt.x + pt.nx * push,
-      y: pt.y + pt.ny * push,
-    };
-    placeIdx++;
+    hop2Flat.push({
+      id: block.group[i],
+      preferT: block.centerT + (i - (block.group.length - 1) / 2) * ARC_SPACING,
+    });
   }
+}
+const evenStep = hop2Flat.length > 0 ? totalPerim / hop2Flat.length : ARC_SPACING;
+for (let i = 0; i < hop2Flat.length; i++) {
+  // Blend neighbor-preferred t with even perimeter slot → even spread, soft affinity
+  const evenT = i * evenStep;
+  const useT = hop2Nodes.size > 180
+    ? 0.35 * hop2Flat[i].preferT + 0.65 * evenT
+    : hop2Flat[i].preferT;
+  const pt = hullPointAt(useT);
+  positions[hop2Flat[i].id] = {
+    x: pt.x + pt.nx * PUSH_DIST,
+    y: pt.y + pt.ny * PUSH_DIST,
+  };
 }
 
 // === OUTER ARC: nodes beyond AW 2-hop (Sammy threshold graphs) ===
@@ -518,12 +516,12 @@ if (beyondNodes.length > 0) {
     beyondGroups[key].push(id);
   }
 
-  // Outer rings sit beyond the hop-2 shell so the AW core stays readable.
-  const OUTER_PUSH = PUSH_DIST + hop2RingCount * RING_GAP + 100;
-  const OUTER_SPACING = 28;
+  // Beyond layer: even arc outside the hop-2 shell (multi-ring only here).
+  const OUTER_PUSH = PUSH_DIST + 220;
+  const OUTER_SPACING = 22;
   const outerSlots = Math.max(1, Math.floor(outerTotal / OUTER_SPACING));
   const beyondRingCount = Math.max(1, Math.ceil(beyondNodes.length / outerSlots));
-  const OUTER_RING_GAP = 60;
+  const OUTER_RING_GAP = 55;
   console.log(`Outer arc: perim=${Math.round(outerTotal)}, rings=${beyondRingCount}, push0=${OUTER_PUSH}`);
 
   const orderedBeyond = [];
@@ -546,30 +544,29 @@ if (beyondNodes.length > 0) {
   }
   orderedBeyond.sort((a, b) => a.ang - b.ang);
 
-  let bPlace = 0;
+  const beyondFlat = [];
   for (const block of orderedBeyond) {
-    for (let i = 0; i < block.group.length; i++) {
-      const ring = bPlace % beyondRingCount;
-      const onRing = Math.floor(bPlace / beyondRingCount);
-      const tEven = (onRing + 0.5) * (outerTotal / Math.ceil(beyondNodes.length / beyondRingCount));
-      const local = block.centerT + (i - (block.group.length - 1) / 2) * (OUTER_SPACING / Math.max(1, beyondRingCount));
-      const useT = beyondRingCount === 1 ? local : 0.6 * local + 0.4 * tEven;
-      const pt = outerPointAt(useT);
-      const push = OUTER_PUSH + ring * OUTER_RING_GAP;
-      positions[block.group[i]] = {
-        x: pt.x + pt.nx * push,
-        y: pt.y + pt.ny * push,
-      };
-      bPlace++;
-    }
+    for (const id of block.group) beyondFlat.push({ id, preferT: block.centerT, ang: block.ang });
+  }
+  const bStep = beyondFlat.length > 0 ? outerTotal / beyondFlat.length : OUTER_SPACING;
+  for (let i = 0; i < beyondFlat.length; i++) {
+    const ring = i % beyondRingCount;
+    const onRing = Math.floor(i / beyondRingCount);
+    const evenT = (onRing + 0.5) * (outerTotal / Math.ceil(beyondFlat.length / beyondRingCount));
+    const useT = 0.3 * beyondFlat[i].preferT + 0.7 * evenT;
+    const pt = outerPointAt(useT);
+    const push = OUTER_PUSH + ring * OUTER_RING_GAP;
+    positions[beyondFlat[i].id] = {
+      x: pt.x + pt.nx * push,
+      y: pt.y + pt.ny * push,
+    };
   }
 
-  // Light repulsion among beyond nodes + spring to anchor
   const beyondIds = beyondNodes.filter(id => positions[id]);
   const beyondAnchor = {};
   for (const id of beyondIds) beyondAnchor[id] = { ...positions[id] };
-  const OUTER_REPEL = 60;
-  for (let iter = 0; iter < 150; iter++) {
+  const OUTER_REPEL = 70;
+  for (let iter = 0; iter < 160; iter++) {
     for (const id of beyondIds) {
       let fx = 0, fy = 0;
       const p = positions[id];
@@ -579,22 +576,21 @@ if (beyondNodes.length > 0) {
         const dx = p.x - o.x, dy = p.y - o.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < OUTER_REPEL && dist > 0.1) {
-          const force = 9 * (1 - dist / OUTER_REPEL);
+          const force = 10 * (1 - dist / OUTER_REPEL);
           fx += (dx / dist) * force;
           fy += (dy / dist) * force;
         }
       }
-      // Keep beyond nodes outside the hop2 shell
       const cdx = p.x - ocx, cdy = p.y - ocy;
       const cdist = Math.sqrt(cdx * cdx + cdy * cdy) || 1;
-      const minR = OUTER_PUSH * 0.9;
+      const minR = OUTER_PUSH * 0.85;
       if (cdist < minR) {
-        fx += (cdx / cdist) * (minR - cdist) * 0.15;
-        fy += (cdy / cdist) * (minR - cdist) * 0.15;
+        fx += (cdx / cdist) * (minR - cdist) * 0.18;
+        fy += (cdy / cdist) * (minR - cdist) * 0.18;
       }
       const a = beyondAnchor[id];
-      fx += (a.x - p.x) * 0.05;
-      fy += (a.y - p.y) * 0.05;
+      fx += (a.x - p.x) * 0.04;
+      fy += (a.y - p.y) * 0.04;
       positions[id] = { x: p.x + fx, y: p.y + fy };
     }
   }
@@ -615,10 +611,11 @@ for (const id of hop2Ids) {
   anchorPositions[id] = { x: positions[id].x, y: positions[id].y };
 }
 
-const REPEL_RADIUS = 80;
-const REPEL_STRENGTH = 12;
-const SPRING_STRENGTH = 0.08;
-const ITERATIONS = 200;
+// Stronger local spread so the single hull arc thickens evenly instead of stacking.
+const REPEL_RADIUS = hop2Nodes.size > 180 ? 110 : 80;
+const REPEL_STRENGTH = hop2Nodes.size > 180 ? 16 : 12;
+const SPRING_STRENGTH = hop2Nodes.size > 180 ? 0.05 : 0.08;
+const ITERATIONS = hop2Nodes.size > 180 ? 280 : 200;
 
 console.log(`Repulsion pass: ${hop2Ids.length} 2-hop nodes, ${ITERATIONS} iterations...`);
 
