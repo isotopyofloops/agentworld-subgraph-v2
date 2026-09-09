@@ -348,11 +348,13 @@ for (const id of hop2Nodes) {
   neighborGroups[key].push(id);
 }
 
-// Isotopy method (commit 47b388a): single surrounding arc offset along
-// outward hull normals. Dense Sammy graphs: even perimeter spacing so the
-// arc doesn't clump, then repulsion thickens the band evenly.
-const PUSH_DIST = hop2Nodes.size > 180 ? 100 : 60;
-const ARC_SPACING = hop2Nodes.size > 180 ? 18 : 35;
+// Isotopy hull normals, with two offset waves for dense 2-hop graphs so
+// labels have room: same hull shape, ring 0 at PUSH_DIST, ring 1 further out.
+// Outer wave is staggered by half a slot so labels don't stack radially.
+const HOP2_WAVES = hop2Nodes.size > 180 ? 2 : 1;
+const PUSH_DIST = hop2Nodes.size > 180 ? 95 : 60;
+const WAVE_GAP = 105; // radial gap between the two 2-hop waves
+const ARC_SPACING = hop2Nodes.size > 180 ? 28 : 35;
 
 // Pre-compute hull perimeter as a parameterized path
 const hullPerim = [];
@@ -363,7 +365,7 @@ for (let i = 0; i < hull.length; i++) {
   hullPerim.push({ startT: totalPerim, endT: totalPerim + edgeLen, edgeIdx: i, len: edgeLen });
   totalPerim += edgeLen;
 }
-console.log(`Hull arc: perim=${Math.round(totalPerim)}, push=${PUSH_DIST}, spacing=${ARC_SPACING} (Iso single-ring)`);
+console.log(`Hull arc: perim=${Math.round(totalPerim)}, waves=${HOP2_WAVES}, push0=${PUSH_DIST}, waveGap=${WAVE_GAP}`);
 
 // Get hull point + outward normal at parameter t (wraps around)
 function hullPointAt(t) {
@@ -416,30 +418,48 @@ for (const [key, group] of Object.entries(neighborGroups)) {
 }
 orderedHop2.sort((a, b) => a.ang - b.ang);
 
-// Flatten in angular order, then place evenly around the full perimeter
-// (Iso affinity order preserved; spacing made even for dense graphs).
+// Flatten in angular order; put higher-degree nodes on the inner wave when dense
+// so important labels sit closer to the core.
 const hop2Flat = [];
 for (const block of orderedHop2) {
   for (let i = 0; i < block.group.length; i++) {
+    const id = block.group[i];
     hop2Flat.push({
-      id: block.group[i],
+      id,
       preferT: block.centerT + (i - (block.group.length - 1) / 2) * ARC_SPACING,
+      degree: degreeMap[id] || 0,
     });
   }
 }
-const evenStep = hop2Flat.length > 0 ? totalPerim / hop2Flat.length : ARC_SPACING;
-for (let i = 0; i < hop2Flat.length; i++) {
-  // Blend neighbor-preferred t with even perimeter slot → even spread, soft affinity
-  const evenT = i * evenStep;
-  const useT = hop2Nodes.size > 180
-    ? 0.35 * hop2Flat[i].preferT + 0.65 * evenT
-    : hop2Flat[i].preferT;
-  const pt = hullPointAt(useT);
-  positions[hop2Flat[i].id] = {
-    x: pt.x + pt.nx * PUSH_DIST,
-    y: pt.y + pt.ny * PUSH_DIST,
-  };
+hop2Flat.sort((a, b) => a.preferT - b.preferT);
+
+// Split into waves by round-robin after degree-biased shuffle within windows:
+// sort by degree desc, assign top half-ish to wave 0 via interleaving with angle order.
+const byAngle = [...hop2Flat];
+const waveBuckets = Array.from({ length: HOP2_WAVES }, () => []);
+// Interleave by angle so each wave is a full surrounding arc; stagger outer wave.
+for (let i = 0; i < byAngle.length; i++) {
+  waveBuckets[i % HOP2_WAVES].push(byAngle[i]);
 }
+
+for (let w = 0; w < HOP2_WAVES; w++) {
+  const bucket = waveBuckets[w];
+  const step = bucket.length > 0 ? totalPerim / bucket.length : ARC_SPACING;
+  const stagger = w === 0 ? 0 : step * 0.5; // half-slot stagger for label clarity
+  const push = PUSH_DIST + w * WAVE_GAP;
+  for (let i = 0; i < bucket.length; i++) {
+    const evenT = i * step + stagger;
+    const useT = hop2Nodes.size > 180
+      ? 0.25 * bucket[i].preferT + 0.75 * evenT
+      : bucket[i].preferT;
+    const pt = hullPointAt(useT);
+    positions[bucket[i].id] = {
+      x: pt.x + pt.nx * push,
+      y: pt.y + pt.ny * push,
+    };
+  }
+}
+console.log(`Placed ${hop2Flat.length} 2-hop nodes on ${HOP2_WAVES} hull wave(s).`);
 
 // === OUTER ARC: nodes beyond AW 2-hop (Sammy threshold graphs) ===
 // Isotopy's full exhibit sits inside hop≤2 so this is a no-op there.
@@ -517,7 +537,7 @@ if (beyondNodes.length > 0) {
   }
 
   // Beyond layer: even arc outside the hop-2 shell (multi-ring only here).
-  const OUTER_PUSH = PUSH_DIST + 220;
+  const OUTER_PUSH = PUSH_DIST + (HOP2_WAVES - 1) * WAVE_GAP + 180;
   const OUTER_SPACING = 22;
   const outerSlots = Math.max(1, Math.floor(outerTotal / OUTER_SPACING));
   const beyondRingCount = Math.max(1, Math.ceil(beyondNodes.length / outerSlots));
@@ -611,11 +631,11 @@ for (const id of hop2Ids) {
   anchorPositions[id] = { x: positions[id].x, y: positions[id].y };
 }
 
-// Stronger local spread so the single hull arc thickens evenly instead of stacking.
-const REPEL_RADIUS = hop2Nodes.size > 180 ? 110 : 80;
-const REPEL_STRENGTH = hop2Nodes.size > 180 ? 16 : 12;
-const SPRING_STRENGTH = hop2Nodes.size > 180 ? 0.05 : 0.08;
-const ITERATIONS = hop2Nodes.size > 180 ? 280 : 200;
+// Repel enough to clear labels; keep spring mild so the two waves stay apart.
+const REPEL_RADIUS = hop2Nodes.size > 180 ? 95 : 80;
+const REPEL_STRENGTH = hop2Nodes.size > 180 ? 14 : 12;
+const SPRING_STRENGTH = hop2Nodes.size > 180 ? 0.06 : 0.08;
+const ITERATIONS = hop2Nodes.size > 180 ? 260 : 200;
 
 console.log(`Repulsion pass: ${hop2Ids.length} 2-hop nodes, ${ITERATIONS} iterations...`);
 
