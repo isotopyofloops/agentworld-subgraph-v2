@@ -275,12 +275,12 @@ cy2.nodes().forEach(n => {
 // === CONVEX HULL PUSH: place 2-hop nodes outside the 1-hop convex hull ===
 // Layer-1 tuning knobs (declared early — hull may scale to fit LAYER1_CAP spacing).
 const LAYER1_CAP = 200;
-const PUSH_DIST = 240; // clearance from outermost 1-hop node to the ring
-const PARK_PUSH = 1100; // keep deferred well clear of the layer-1 ring
-const LAYER1_TARGET_SPACING = 42; // chord length on the circular ring
+const PUSH_DIST = 140; // outward offset of the 1-hop convex hull (hug the core)
+const PARK_PUSH = 800; // extra offset for deferred park path
+const LAYER1_MIN_SPACING = 28; // only inflate the path if natural step falls below this
 const LAYER1_LABEL_TOP = 48; // only top-N by degree get labels on the dense ring
-// Layer-1 sits on a true circle (equal angle), not the polygonal hull offset —
-// hull edges were reading as rigid line-clumps with empty sectors between them.
+// Layer-1 follows a rounded offset of the 1-hop convex hull (Sam's outline),
+// with even arc-length spacing — not a circle, and not raw polygonal edges.
 
 // Compute convex hull of 1-hop nodes (Andrew's monotone chain)
 const hop1Points = [];
@@ -313,21 +313,16 @@ let cx = 0, cy_val = 0;
 for (const id of hop1Nodes) { const p = positions[id]; if (p) { cx += p.x; cy_val += p.y; } }
 cx /= hop1Nodes.size; cy_val /= hop1Nodes.size;
 
-// Keep the 1-hop core at its natural cose size. Ring radius (below) absorbs
-// the spacing budget so we don't inflate the core just to fit 200 perimeter slots.
+// Keep the 1-hop core at its natural cose size. Spacing budget is absorbed by
+// scaling the *offset path* from the centroid (shape preserved, core untouched).
 let maxHop1R = 0;
 for (const id of hop1Nodes) {
   const p = positions[id];
   if (!p) continue;
   maxHop1R = Math.max(maxHop1R, Math.sqrt((p.x - cx) ** 2 + (p.y - cy_val) ** 2));
 }
-const ringRadiusFromClearance = maxHop1R + PUSH_DIST;
-const ringRadiusFromSpacing = (LAYER1_CAP * LAYER1_TARGET_SPACING) / (2 * Math.PI);
-const LAYER1_RING_R = Math.max(ringRadiusFromClearance, ringRadiusFromSpacing);
-const PARK_RING_R = Math.max(LAYER1_RING_R + (PARK_PUSH - PUSH_DIST), LAYER1_RING_R * 1.55);
 
 console.log(`Convex hull: ${hull.length} vertices, centroid (${Math.round(cx)}, ${Math.round(cy_val)}), maxHop1R=${Math.round(maxHop1R)}`);
-console.log(`Layer-1 circle R=${Math.round(LAYER1_RING_R)} (clearance ${Math.round(ringRadiusFromClearance)} vs spacing ${Math.round(ringRadiusFromSpacing)}); park R=${Math.round(PARK_RING_R)}`);
 
 // For each hull edge, compute outward normal
 function hullEdgeNormal(i) {
@@ -467,60 +462,155 @@ const deferred = [
   ...layerCandidates.filter(c => c.pool === 'beyond'),
 ];
 
-// Equal-angle circle around the (unscaled) 1-hop centroid — uses empty space
-// instead of packing onto polygonal hull edges.
+// Rounded outward offset of the convex hull: straight segments parallel to each
+// hull edge, circular arcs at vertices (Minkowski sum with a disk). Even
+// arc-length samples → hull-shaped ring without polygonal line-clumps.
+function buildRoundedOffsetPath(poly, dist) {
+  const segs = [];
+  const n = poly.length;
+  if (n < 3 || dist < 0) return segs;
+  const normals = [];
+  for (let i = 0; i < n; i++) {
+    const a = poly[i], b = poly[(i + 1) % n];
+    const dx = b.x - a.x, dy = b.y - a.y;
+    const len = Math.sqrt(dx * dx + dy * dy) || 1;
+    normals.push({ nx: dy / len, ny: -dx / len }); // outward for CCW
+  }
+  for (let i = 0; i < n; i++) {
+    const a = poly[i], b = poly[(i + 1) % n];
+    const nrm = normals[i];
+    const x0 = a.x + nrm.nx * dist, y0 = a.y + nrm.ny * dist;
+    const x1 = b.x + nrm.nx * dist, y1 = b.y + nrm.ny * dist;
+    const lineLen = Math.sqrt((x1 - x0) ** 2 + (y1 - y0) ** 2);
+    segs.push({ type: 'line', x0, y0, x1, y1, len: lineLen, nx: nrm.nx, ny: nrm.ny });
+
+    const nNext = normals[(i + 1) % n];
+    const a0 = Math.atan2(nrm.ny, nrm.nx);
+    const a1 = Math.atan2(nNext.ny, nNext.nx);
+    let sweep = a1 - a0;
+    while (sweep < 0) sweep += 2 * Math.PI;
+    while (sweep >= 2 * Math.PI) sweep -= 2 * Math.PI;
+    segs.push({
+      type: 'arc',
+      cx: b.x, cy: b.y, r: dist,
+      a0, sweep,
+      len: dist * sweep,
+    });
+  }
+  return segs;
+}
+
+function pathTotalLength(segs) {
+  return segs.reduce((s, seg) => s + seg.len, 0);
+}
+
+function pointOnOffsetPath(segs, t) {
+  const total = pathTotalLength(segs);
+  if (total <= 0 || segs.length === 0) return { x: cx, y: cy_val, nx: 1, ny: 0 };
+  t = ((t % total) + total) % total;
+  let acc = 0;
+  for (let i = 0; i < segs.length; i++) {
+    const seg = segs[i];
+    const atEnd = i === segs.length - 1;
+    if (t <= acc + seg.len || atEnd) {
+      const u = seg.len > 0 ? Math.min(1, Math.max(0, (t - acc) / seg.len)) : 0;
+      if (seg.type === 'line') {
+        return {
+          x: seg.x0 + (seg.x1 - seg.x0) * u,
+          y: seg.y0 + (seg.y1 - seg.y0) * u,
+          nx: seg.nx, ny: seg.ny,
+        };
+      }
+      const ang = seg.a0 + seg.sweep * u;
+      return {
+        x: seg.cx + Math.cos(ang) * seg.r,
+        y: seg.cy + Math.sin(ang) * seg.r,
+        nx: Math.cos(ang), ny: Math.sin(ang),
+      };
+    }
+    acc += seg.len;
+  }
+  return pointOnOffsetPath(segs, 0);
+}
+
+function scaleFromCentroid(pt, s) {
+  return {
+    x: cx + (pt.x - cx) * s,
+    y: cy_val + (pt.y - cy_val) * s,
+    nx: pt.nx,
+    ny: pt.ny,
+  };
+}
+
+const offsetPath = buildRoundedOffsetPath(hull, PUSH_DIST);
+const offsetLen0 = pathTotalLength(offsetPath);
+// Prefer true hull offset (scale≈1) so the ring keeps the core's irregular shape.
+// Inflate only when nodes would pack tighter than LAYER1_MIN_SPACING.
+const naturalStep = LAYER1_CAP > 0 ? offsetLen0 / LAYER1_CAP : offsetLen0;
+const targetPerim = naturalStep >= LAYER1_MIN_SPACING
+  ? offsetLen0
+  : LAYER1_CAP * LAYER1_MIN_SPACING;
+const pathScale = offsetLen0 > 1 ? targetPerim / offsetLen0 : 1;
+const parkPath = buildRoundedOffsetPath(hull, PUSH_DIST + PARK_PUSH);
+const parkLen0 = pathTotalLength(parkPath);
+const parkScale = Math.max(pathScale * 1.2, parkLen0 > 1 ? (Math.max(parkLen0, targetPerim * 1.4)) / parkLen0 : pathScale);
+
+console.log(`Rounded-hull offset: rawPerim=${Math.round(offsetLen0)}, naturalStep≈${Math.round(naturalStep)}px, scale×${pathScale.toFixed(2)} → perim ${Math.round(targetPerim)}.`);
+
 layer1.sort((a, b) => a.ang - b.ang);
 const layer1Ids = new Set();
-const layer1AngleStep = layer1.length > 0 ? (2 * Math.PI) / layer1.length : 1;
-const layer1Chord = 2 * LAYER1_RING_R * Math.sin(layer1AngleStep / 2);
+const layer1Step = layer1.length > 0 ? offsetLen0 / layer1.length : 1;
 for (let i = 0; i < layer1.length; i++) {
-  const ang = -Math.PI + (i + 0.5) * layer1AngleStep;
-  positions[layer1[i].id] = {
-    x: cx + Math.cos(ang) * LAYER1_RING_R,
-    y: cy_val + Math.sin(ang) * LAYER1_RING_R,
-  };
+  const raw = pointOnOffsetPath(offsetPath, (i + 0.5) * layer1Step);
+  const pt = scaleFromCentroid(raw, pathScale);
+  positions[layer1[i].id] = { x: pt.x, y: pt.y };
   layer1Ids.add(layer1[i].id);
 }
-console.log(`Layer 1: ${layer1.length} nodes on circle R=${Math.round(LAYER1_RING_R)} (chord≈${Math.round(layer1Chord)}px, ${LAYER1_TARGET_SPACING}px target).`);
+const layer1Chord = pathScale * layer1Step; // arc length on scaled path
+console.log(`Layer 1: ${layer1.length} nodes on rounded-hull path (step≈${Math.round(layer1Chord)}px).`);
 console.log(`Deferred for later layers: ${deferred.length} (hop2 left=${layer1Pool.length - layer1.length}, beyond=${beyondIdsAll.length}).`);
 
-// Park deferred on a larger circle so they stay out of the layer-1 frame.
 deferred.sort((a, b) => a.ang - b.ang);
-const parkAngleStep = deferred.length > 0 ? (2 * Math.PI) / deferred.length : 1;
+const parkStep = deferred.length > 0 ? parkLen0 / deferred.length : 1;
 for (let i = 0; i < deferred.length; i++) {
-  const ang = -Math.PI + (i + 0.5) * parkAngleStep;
-  positions[deferred[i].id] = {
-    x: cx + Math.cos(ang) * PARK_RING_R,
-    y: cy_val + Math.sin(ang) * PARK_RING_R,
-  };
+  const raw = pointOnOffsetPath(parkPath, (i + 0.5) * parkStep);
+  const pt = scaleFromCentroid(raw, parkScale);
+  positions[deferred[i].id] = { x: pt.x, y: pt.y };
 }
 
-// === LAYER-1: angular repulsion on the circle (break residual clumps) ===
-// Start from equal angles; a few strong tangential pushes + re-snap keep spacing even
-// if any later affinity pass jostles them. Locked radius = LAYER1_RING_R.
+// Light tangential separation, then re-slot to exact equal arc-length on the path.
 const hop2Ids = [...layer1Ids].filter(id => positions[id]);
 const anchorPositions = {};
 for (const id of hop2Ids) {
   anchorPositions[id] = { x: positions[id].x, y: positions[id].y };
 }
 
-function snapToLayer1Ring(id) {
-  const p = positions[id];
-  let dx = p.x - cx, dy = p.y - cy_val;
-  const len = Math.sqrt(dx * dx + dy * dy);
-  if (len < 1) { dx = 1; dy = 0; } else { dx /= len; dy /= len; }
-  positions[id] = {
-    x: cx + dx * LAYER1_RING_R,
-    y: cy_val + dy * LAYER1_RING_R,
-  };
+function nearestPathParam(px, py) {
+  // Sample the scaled path; good enough for snap (path is smooth).
+  const samples = Math.max(64, hop2Ids.length * 2);
+  let bestT = 0, bestD = Infinity;
+  for (let i = 0; i < samples; i++) {
+    const raw = pointOnOffsetPath(offsetPath, (i / samples) * offsetLen0);
+    const pt = scaleFromCentroid(raw, pathScale);
+    const d = (pt.x - px) ** 2 + (pt.y - py) ** 2;
+    if (d < bestD) { bestD = d; bestT = (i / samples) * offsetLen0; }
+  }
+  return bestT;
 }
 
-const REPEL_RADIUS = Math.max(layer1Chord * 1.35, 55);
-const REPEL_STRENGTH = 14;
-const SPRING_STRENGTH = 0.18; // light — equal-angle anchors, allow redistribution
-const ITERATIONS = 200;
+function snapToLayer1Ring(id) {
+  const p = positions[id];
+  const t = nearestPathParam(p.x, p.y);
+  const pt = scaleFromCentroid(pointOnOffsetPath(offsetPath, t), pathScale);
+  positions[id] = { x: pt.x, y: pt.y };
+}
 
-console.log(`Layer-1 angular repulsion: ${hop2Ids.length} nodes, repelR=${Math.round(REPEL_RADIUS)}, spring=${SPRING_STRENGTH}...`);
+const REPEL_RADIUS = Math.max(layer1Chord * 1.25, 50);
+const REPEL_STRENGTH = 12;
+const SPRING_STRENGTH = 0.2;
+const ITERATIONS = 120;
+
+console.log(`Layer-1 path repulsion: ${hop2Ids.length} nodes, repelR=${Math.round(REPEL_RADIUS)}...`);
 
 for (let iter = 0; iter < ITERATIONS; iter++) {
   for (const id of hop2Ids) {
@@ -546,7 +636,6 @@ for (let iter = 0; iter < ITERATIONS; iter++) {
     fx += (anchor.x - p.x) * SPRING_STRENGTH;
     fy += (anchor.y - p.y) * SPRING_STRENGTH;
 
-    // Tangential only — radius is hard-locked to the circle.
     const radial = fx * rx + fy * ry;
     fx -= radial * rx;
     fy -= radial * ry;
@@ -556,21 +645,18 @@ for (let iter = 0; iter < ITERATIONS; iter++) {
   }
 }
 
-// Final equal-angle re-slot: sort by current angle and place on exact slots.
-// Stronger than repulsion alone at killing leftover clumps / empty sectors.
+// Final equal arc-length reslot on the rounded-hull path (kills leftover clumps).
 {
   const ordered = hop2Ids
-    .map(id => ({ id, ang: Math.atan2(positions[id].y - cy_val, positions[id].x - cx) }))
-    .sort((a, b) => a.ang - b.ang);
+    .map(id => ({ id, t: nearestPathParam(positions[id].x, positions[id].y) }))
+    .sort((a, b) => a.t - b.t);
   for (let i = 0; i < ordered.length; i++) {
-    const ang = -Math.PI + (i + 0.5) * layer1AngleStep;
-    positions[ordered[i].id] = {
-      x: cx + Math.cos(ang) * LAYER1_RING_R,
-      y: cy_val + Math.sin(ang) * LAYER1_RING_R,
-    };
+    const raw = pointOnOffsetPath(offsetPath, (i + 0.5) * layer1Step);
+    const pt = scaleFromCentroid(raw, pathScale);
+    positions[ordered[i].id] = { x: pt.x, y: pt.y };
     anchorPositions[ordered[i].id] = { ...positions[ordered[i].id] };
   }
-  console.log(`Layer-1 equal-angle reslot: ${ordered.length} nodes on R=${Math.round(LAYER1_RING_R)}.`);
+  console.log(`Layer-1 equal-arc reslot: ${ordered.length} nodes on rounded hull (scale×${pathScale.toFixed(2)}).`);
 }
 
 // Round all positions
@@ -755,10 +841,11 @@ data._layout = {
     parkPush: PARK_PUSH,
     deferred: deferred.length,
     labelTop: LAYER1_LABEL_TOP,
-    shape: 'circle',
-    ringR: Math.round(LAYER1_RING_R * 100) / 100,
-    parkR: Math.round(PARK_RING_R * 100) / 100,
-    chord: Math.round(layer1Chord * 100) / 100,
+    shape: 'rounded-hull',
+    pathScale: Math.round(pathScale * 1000) / 1000,
+    pathPerim: Math.round(targetPerim),
+    step: Math.round(layer1Chord * 100) / 100,
+    hullVertices: hull.length,
     ids: layer1.map(c => c.id),
   },
 };
