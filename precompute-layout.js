@@ -276,8 +276,9 @@ cy2.nodes().forEach(n => {
 // Layer-1 tuning knobs (declared early — hull may scale to fit LAYER1_CAP spacing).
 const LAYER1_CAP = 200;
 const PUSH_DIST = 130;
-const PARK_PUSH = 560;
+const PARK_PUSH = 980; // keep deferred well clear of the layer-1 ring
 const LAYER1_TARGET_SPACING = 36; // desired px along hull perimeter per layer-1 node
+const LAYER1_LABEL_TOP = 48; // only top-N by degree get labels on the dense ring
 
 // Compute convex hull of 1-hop nodes (Andrew's monotone chain)
 const hop1Points = [];
@@ -522,25 +523,43 @@ for (let i = 0; i < deferred.length; i++) {
   };
 }
 
-// === LAYER-1 REPULSION: keep the ring even without collapsing into clumps ===
-// Only layer-1 nodes move. Strong spring to anchors preserves even perimeter slots.
+// === LAYER-1 REPULSION: tangential separation on a hard ring ===
+// Free repulsion drifts radially (ring thickness blew out to ~800–1500 from centroid).
+// Snap every node back onto hull+PUSH_DIST after each step so only arc spacing moves.
 const hop2Ids = [...layer1Ids].filter(id => positions[id]);
 const anchorPositions = {};
 for (const id of hop2Ids) {
   anchorPositions[id] = { x: positions[id].x, y: positions[id].y };
 }
 
-const REPEL_RADIUS = Math.max(40, Math.round(layer1Step * 0.7));
-const REPEL_STRENGTH = 8;
-const SPRING_STRENGTH = 0.22; // strong — hold even perimeter slots
-const ITERATIONS = 180;
+function snapToLayer1Ring(id) {
+  const p = positions[id];
+  let dx = p.x - cx, dy = p.y - cy_val;
+  const len = Math.sqrt(dx * dx + dy * dy);
+  if (len < 1) { dx = 1; dy = 0; } else { dx /= len; dy /= len; }
+  const { hitX, hitY, edgeIdx } = rayHullExit(cx, cy_val, dx, dy);
+  const n = edgeIdx >= 0 ? hullEdgeNormal(edgeIdx) : { nx: dx, ny: dy };
+  positions[id] = {
+    x: hitX + n.nx * PUSH_DIST,
+    y: hitY + n.ny * PUSH_DIST,
+  };
+}
 
-console.log(`Layer-1 repulsion: ${hop2Ids.length} nodes, repelR=${REPEL_RADIUS}, spring=${SPRING_STRENGTH}...`);
+const REPEL_RADIUS = Math.max(40, Math.round(layer1Step * 0.85));
+const REPEL_STRENGTH = 6;
+const SPRING_STRENGTH = 0.35; // hold even perimeter slots
+const ITERATIONS = 160;
+
+console.log(`Layer-1 repulsion (tangential+snap): ${hop2Ids.length} nodes, repelR=${REPEL_RADIUS}, spring=${SPRING_STRENGTH}...`);
 
 for (let iter = 0; iter < ITERATIONS; iter++) {
   for (const id of hop2Ids) {
     let fx = 0, fy = 0;
     const p = positions[id];
+    // Outward unit from centroid — used to kill radial force components
+    let rx = p.x - cx, ry = p.y - cy_val;
+    const rlen = Math.sqrt(rx * rx + ry * ry) || 1;
+    rx /= rlen; ry /= rlen;
 
     for (const otherId of hop2Ids) {
       if (otherId === id) continue;
@@ -560,7 +579,7 @@ for (let iter = 0; iter < ITERATIONS; iter++) {
       const dx = p.x - o.x, dy = p.y - o.y;
       const dist = Math.sqrt(dx * dx + dy * dy);
       if (dist < REPEL_RADIUS && dist > 0.1) {
-        const force = REPEL_STRENGTH * 1.4 * (1 - dist / REPEL_RADIUS);
+        const force = REPEL_STRENGTH * 1.2 * (1 - dist / REPEL_RADIUS);
         fx += (dx / dist) * force;
         fy += (dy / dist) * force;
       }
@@ -570,36 +589,19 @@ for (let iter = 0; iter < ITERATIONS; iter++) {
     fx += (anchor.x - p.x) * SPRING_STRENGTH;
     fy += (anchor.y - p.y) * SPRING_STRENGTH;
 
+    // Keep only the tangential part of the step (ring thickness is hard-constrained).
+    const radial = fx * rx + fy * ry;
+    fx -= radial * rx;
+    fy -= radial * ry;
+
     positions[id] = { x: p.x + fx, y: p.y + fy };
+    snapToLayer1Ring(id);
   }
 }
 
-// Hard constraint: layer-1 nodes that drifted inside the hull get projected out.
-function pointInHull(px, py) {
-  if (hull.length < 3) return false;
-  for (let i = 0; i < hull.length; i++) {
-    const a = hull[i], b = hull[(i + 1) % hull.length];
-    if (cross(a, b, { x: px, y: py }) < 0) return false;
-  }
-  return true;
-}
-let projected = 0;
-for (const id of hop2Ids) {
-  const p = positions[id];
-  if (!pointInHull(p.x, p.y)) continue;
-  let dx = p.x - cx, dy = p.y - cy_val;
-  const len = Math.sqrt(dx * dx + dy * dy);
-  if (len < 1) { dx = 1; dy = 0; } else { dx /= len; dy /= len; }
-  const { hitX, hitY } = rayHullExit(cx, cy_val, dx, dy);
-  const nApproxX = hitX - cx, nApproxY = hitY - cy_val;
-  const nLen = Math.sqrt(nApproxX * nApproxX + nApproxY * nApproxY) || 1;
-  positions[id] = {
-    x: hitX + (nApproxX / nLen) * PUSH_DIST,
-    y: hitY + (nApproxY / nLen) * PUSH_DIST,
-  };
-  projected++;
-}
-if (projected) console.log(`Projected ${projected} layer-1 nodes back outside hull.`);
+// Final snap pass (idempotent) — every layer-1 node sits on hull+PUSH_DIST.
+for (const id of hop2Ids) snapToLayer1Ring(id);
+console.log(`Layer-1 ring snap: ${hop2Ids.length} nodes locked to push=${PUSH_DIST}.`);
 
 // Round all positions
 for (const id of hop1Nodes) {
@@ -631,11 +633,28 @@ const LABEL_HEIGHT = 14;
 const LABEL_PAD = 4;
 const MIN_DEGREE_FOR_LABEL = 3;
 
+// Layer-1 ring is dense — only the highest-degree ring nodes get labels.
+const layer1LabelAllow = new Set(
+  [...layer1Ids]
+    .sort((a, b) => (degreeMap[b] || 0) - (degreeMap[a] || 0) || a.localeCompare(b))
+    .slice(0, LAYER1_LABEL_TOP)
+);
+
 const labeledNodes = data.nodes
-  .filter(n => (degreeMap[n.id] || 0) >= MIN_DEGREE_FOR_LABEL && n.x !== undefined)
+  .filter(n => {
+    if (n.x === undefined) return false;
+    if (layer1Ids.has(n.id)) return layer1LabelAllow.has(n.id);
+    return (degreeMap[n.id] || 0) >= MIN_DEGREE_FOR_LABEL;
+  })
   .sort((a, b) => (degreeMap[b.id] || 0) - (degreeMap[a.id] || 0));
 
-console.log(`Placing labels for ${labeledNodes.length} nodes (degree >= ${MIN_DEGREE_FOR_LABEL})...`);
+// Drop stale offsets so skipped ring nodes don't keep old labelDx/Dy.
+for (const n of data.nodes) {
+  delete n.labelDx;
+  delete n.labelDy;
+}
+
+console.log(`Placing labels for ${labeledNodes.length} nodes (layer1 top ${LAYER1_LABEL_TOP}, else degree >= ${MIN_DEGREE_FOR_LABEL})...`);
 
 function nodeRadius(id) {
   const d = degreeMap[id] || 0;
@@ -677,13 +696,24 @@ function circleRectOverlap(circle, rect) {
 for (const node of labeledNodes) {
   const lw = labelWidth(node.id);
   const r = nodeRadius(node.id);
-  const gap = r + 8;
+  const gap = r + (layer1Ids.has(node.id) ? 14 : 8);
 
   let bestScore = Infinity;
   let bestDx = gap + 4;
   let bestDy = 3;
 
-  for (const angle of ANGLES) {
+  // Prefer outward (away from core) for layer-1 labels so they don't fill the ring.
+  let angleOrder = ANGLES;
+  if (layer1Ids.has(node.id)) {
+    const outAng = Math.atan2(node.y - cy_val, node.x - cx);
+    angleOrder = [...ANGLES].sort((a, b) => {
+      const da = Math.abs(Math.atan2(Math.sin(a - outAng), Math.cos(a - outAng)));
+      const db = Math.abs(Math.atan2(Math.sin(b - outAng), Math.cos(b - outAng)));
+      return da - db;
+    });
+  }
+
+  for (const angle of angleOrder) {
     const dx = Math.cos(angle) * gap;
     const dy = Math.sin(angle) * gap;
 
@@ -704,6 +734,14 @@ for (const node of labeledNodes) {
     for (const nc of nodeCircles) {
       score += circleRectOverlap(nc, rect) * 50;
     }
+    // Soft penalty for inward labels on the ring
+    if (layer1Ids.has(node.id)) {
+      const labelCx = lx1 + lw / 2;
+      const labelCy = ly1 + LABEL_HEIGHT / 2;
+      const nodeDist = Math.hypot(node.x - cx, node.y - cy_val);
+      const labelDist = Math.hypot(labelCx - cx, labelCy - cy_val);
+      if (labelDist < nodeDist) score += 30;
+    }
 
     if (score < bestScore) {
       bestScore = score;
@@ -711,6 +749,11 @@ for (const node of labeledNodes) {
       bestDy = Math.round((ly1 - node.y + LABEL_HEIGHT/2) * 100) / 100;
       if (score === 0) break; // perfect placement, stop searching
     }
+  }
+
+  // Skip hopeless overlaps on the ring rather than stacking illegible text
+  if (layer1Ids.has(node.id) && bestScore > 80) {
+    continue;
   }
 
   const finalLw = lw;
@@ -741,6 +784,8 @@ data._layout = {
     push: PUSH_DIST,
     parkPush: PARK_PUSH,
     deferred: deferred.length,
+    labelTop: LAYER1_LABEL_TOP,
+    ringSnap: true,
     ids: layer1.map(c => c.id),
   },
 };
