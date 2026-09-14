@@ -272,14 +272,15 @@ cy2.nodes().forEach(n => {
   }
 });
 
-// === CONVEX HULL PUSH: place 2-hop nodes outside the 1-hop convex hull ===
-// Layer-1 tuning knobs (declared early — hull may scale to fit LAYER1_CAP spacing).
-const LAYER1_CAP = 200;
-const PUSH_DIST = 110; // clearance from outermost 1-hop node to the ring
-const PARK_GAP = 300; // radial gap from layer-1 ring to deferred park ring
-const LAYER1_TARGET_SPACING = 34; // chord length on the circle (readable dots; labels thinned)
-const LAYER1_LABEL_TOP = 48; // only top-N by degree get labels on the dense ring
-// Layer-1 sits on a tight equal-angle circle around the natural 1-hop core.
+// === CONVEX HULL PUSH: place 2-hop nodes in two concentric waves ===
+// Wave-1 (inner ring): higher-degree 2-hop nodes, closer to core
+// Wave-2 (outer ring): remaining 2-hop nodes, more label clearance
+const PUSH_DIST = 110;        // clearance from outermost 1-hop node to wave-1
+const WAVE_GAP = 100;         // radial gap between wave-1 and wave-2 rings
+const PARK_GAP = 200;         // radial gap from wave-2 ring to beyond-node park ring
+const TARGET_SPACING = 36;    // target chord length per node (readable labels)
+const WAVE1_LABEL_TOP = 60;   // top-N by degree get labels on wave-1
+const WAVE2_LABEL_TOP = 40;   // top-N by degree get labels on wave-2
 
 // Compute convex hull of 1-hop nodes (Andrew's monotone chain)
 const hop1Points = [];
@@ -312,54 +313,111 @@ let cx = 0, cy_val = 0;
 for (const id of hop1Nodes) { const p = positions[id]; if (p) { cx += p.x; cy_val += p.y; } }
 cx /= hop1Nodes.size; cy_val /= hop1Nodes.size;
 
-// Keep the 1-hop core at its natural cose size. Ring radius is the tighter of
-// (core clearance) vs (chord-spacing budget) — previously the spacing floor
-// pushed the ring too far out.
-let maxHop1R = 0;
-for (const id of hop1Nodes) {
-  const p = positions[id];
-  if (!p) continue;
-  maxHop1R = Math.max(maxHop1R, Math.sqrt((p.x - cx) ** 2 + (p.y - cy_val) ** 2));
-}
-const ringRadiusFromClearance = maxHop1R + PUSH_DIST;
-const ringRadiusFromSpacing = (LAYER1_CAP * LAYER1_TARGET_SPACING) / (2 * Math.PI);
-const LAYER1_RING_R = Math.max(ringRadiusFromClearance, ringRadiusFromSpacing);
-const PARK_RING_R = LAYER1_RING_R + PARK_GAP;
+console.log(`Convex hull: ${hull.length} vertices, centroid (${Math.round(cx)}, ${Math.round(cy_val)})`);
 
-console.log(`Convex hull: ${hull.length} vertices, centroid (${Math.round(cx)}, ${Math.round(cy_val)}), maxHop1R=${Math.round(maxHop1R)}`);
-console.log(`Layer-1 circle R=${Math.round(LAYER1_RING_R)} (clearance ${Math.round(ringRadiusFromClearance)} vs spacing ${Math.round(ringRadiusFromSpacing)}); park R=${Math.round(PARK_RING_R)} (gap ${PARK_GAP})`);
-
-// For each hull edge, compute outward normal
-function hullEdgeNormal(i) {
-  const a = hull[i], b = hull[(i + 1) % hull.length];
+// === OFFSET HULL: push each hull edge outward along its normal ===
+function hullEdgeNormal(h, i) {
+  const a = h[i], b = h[(i + 1) % h.length];
   const dx = b.x - a.x, dy = b.y - a.y;
   const len = Math.sqrt(dx * dx + dy * dy);
-  return { nx: dy / len, ny: -dx / len }; // outward normal (CCW hull)
+  return { nx: dy / len, ny: -dx / len };
 }
 
-// Ray-hull intersection: shoot ray from point along direction, find where it exits the hull
-function rayHullExit(px, py, dx, dy) {
-  let bestT = Infinity, bestEdgeIdx = -1, bestHitX = px, bestHitY = py;
-  for (let i = 0; i < hull.length; i++) {
-    const a = hull[i], b = hull[(i + 1) % hull.length];
+function offsetHull(h, dist) {
+  const n = h.length;
+  if (n < 3) return h.map(p => ({ x: p.x, y: p.y }));
+  const offsetEdges = [];
+  for (let i = 0; i < n; i++) {
+    const norm = hullEdgeNormal(h, i);
+    const a = h[i], b = h[(i + 1) % n];
+    offsetEdges.push({
+      ax: a.x + norm.nx * dist, ay: a.y + norm.ny * dist,
+      bx: b.x + norm.nx * dist, by: b.y + norm.ny * dist,
+    });
+  }
+  const verts = [];
+  for (let i = 0; i < n; i++) {
+    const e1 = offsetEdges[i];
+    const e2 = offsetEdges[(i + 1) % n];
+    const d1x = e1.bx - e1.ax, d1y = e1.by - e1.ay;
+    const d2x = e2.bx - e2.ax, d2y = e2.by - e2.ay;
+    const denom = d1x * d2y - d1y * d2x;
+    if (Math.abs(denom) < 1e-9) {
+      verts.push({ x: e1.bx, y: e1.by });
+    } else {
+      const t = ((e2.ax - e1.ax) * d2y - (e2.ay - e1.ay) * d2x) / denom;
+      verts.push({ x: e1.ax + d1x * t, y: e1.ay + d1y * t });
+    }
+  }
+  return verts;
+}
+
+// Parameterize a hull's perimeter for even-spacing placement.
+function parameterizeHull(h) {
+  const segs = [];
+  let total = 0;
+  for (let i = 0; i < h.length; i++) {
+    const a = h[i], b = h[(i + 1) % h.length];
+    const len = Math.sqrt((b.x - a.x) ** 2 + (b.y - a.y) ** 2);
+    segs.push({ startT: total, endT: total + len, idx: i, len });
+    total += len;
+  }
+  return { segs, total };
+}
+
+// Get x,y at parameter t along a hull perimeter.
+function hullPointAtT(h, param, t) {
+  t = ((t % param.total) + param.total) % param.total;
+  for (const seg of param.segs) {
+    if (t <= seg.endT) {
+      const frac = seg.len > 0 ? (t - seg.startT) / seg.len : 0;
+      const a = h[seg.idx], b = h[(seg.idx + 1) % h.length];
+      return { x: a.x + (b.x - a.x) * frac, y: a.y + (b.y - a.y) * frac };
+    }
+  }
+  return { x: h[0].x, y: h[0].y };
+}
+
+// Snap a point onto the nearest position on an offset hull (project radially from centroid).
+function snapToHull(h, param, px, py) {
+  const dx = px - cx, dy = py - cy_val;
+  const ang = Math.atan2(dy, dx);
+  const rayLen = 1e6;
+  const rx = Math.cos(ang) * rayLen, ry = Math.sin(ang) * rayLen;
+  let bestT = Infinity, bestX = px, bestY = py, bestDist = Infinity;
+  for (let i = 0; i < h.length; i++) {
+    const a = h[i], b = h[(i + 1) % h.length];
     const ex = b.x - a.x, ey = b.y - a.y;
-    const denom = dx * ey - dy * ex;
+    const denom = rx * ey - ry * ex;
     if (Math.abs(denom) < 1e-9) continue;
-    const t = ((a.x - px) * ey - (a.y - py) * ex) / denom;
-    const u = ((a.x - px) * dy - (a.y - py) * dx) / denom;
+    const t = ((a.x - cx) * ey - (a.y - cy_val) * ex) / denom;
+    const u = ((a.x - cx) * ry - (a.y - cy_val) * rx) / denom;
     if (t > 0 && u >= 0 && u <= 1) {
-      if (t < bestT) {
-        bestT = t;
-        bestEdgeIdx = i;
-        bestHitX = px + dx * t;
-        bestHitY = py + dy * t;
+      const hx = cx + rx * t, hy = cy_val + ry * t;
+      const d = Math.sqrt((hx - cx) ** 2 + (hy - cy_val) ** 2);
+      if (Math.abs(d) < bestDist || bestDist === Infinity) {
+        bestDist = d;
+        bestX = hx; bestY = hy;
       }
     }
   }
-  return { hitX: bestHitX, hitY: bestHitY, edgeIdx: bestEdgeIdx, t: bestT };
+  return { x: bestX, y: bestY };
 }
 
-// Group 2-hop nodes by their 1-hop neighbor(s) for fan-out
+// Compute offset hulls for each wave.
+const wave1Hull = offsetHull(hull, PUSH_DIST);
+const wave2Hull = offsetHull(hull, PUSH_DIST + WAVE_GAP);
+const parkHull = offsetHull(hull, PUSH_DIST + WAVE_GAP + PARK_GAP);
+
+const wave1Param = parameterizeHull(wave1Hull);
+const wave2Param = parameterizeHull(wave2Hull);
+const parkParam = parameterizeHull(parkHull);
+
+console.log(`Wave 1 offset hull: perimeter ${Math.round(wave1Param.total)}px (offset ${PUSH_DIST})`);
+console.log(`Wave 2 offset hull: perimeter ${Math.round(wave2Param.total)}px (offset ${PUSH_DIST + WAVE_GAP})`);
+console.log(`Park hull: perimeter ${Math.round(parkParam.total)}px (offset ${PUSH_DIST + WAVE_GAP + PARK_GAP})`);
+
+// Group 2-hop nodes by their 1-hop neighbor(s) — used for angular placement.
 const neighborGroups = {};
 for (const id of hop2Nodes) {
   const neighbors1 = (adjList[id] || []).filter(nb => hop1Nodes.has(nb) && positions[nb]);
@@ -370,52 +428,8 @@ for (const id of hop2Nodes) {
   neighborGroups[key].push(id);
 }
 
-// Layer-1 pass: ~200 nodes evenly around the 1-hop convex hull (Iso normals).
-// Get the ring geometry right first; deferred nodes park far out for later layers.
-
-// Pre-compute hull perimeter as a parameterized path
-const hullPerim = [];
-let totalPerim = 0;
-for (let i = 0; i < hull.length; i++) {
-  const a = hull[i], b = hull[(i + 1) % hull.length];
-  const edgeLen = Math.sqrt((b.x - a.x) ** 2 + (b.y - a.y) ** 2);
-  hullPerim.push({ startT: totalPerim, endT: totalPerim + edgeLen, edgeIdx: i, len: edgeLen });
-  totalPerim += edgeLen;
-}
-
-// Get hull point + outward normal at parameter t (wraps around)
-function hullPointAt(t) {
-  t = ((t % totalPerim) + totalPerim) % totalPerim;
-  for (const seg of hullPerim) {
-    if (t <= seg.endT) {
-      const frac = seg.len > 0 ? (t - seg.startT) / seg.len : 0;
-      const a = hull[seg.edgeIdx], b = hull[(seg.edgeIdx + 1) % hull.length];
-      const n = hullEdgeNormal(seg.edgeIdx);
-      return {
-        x: a.x + (b.x - a.x) * frac,
-        y: a.y + (b.y - a.y) * frac,
-        nx: n.nx, ny: n.ny,
-      };
-    }
-  }
-  return hullPointAt(0);
-}
-
-// Find parameter t for a hull exit point
-function hullParamFor(hitX, hitY, edgeIdx) {
-  if (edgeIdx < 0) return 0;
-  const seg = hullPerim[edgeIdx];
-  const a = hull[edgeIdx], b = hull[(edgeIdx + 1) % hull.length];
-  const dx = b.x - a.x, dy = b.y - a.y;
-  const frac = Math.abs(dx) > Math.abs(dy)
-    ? (hitX - a.x) / (dx || 1)
-    : (hitY - a.y) / (dy || 1);
-  return seg.startT + Math.max(0, Math.min(1, frac || 0)) * seg.len;
-}
-
-// Candidate pool for surrounding layers: true 2-hop first, then beyond.
-const beyondIdsAll = data.nodes.map(n => n.id).filter(id => !(id in hopDist));
-const layerCandidates = [];
+// Compute preferred angle for each 2-hop node (toward its 1-hop neighbor).
+const hop2Candidates = [];
 for (const [key, group] of Object.entries(neighborGroups)) {
   let anchorX, anchorY;
   if (key === '__orphan__') {
@@ -429,151 +443,124 @@ for (const [key, group] of Object.entries(neighborGroups)) {
   let dx = anchorX - cx, dy = anchorY - cy_val;
   const len = Math.sqrt(dx * dx + dy * dy);
   if (len < 1) { dx = 1; dy = 0; } else { dx /= len; dy /= len; }
-  const { hitX, hitY, edgeIdx } = rayHullExit(cx, cy_val, dx, dy);
-  const centerT = hullParamFor(hitX, hitY, edgeIdx);
   const ang = Math.atan2(dy, dx);
   for (const id of group) {
-    layerCandidates.push({ id, preferT: centerT, ang, degree: degreeMap[id] || 0, pool: 'hop2' });
+    hop2Candidates.push({ id, ang, degree: degreeMap[id] || 0 });
   }
 }
-// Beyond nodes: angle from centroid via any positioned neighbor, else hash angle
+hop2Candidates.sort((a, b) => b.degree - a.degree || a.ang - b.ang);
+
+// Split 2-hop into two waves by degree. Wave 1 = higher-degree (inner), Wave 2 = rest (outer).
+const half = Math.ceil(hop2Candidates.length / 2);
+const wave1 = hop2Candidates.slice(0, half);
+const wave2 = hop2Candidates.slice(half);
+
+// Beyond nodes: angle from centroid via any positioned neighbor, else hash angle.
+const beyondIdsAll = data.nodes.map(n => n.id).filter(id => !(id in hopDist));
+const beyondCandidates = [];
 for (const id of beyondIdsAll) {
   const nbs = (adjList[id] || []).filter(nb => positions[nb]);
-  let ang = 0, preferT = 0;
+  let ang = 0;
   if (nbs.length > 0) {
     let ax = 0, ay = 0;
     for (const nb of nbs) { ax += positions[nb].x; ay += positions[nb].y; }
     ax /= nbs.length; ay /= nbs.length;
-    const dx = ax - cx, dy = ay - cy_val;
-    ang = Math.atan2(dy, dx);
-    preferT = ((ang + Math.PI) / (2 * Math.PI)) * totalPerim;
+    ang = Math.atan2(ay - cy_val, ax - cx);
   } else {
-    // Stable pseudo-angle from id so parks don't all stack
     let h = 0;
     for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
     ang = (h / 0xffffffff) * Math.PI * 2 - Math.PI;
-    preferT = ((ang + Math.PI) / (2 * Math.PI)) * totalPerim;
   }
-  layerCandidates.push({ id, preferT, ang, degree: degreeMap[id] || 0, pool: 'beyond' });
+  beyondCandidates.push({ id, ang, degree: degreeMap[id] || 0 });
 }
 
-// Layer 1: top LAYER1_CAP by degree (prefer hop2), then even perimeter slots.
-const layer1Pool = layerCandidates
-  .filter(c => c.pool === 'hop2')
-  .sort((a, b) => b.degree - a.degree || a.ang - b.ang);
-const layer1 = layer1Pool.slice(0, Math.min(LAYER1_CAP, layer1Pool.length));
-const deferred = [
-  ...layer1Pool.slice(layer1.length),
-  ...layerCandidates.filter(c => c.pool === 'beyond'),
-];
-
-// Equal-angle circle — even spacing, tight around the core.
-layer1.sort((a, b) => a.ang - b.ang);
-const layer1Ids = new Set();
-const layer1AngleStep = layer1.length > 0 ? (2 * Math.PI) / layer1.length : 1;
-const layer1Chord = 2 * LAYER1_RING_R * Math.sin(layer1AngleStep / 2);
-for (let i = 0; i < layer1.length; i++) {
-  const ang = -Math.PI + (i + 0.5) * layer1AngleStep;
-  positions[layer1[i].id] = {
-    x: cx + Math.cos(ang) * LAYER1_RING_R,
-    y: cy_val + Math.sin(ang) * LAYER1_RING_R,
-  };
-  layer1Ids.add(layer1[i].id);
-}
-console.log(`Layer 1: ${layer1.length} nodes on circle R=${Math.round(LAYER1_RING_R)} (chord≈${Math.round(layer1Chord)}px).`);
-console.log(`Deferred for later layers: ${deferred.length} (hop2 left=${layer1Pool.length - layer1.length}, beyond=${beyondIdsAll.length}).`);
-
-deferred.sort((a, b) => a.ang - b.ang);
-const parkAngleStep = deferred.length > 0 ? (2 * Math.PI) / deferred.length : 1;
-for (let i = 0; i < deferred.length; i++) {
-  const ang = -Math.PI + (i + 0.5) * parkAngleStep;
-  positions[deferred[i].id] = {
-    x: cx + Math.cos(ang) * PARK_RING_R,
-    y: cy_val + Math.sin(ang) * PARK_RING_R,
-  };
+// Place wave-1 nodes evenly along offset hull perimeter.
+wave1.sort((a, b) => a.ang - b.ang);
+const wave1Ids = new Set();
+const wave1Spacing = wave1.length > 0 ? wave1Param.total / wave1.length : 1;
+for (let i = 0; i < wave1.length; i++) {
+  const t = (i + 0.5) * wave1Spacing;
+  const pt = hullPointAtT(wave1Hull, wave1Param, t);
+  positions[wave1[i].id] = pt;
+  wave1Ids.add(wave1[i].id);
 }
 
-// Light tangential repulsion, then exact equal-angle reslot on the circle.
-const hop2Ids = [...layer1Ids].filter(id => positions[id]);
-const anchorPositions = {};
-for (const id of hop2Ids) {
-  anchorPositions[id] = { x: positions[id].x, y: positions[id].y };
+// Place wave-2 nodes evenly along offset hull perimeter.
+wave2.sort((a, b) => a.ang - b.ang);
+const wave2Ids = new Set();
+const wave2Spacing = wave2.length > 0 ? wave2Param.total / wave2.length : 1;
+for (let i = 0; i < wave2.length; i++) {
+  const t = (i + 0.5) * wave2Spacing;
+  const pt = hullPointAtT(wave2Hull, wave2Param, t);
+  positions[wave2[i].id] = pt;
+  wave2Ids.add(wave2[i].id);
 }
 
-function snapToLayer1Ring(id) {
-  const p = positions[id];
-  let dx = p.x - cx, dy = p.y - cy_val;
-  const len = Math.sqrt(dx * dx + dy * dy);
-  if (len < 1) { dx = 1; dy = 0; } else { dx /= len; dy /= len; }
-  positions[id] = {
-    x: cx + dx * LAYER1_RING_R,
-    y: cy_val + dy * LAYER1_RING_R,
-  };
+// Park beyond nodes evenly along park hull perimeter.
+beyondCandidates.sort((a, b) => a.ang - b.ang);
+const parkSpacing = beyondCandidates.length > 0 ? parkParam.total / beyondCandidates.length : 1;
+for (let i = 0; i < beyondCandidates.length; i++) {
+  const t = (i + 0.5) * parkSpacing;
+  const pt = hullPointAtT(parkHull, parkParam, t);
+  positions[beyondCandidates[i].id] = pt;
 }
 
-const REPEL_RADIUS = Math.max(layer1Chord * 1.25, 48);
-const REPEL_STRENGTH = 12;
-const SPRING_STRENGTH = 0.2;
-const ITERATIONS = 120;
+console.log(`Wave 1: ${wave1.length} nodes, spacing ≈ ${Math.round(wave1Spacing)}px along hull`);
+console.log(`Wave 2: ${wave2.length} nodes, spacing ≈ ${Math.round(wave2Spacing)}px along hull`);
+console.log(`Beyond: ${beyondCandidates.length} nodes parked along hull (spacing ≈ ${Math.round(parkSpacing)}px)`);
 
-console.log(`Layer-1 angular repulsion: ${hop2Ids.length} nodes, repelR=${Math.round(REPEL_RADIUS)}...`);
+// Tangential repulsion for each hull contour independently.
+function runHullRepulsion(ringIds, oHull, oParam, label) {
+  const ids = [...ringIds].filter(id => positions[id]);
+  const anchors = {};
+  for (const id of ids) anchors[id] = { ...positions[id] };
 
-for (let iter = 0; iter < ITERATIONS; iter++) {
-  for (const id of hop2Ids) {
-    let fx = 0, fy = 0;
-    const p = positions[id];
-    let rx = p.x - cx, ry = p.y - cy_val;
-    const rlen = Math.sqrt(rx * rx + ry * ry) || 1;
-    rx /= rlen; ry /= rlen;
+  const spacing = ids.length > 0 ? oParam.total / ids.length : 48;
+  const repelR = Math.max(spacing * 1.25, 48);
+  const repelStr = 12, springStr = 0.2, iters = 120;
 
-    for (const otherId of hop2Ids) {
-      if (otherId === id) continue;
-      const o = positions[otherId];
-      const dx = p.x - o.x, dy = p.y - o.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < REPEL_RADIUS && dist > 0.1) {
-        const force = REPEL_STRENGTH * (1 - dist / REPEL_RADIUS);
-        fx += (dx / dist) * force;
-        fy += (dy / dist) * force;
+  for (let iter = 0; iter < iters; iter++) {
+    for (const id of ids) {
+      let fx = 0, fy = 0;
+      const p = positions[id];
+
+      for (const oid of ids) {
+        if (oid === id) continue;
+        const o = positions[oid];
+        const dx = p.x - o.x, dy = p.y - o.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < repelR && dist > 0.1) {
+          const force = repelStr * (1 - dist / repelR);
+          fx += (dx / dist) * force;
+          fy += (dy / dist) * force;
+        }
       }
+      const a = anchors[id];
+      fx += (a.x - p.x) * springStr;
+      fy += (a.y - p.y) * springStr;
+
+      positions[id] = { x: p.x + fx, y: p.y + fy };
+      const snapped = snapToHull(oHull, oParam, positions[id].x, positions[id].y);
+      positions[id] = snapped;
     }
-
-    const anchor = anchorPositions[id];
-    fx += (anchor.x - p.x) * SPRING_STRENGTH;
-    fy += (anchor.y - p.y) * SPRING_STRENGTH;
-
-    const radial = fx * rx + fy * ry;
-    fx -= radial * rx;
-    fy -= radial * ry;
-
-    positions[id] = { x: p.x + fx, y: p.y + fy };
-    snapToLayer1Ring(id);
   }
-}
 
-{
-  const ordered = hop2Ids
+  // Final even reslot: sort by angle from centroid, redistribute evenly along hull.
+  const ordered = ids
     .map(id => ({ id, ang: Math.atan2(positions[id].y - cy_val, positions[id].x - cx) }))
     .sort((a, b) => a.ang - b.ang);
   for (let i = 0; i < ordered.length; i++) {
-    const ang = -Math.PI + (i + 0.5) * layer1AngleStep;
-    positions[ordered[i].id] = {
-      x: cx + Math.cos(ang) * LAYER1_RING_R,
-      y: cy_val + Math.sin(ang) * LAYER1_RING_R,
-    };
-    anchorPositions[ordered[i].id] = { ...positions[ordered[i].id] };
+    const t = (i + 0.5) * spacing;
+    positions[ordered[i].id] = hullPointAtT(oHull, oParam, t);
   }
-  console.log(`Layer-1 equal-angle reslot: ${ordered.length} nodes on R=${Math.round(LAYER1_RING_R)}.`);
+  console.log(`${label} hull repulsion + reslot: ${ids.length} nodes, spacing ≈ ${Math.round(spacing)}px.`);
 }
 
+runHullRepulsion(wave1Ids, wave1Hull, wave1Param, 'Wave 1');
+runHullRepulsion(wave2Ids, wave2Hull, wave2Param, 'Wave 2');
+
 // Round all positions
-for (const id of hop1Nodes) {
-  if (positions[id]) {
-    positions[id].x = Math.round(positions[id].x * 100) / 100;
-    positions[id].y = Math.round(positions[id].y * 100) / 100;
-  }
-}
-for (const id of hop2Ids) {
+for (const id of Object.keys(positions)) {
   positions[id].x = Math.round(positions[id].x * 100) / 100;
   positions[id].y = Math.round(positions[id].y * 100) / 100;
 }
@@ -596,17 +583,23 @@ const LABEL_HEIGHT = 14;
 const LABEL_PAD = 4;
 const MIN_DEGREE_FOR_LABEL = 3;
 
-// Layer-1 ring is dense — only the highest-degree ring nodes get labels.
-const layer1LabelAllow = new Set(
-  [...layer1Ids]
+// Each wave ring is dense — only the highest-degree ring nodes per wave get labels.
+const wave1LabelAllow = new Set(
+  [...wave1Ids]
     .sort((a, b) => (degreeMap[b] || 0) - (degreeMap[a] || 0) || a.localeCompare(b))
-    .slice(0, LAYER1_LABEL_TOP)
+    .slice(0, WAVE1_LABEL_TOP)
+);
+const wave2LabelAllow = new Set(
+  [...wave2Ids]
+    .sort((a, b) => (degreeMap[b] || 0) - (degreeMap[a] || 0) || a.localeCompare(b))
+    .slice(0, WAVE2_LABEL_TOP)
 );
 
 const labeledNodes = data.nodes
   .filter(n => {
     if (n.x === undefined) return false;
-    if (layer1Ids.has(n.id)) return layer1LabelAllow.has(n.id);
+    if (wave1Ids.has(n.id)) return wave1LabelAllow.has(n.id);
+    if (wave2Ids.has(n.id)) return wave2LabelAllow.has(n.id);
     return (degreeMap[n.id] || 0) >= MIN_DEGREE_FOR_LABEL;
   })
   .sort((a, b) => (degreeMap[b.id] || 0) - (degreeMap[a.id] || 0));
@@ -617,7 +610,7 @@ for (const n of data.nodes) {
   delete n.labelDy;
 }
 
-console.log(`Placing labels for ${labeledNodes.length} nodes (layer1 top ${LAYER1_LABEL_TOP}, else degree >= ${MIN_DEGREE_FOR_LABEL})...`);
+console.log(`Placing labels for ${labeledNodes.length} nodes (wave1 top ${WAVE1_LABEL_TOP}, wave2 top ${WAVE2_LABEL_TOP}, else degree >= ${MIN_DEGREE_FOR_LABEL})...`);
 
 function nodeRadius(id) {
   const d = degreeMap[id] || 0;
@@ -659,15 +652,16 @@ function circleRectOverlap(circle, rect) {
 for (const node of labeledNodes) {
   const lw = labelWidth(node.id);
   const r = nodeRadius(node.id);
-  const gap = r + (layer1Ids.has(node.id) ? 16 : 8);
+  const isRingNode = wave1Ids.has(node.id) || wave2Ids.has(node.id);
+  const gap = r + (isRingNode ? 16 : 8);
 
   let bestScore = Infinity;
   let bestDx = gap + 4;
   let bestDy = 3;
 
-  // Prefer outward (away from core) for layer-1 labels so they don't fill the ring.
+  // Prefer outward (away from core) for ring labels so they don't fill inward.
   let angleOrder = ANGLES;
-  if (layer1Ids.has(node.id)) {
+  if (isRingNode) {
     const outAng = Math.atan2(node.y - cy_val, node.x - cx);
     angleOrder = [...ANGLES].sort((a, b) => {
       const da = Math.abs(Math.atan2(Math.sin(a - outAng), Math.cos(a - outAng)));
@@ -697,8 +691,8 @@ for (const node of labeledNodes) {
     for (const nc of nodeCircles) {
       score += circleRectOverlap(nc, rect) * 50;
     }
-    // Soft penalty for inward labels on the ring
-    if (layer1Ids.has(node.id)) {
+    // Soft penalty for inward labels on ring nodes
+    if (isRingNode) {
       const labelCx = lx1 + lw / 2;
       const labelCy = ly1 + LABEL_HEIGHT / 2;
       const nodeDist = Math.hypot(node.x - cx, node.y - cy_val);
@@ -714,8 +708,8 @@ for (const node of labeledNodes) {
     }
   }
 
-  // Skip hopeless overlaps on the ring rather than stacking illegible text
-  if (layer1Ids.has(node.id) && bestScore > 80) {
+  // Skip hopeless overlaps on ring nodes rather than stacking illegible text
+  if (isRingNode && bestScore > 80) {
     continue;
   }
 
@@ -741,18 +735,29 @@ data._layout = {
   nodeCount: data.nodes.length,
   edgeCount: data.edges.length,
   labeledNodes: labeledNodes.length,
-  layer1: {
-    cap: LAYER1_CAP,
-    count: layer1.length,
+  wave1: {
+    count: wave1.length,
     push: PUSH_DIST,
+    labelTop: WAVE1_LABEL_TOP,
+    shape: 'hull',
+    hullPerimeter: Math.round(wave1Param.total),
+    spacing: Math.round(wave1Spacing),
+    ids: wave1.map(c => c.id),
+  },
+  wave2: {
+    count: wave2.length,
+    gap: WAVE_GAP,
+    labelTop: WAVE2_LABEL_TOP,
+    shape: 'hull',
+    hullPerimeter: Math.round(wave2Param.total),
+    spacing: Math.round(wave2Spacing),
+    ids: wave2.map(c => c.id),
+  },
+  beyond: {
+    count: beyondCandidates.length,
     parkGap: PARK_GAP,
-    deferred: deferred.length,
-    labelTop: LAYER1_LABEL_TOP,
-    shape: 'circle',
-    ringR: Math.round(LAYER1_RING_R * 100) / 100,
-    parkR: Math.round(PARK_RING_R * 100) / 100,
-    chord: Math.round(layer1Chord * 100) / 100,
-    ids: layer1.map(c => c.id),
+    hullPerimeter: Math.round(parkParam.total),
+    spacing: Math.round(parkSpacing),
   },
 };
 
