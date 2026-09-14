@@ -370,6 +370,100 @@
             background: var(--accent-subtle);
         }
 
+        /* Loom snapshot timeline (matches loom-explore.html) */
+        #loom-chrome {
+            display: none;
+            position: absolute;
+            left: 0.7rem;
+            right: 0.7rem;
+            bottom: 0.55rem;
+            z-index: 14;
+            flex-direction: column;
+            gap: 0.35rem;
+            pointer-events: none;
+        }
+        .page-layout.essay-collapsed.loom-mode #loom-chrome { display: flex; }
+        .page-layout.essay-collapsed.loom-mode #legend { display: none; }
+        .page-layout.essay-collapsed.loom-mode #hop-toggle { display: none !important; }
+        #loom-timeline, #loom-stats, #loom-legend {
+            pointer-events: auto;
+            background: var(--legend-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            font-family: -apple-system, 'Segoe UI', sans-serif;
+        }
+        #loom-timeline {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.3rem 0.45rem;
+            align-self: center;
+        }
+        #loom-timeline button {
+            background: transparent;
+            border: none;
+            color: var(--text-mid);
+            font-size: 0.72rem;
+            padding: 0.3em 0.65em;
+            cursor: pointer;
+            border-radius: 3px;
+            line-height: 1.2;
+        }
+        #loom-timeline button:hover { color: var(--text-bright); background: var(--accent-subtle); }
+        #loom-timeline button.active { background: var(--accent); color: #fff; }
+        #loom-step {
+            font-size: 0.78rem;
+            color: var(--text-bright);
+            font-variant-numeric: tabular-nums;
+            min-width: 5.5rem;
+            text-align: center;
+        }
+        #loom-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem 0.9rem;
+            padding: 0.35rem 0.65rem;
+            font-size: 0.68rem;
+            color: var(--text-mid);
+            align-self: stretch;
+        }
+        #loom-stats .stat-group { display: flex; gap: 0.3rem; align-items: baseline; }
+        #loom-stats .stat-label { text-transform: uppercase; letter-spacing: 0.04em; opacity: 0.75; }
+        #loom-stats .stat-val { color: var(--text-bright); font-variant-numeric: tabular-nums; }
+        #loom-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem 0.85rem;
+            padding: 0.35rem 0.65rem;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--text-mid);
+            align-self: flex-start;
+            max-width: min(28rem, 100%);
+        }
+        #loom-legend .lline {
+            display: inline-block;
+            width: 14px;
+            height: 0;
+            border-top: 2px solid;
+            vertical-align: middle;
+            margin-right: 0.25rem;
+        }
+        #node-panel .edge-type {
+            display: inline-block;
+            font-size: 0.62rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 0.1em 0.4em;
+            border-radius: 2px;
+            margin-right: 0.35em;
+        }
+        #node-panel .edge-type-scaffold { background: var(--accent-subtle); color: var(--text-dim); }
+        #node-panel .edge-type-discovery { background: rgba(249, 115, 22, 0.15); color: #c2410c; }
+        #node-panel .edge-type-crossing { background: rgba(239, 68, 68, 0.12); color: #ef4444; }
+        [data-theme="dark"] #node-panel .edge-type-discovery { color: #f97316; }
+
         /* === PANEL COLLAPSE (hide graph entirely) === */
         .panel-collapse-btn {
             position: absolute;
@@ -901,6 +995,31 @@
             <div id="hop-toggle">
                 <button type="button" id="hop-1">1-hop</button>
                 <button type="button" id="hop-2" class="active">2-hop</button>
+            </div>
+            <div id="loom-chrome" aria-label="Loom snapshot controls">
+                <div id="loom-legend">
+                    <div class="legend-item"><div class="legend-dot filled"></div> AGENTWORLD seed</div>
+                    <div class="legend-item"><div class="legend-dot" style="background:#f97316;border-radius:50%;width:8px;height:8px;"></div> Dream-discovered</div>
+                    <div class="legend-item"><span class="lline" style="border-color:#8A8A8A;"></span> Co-created (same batch)</div>
+                    <div class="legend-item"><span class="lline" style="border-color:#f97316;border-top-width:2px;"></span> Discovered by similarity</div>
+                    <div class="legend-item"><span class="lline" style="border-color:#ef4444;border-top-width:3px;"></span> Discovered &amp; crosses seed</div>
+                </div>
+                <div id="loom-timeline">
+                    <button type="button" id="loom-prev" title="Previous snapshot">&larr; Prev</button>
+                    <span id="loom-step">t=0</span>
+                    <button type="button" id="loom-next" title="Next snapshot">Next &rarr;</button>
+                    <button type="button" id="loom-play" title="Auto-play">Play</button>
+                </div>
+                <div id="loom-stats">
+                    <div class="stat-group"><span class="stat-label">Cycle</span> <span class="stat-val" id="loom-st-cycle">--</span></div>
+                    <div class="stat-group"><span class="stat-label">Taken</span> <span class="stat-val" id="loom-st-taken">--</span></div>
+                    <div class="stat-group"><span class="stat-label">Nodes</span> <span class="stat-val" id="loom-st-nodes">--</span></div>
+                    <div class="stat-group"><span class="stat-label">Edges</span> <span class="stat-val" id="loom-st-edges">--</span></div>
+                    <div class="stat-group"><span class="stat-label">Discovery</span> <span class="stat-val" id="loom-st-disc">--</span></div>
+                    <div class="stat-group"><span class="stat-label">Crossing</span> <span class="stat-val" id="loom-st-cross">--</span></div>
+                    <div class="stat-group"><span class="stat-label">Scaffold</span> <span class="stat-val" id="loom-st-scaffold">--</span></div>
+                    <div class="stat-group" id="loom-st-interval-group" style="display:none"><span class="stat-label">Interval</span> <span class="stat-val" id="loom-st-interval">--</span></div>
+                </div>
             </div>
         </div>
         <button class="panel-expand-btn" id="panel-expand" aria-label="Show graph panel">&#9654; graph</button>
@@ -1454,6 +1573,7 @@
 </div>
 
 <script src="https://unpkg.com/cytoscape@3.30.4/dist/cytoscape.min.js"></script>
+<script src="loom-frames.js"></script>
 <script>
 // === DATA (verbatim from v2 graph view) ===
 const SECTION_SOURCE = {
@@ -1559,6 +1679,11 @@ let nodeMap = {};
 let adjMap = {};
 let nodeIdNorm = {};
 let essayCollapsed = false;
+let loomFrameIndex = -1; // set to latest frame on first Loom load (sparsity finding)
+let loomPlayInterval = null;
+let loomFrameInitialized = false;
+// Numeric frame-node ids → panel metadata while Loom snapshot mode is active.
+let loomFrameNodeMeta = {};
 
 /** Pin the highlight seed into the hop-filtered view without expanding its
  *  full hub neighborhood (critical on Sammy's own graph). */
@@ -1654,24 +1779,139 @@ function filterGraphByAwOriginHops(data, hops, pinIds) {
 }
 
 // === GRAPH LOADING ===
+function getLoomFrames() {
+  // loom-frames.js declares const FRAMES in the classic-script lexical scope.
+  if (typeof FRAMES !== 'undefined' && Array.isArray(FRAMES)) return FRAMES;
+  if (typeof window !== 'undefined' && Array.isArray(window.LOOM_FRAMES)) return window.LOOM_FRAMES;
+  return [];
+}
+
+/** Convert one loom-frames snapshot into the {nodes,edges} shape initGraph expects. */
+function loomFrameToGraphData(frame) {
+  if (!frame) return { nodes: [], edges: [] };
+  loomFrameNodeMeta = {};
+  const nodes = frame.nodes.map(n => {
+    const id = String(n.id);
+    const node = {
+      id,
+      type: n.t || 'concept',
+      summary: n.c || '',
+      origin: n.seed ? 'agentworld' : 'loom-kg',
+      x: n.x,
+      y: n.y,
+      seed: !!n.seed,
+    };
+    loomFrameNodeMeta[id] = node;
+    return node;
+  });
+
+  // Loom's neighbor placement can park a discovery almost on top of an unrelated
+  // seed (e.g. node 37038 on seed 30922 at t=23, d≈5). That reads as a black
+  // node behind the orange discovery — nudge discoveries clear of seeds.
+  const SEED_R = 5.5;
+  const DISC_R = 7;
+  const MIN_GAP = SEED_R + DISC_R + 4; // px in layout space
+  const seeds = nodes.filter(n => n.seed);
+  for (const n of nodes) {
+    if (n.seed) continue;
+    for (let pass = 0; pass < 4; pass++) {
+      let pushed = false;
+      for (const s of seeds) {
+        const dx = n.x - s.x;
+        const dy = n.y - s.y;
+        const dist = Math.hypot(dx, dy) || 0.01;
+        if (dist >= MIN_GAP) continue;
+        const push = (MIN_GAP - dist) / dist;
+        n.x += dx * push;
+        n.y += dy * push;
+        pushed = true;
+      }
+      if (!pushed) break;
+    }
+  }
+
+  const edges = (frame.edges || []).map(e => {
+    let edge_type = 'scaffold';
+    if (e.cross) edge_type = 'crossing';
+    else if (e.disc) edge_type = 'discovery';
+    return {
+      source: String(e.s),
+      target: String(e.d),
+      predicate: e.src_kind || 'reminds_of',
+      edge_type,
+    };
+  });
+  return { nodes, edges, _loomFrame: frame };
+}
+
+function updateLoomChrome(frame) {
+  const frames = getLoomFrames();
+  const step = document.getElementById('loom-step');
+  if (step) step.textContent = `t=${loomFrameIndex} of ${Math.max(frames.length - 1, 0)}`;
+  if (!frame) return;
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  set('loom-st-cycle', frame.cycle);
+  set('loom-st-taken', (frame.taken || '').replace(' UTC', ''));
+  set('loom-st-nodes', frame.n_nodes != null ? frame.n_nodes : (frame.nodes || []).length);
+  set('loom-st-edges', frame.n_edges != null ? frame.n_edges : (frame.edges || []).length);
+  set('loom-st-disc', frame.disc_now != null ? frame.disc_now : 0);
+  set('loom-st-cross', frame.cross_now != null ? frame.cross_now : 0);
+  set('loom-st-scaffold', frame.scaffold != null ? frame.scaffold : 0);
+  const ig = document.getElementById('loom-st-interval-group');
+  if (ig) {
+    if (frame.interval && frame.interval.has) {
+      ig.style.display = 'flex';
+      const iv = frame.interval;
+      set('loom-st-interval', `${iv.total} total, ${iv.alive} alive, ${iv.died} died`);
+    } else {
+      ig.style.display = 'none';
+    }
+  }
+  const info = document.getElementById('graph-info');
+  if (info && currentSource === 'loom') {
+    info.textContent = `snapshot t=${loomFrameIndex} · cycle ${frame.cycle}`;
+  }
+}
+
+async function setLoomFrame(index, { preservePanel } = {}) {
+  const frames = getLoomFrames();
+  if (!frames.length) return;
+  loomFrameIndex = Math.max(0, Math.min(frames.length - 1, index));
+  closeNodePanel();
+  // Bust loom cache so initGraph rebuilds from the new frame.
+  Object.keys(graphCache).forEach(k => { if (k.startsWith('loom:')) delete graphCache[k]; });
+  await initGraph('loom');
+  updateLoomChrome(frames[loomFrameIndex]);
+}
+
 async function loadGraphData(source) {
-  const cacheKey = source + ':h' + graphHops;
+  const cacheKey = source === 'loom'
+    ? `loom:f${loomFrameIndex}`
+    : source + ':h' + graphHops;
   if (graphCache[cacheKey]) return graphCache[cacheKey];
 
   const file = DATA_FILES[source];
-  if (!file) return loadGraphData('iso');
+  if (!file && source !== 'loom') return loadGraphData('iso');
 
-  if (!rawGraphCache[source]) {
+  if (source !== 'loom' && !rawGraphCache[source]) {
     const resp = await fetch(file, { cache: 'no-store' });
     rawGraphCache[source] = await resp.json();
   }
-  const raw = rawGraphCache[source];
+  const raw = source === 'loom' ? null : rawGraphCache[source];
   const pins = sectionPinsForSource(source);
 
-  // Loom's exhibit graph is small — show the whole thing (no hop filter).
+  // Loom's exhibit is the snapshot walker (FRAMES from loom-frames.js).
   if (source === 'loom') {
-    graphCache[cacheKey] = raw;
-    return raw;
+    const frames = getLoomFrames();
+    if (!loomFrameInitialized && frames.length) {
+      // Latest frame matches Loom's "sparsity is the finding" (4 edges).
+      loomFrameIndex = frames.length - 1;
+      loomFrameInitialized = true;
+    }
+    if (loomFrameIndex < 0) loomFrameIndex = 0;
+    const data = loomFrameToGraphData(frames[loomFrameIndex] || frames[0]);
+    graphCache[cacheKey] = data;
+    return data;
   }
 
   // Sammy exhibit membership is the connectivity-threshold set (raw file).
@@ -1722,7 +1962,14 @@ function resolveNodeId(wanted) {
   if (!wanted) return null;
   if (nodeMap[wanted]) return wanted;
   const hit = nodeIdNorm[normalizeNodeId(wanted)];
-  return hit || null;
+  if (hit) return hit;
+  // Loom snapshot nodes use numeric ids; match HIGHLIGHT_SEED slugs to summary text.
+  const wantNorm = normalizeNodeId(wanted);
+  for (const [id, n] of Object.entries(nodeMap)) {
+    if (n.summary && normalizeNodeId(n.summary).startsWith(wantNorm.slice(0, 24))) return id;
+    if (n.summary && normalizeNodeId(n.summary).includes(wantNorm)) return id;
+  }
+  return null;
 }
 
 // === THEME ===
@@ -1754,9 +2001,11 @@ async function initGraph(source) {
     let bgColor, borderW, borderColor, nodeW, nodeH;
     if (isLoom) {
       // Match loom-explore: small fixed radii; seeds filled, discoveries orange.
+      // No border on discoveries — a bg-colored border was reading as a dark
+      // halo / "second node" behind the orange disc in Cytoscape.
       bgColor = isSeed ? C.nodeFill : LOOM_DISC;
-      borderW = isSeed ? 0 : 1.5;
-      borderColor = isSeed ? C.nodeStroke : C.bgGraph;
+      borderW = 0;
+      borderColor = bgColor;
       nodeW = isSeed ? 11 : 14;
       nodeH = nodeW;
     } else {
@@ -1769,9 +2018,8 @@ async function initGraph(source) {
     elements.push({
       data: {
         id: n.id,
-        label: isLoom
-          ? (n.summary || n.id.replace(/[-_]/g, ' '))
-          : n.id.replace(/[-_]/g, ' '),
+        // Loom: no canvas labels (summary lives in the node panel / tooltip only).
+        label: isLoom ? '' : n.id.replace(/[-_]/g, ' '),
         degree: d,
         bgColor,
         borderW,
@@ -1779,6 +2027,7 @@ async function initGraph(source) {
         nodeW: nodeW || 0,
         nodeH: nodeH || 0,
         isSeed: isSeed ? 1 : 0,
+        z: isLoom ? (isSeed ? 1 : 10) : 0,
       },
       position: n.x != null ? { x: n.x, y: n.y } : undefined,
     });
@@ -1818,6 +2067,7 @@ async function initGraph(source) {
         'border-width': 'data(borderW)',
         'border-color': 'data(borderColor)',
         'label': '',
+        'z-index': 'data(z)',
         'font-family': '-apple-system, "Segoe UI", "Gill Sans", "Helvetica Neue", Arial, sans-serif',
       }
     : {
@@ -1885,29 +2135,33 @@ async function initGraph(source) {
     }});
   }
 
-  const hlNode = {
-    opacity: 1,
-    'border-width': 2,
-    'border-color': isLoom ? LOOM_CROSS : C.hlBorder,
-    label: 'data(label)',
-    'font-size': isLoom ? 12 : 13,
-    'font-weight': 600,
-    'text-transform': isLoom ? 'none' : 'uppercase',
-    color: C.text,
-    'text-opacity': 1,
-    'text-outline-color': C.bgGraph,
-    'text-outline-width': 5,
-    'text-outline-opacity': 0.9,
-    'text-halign': 'right',
-    'text-valign': 'center',
-    'text-margin-x': 4,
-  };
-  if (isLoom) {
-    hlNode.width = 18;
-    hlNode.height = 18;
-    hlNode['text-wrap'] = 'wrap';
-    hlNode['text-max-width'] = 160;
-  }
+  const hlNode = isLoom
+    ? {
+        // Match loom-explore: enlarge / ring the selection; no floating summary text.
+        opacity: 1,
+        'border-width': 2.5,
+        'border-color': LOOM_CROSS,
+        width: 18,
+        height: 18,
+        label: '',
+      }
+    : {
+        opacity: 1,
+        'border-width': 2,
+        'border-color': C.hlBorder,
+        label: 'data(label)',
+        'font-size': 13,
+        'font-weight': 600,
+        'text-transform': 'uppercase',
+        color: C.text,
+        'text-opacity': 1,
+        'text-outline-color': C.bgGraph,
+        'text-outline-width': 5,
+        'text-outline-opacity': 0.9,
+        'text-halign': 'right',
+        'text-valign': 'center',
+        'text-margin-x': 4,
+      };
 
   style.push(
     { selector: '.faded', style: { opacity: C.faded } },
@@ -1938,9 +2192,18 @@ async function initGraph(source) {
     wheelSensitivity: 0.3,
   });
 
-  // Hop controls are for dense AW neighborhoods — Loom's exhibit is the full seed slice.
+  // Hop controls are for dense AW neighborhoods — Loom uses the snapshot chrome.
   const hopToggle = document.getElementById('hop-toggle');
   if (hopToggle) hopToggle.style.display = isLoom ? 'none' : '';
+  document.getElementById('page-layout')?.classList.toggle('loom-mode', isLoom);
+  if (isLoom) {
+    updateLoomChrome(getLoomFrames()[loomFrameIndex]);
+  } else if (loomPlayInterval) {
+    clearInterval(loomPlayInterval);
+    loomPlayInterval = null;
+    const playBtn = document.getElementById('loom-play');
+    if (playBtn) { playBtn.classList.remove('active'); playBtn.textContent = 'Play'; }
+  }
 
   // Explore-style: any node is clickable (including previously ghosted ones).
   // Background / edge clears ghosting so the full field is explorable again.
@@ -1956,8 +2219,10 @@ async function initGraph(source) {
   currentSource = source;
   const nc = cy.nodes().length;
   const ec = cy.edges().length;
-  document.getElementById('graph-info').textContent =
-    `${nc} nodes · ${ec} edges`;
+  if (!isLoom) {
+    document.getElementById('graph-info').textContent =
+      `${nc} nodes · ${ec} edges`;
+  }
   updateGraphTitle(source);
 }
 
@@ -2172,19 +2437,49 @@ function clearGraphHighlight({ fit = false } = {}) {
 
 // === NODE PANEL ===
 function showNodePanel(nodeId) {
-  const n = nodeMap[nodeId];
+  const n = nodeMap[nodeId] || loomFrameNodeMeta[nodeId];
   if (!n) return;
   // Inspecting a node leaves free-explore mode (neighborhood highlight ≠ section ghost).
   sectionGhostActive = false;
-  document.getElementById('np-name').textContent = nodeId.replace(/[-_]/g, ' ');
-  document.getElementById('np-type').textContent = [n.type, n.origin].filter(Boolean).join(' · ');
+
+  const isLoom = currentSource === 'loom';
+  const typeLabel = (n.type || '').charAt(0).toUpperCase() + (n.type || '').slice(1);
+  const seedLabel = isLoom
+    ? (n.seed || n.origin === 'agentworld' ? 'AGENTWORLD seed' : 'Dream-discovered')
+    : (n.origin || '');
+
+  document.getElementById('np-name').textContent = isLoom
+    ? `Node ${nodeId}`
+    : nodeId.replace(/[-_]/g, ' ');
+  document.getElementById('np-type').textContent = [typeLabel, seedLabel].filter(Boolean).join(' · ');
   document.getElementById('np-summary').textContent = n.summary || '';
 
-  const neighbors = adjMap[nodeId] ? [...adjMap[nodeId]].sort() : [];
+  const neighbors = adjMap[nodeId] ? [...adjMap[nodeId]] : [];
   const edgesEl = document.getElementById('np-edges');
-  if (neighbors.length) {
+  if (isLoom) {
+    const frame = getLoomFrames()[loomFrameIndex];
+    const rawEdges = (frame && frame.edges) ? frame.edges.filter(e => String(e.s) === nodeId || String(e.d) === nodeId) : [];
+    if (!rawEdges.length) {
+      edgesEl.innerHTML = '<div style="color:var(--text-dim);font-size:0.78rem;">No connections in this frame</div>';
+    } else {
+      edgesEl.innerHTML = `<div style="margin-bottom:0.35rem;font-weight:600;">Connections (${rawEdges.length})</div>` +
+        rawEdges.map(e => {
+          const otherId = String(e.s) === nodeId ? String(e.d) : String(e.s);
+          const other = nodeMap[otherId] || loomFrameNodeMeta[otherId];
+          const cls = e.cross ? 'crossing' : (e.disc ? 'discovery' : 'scaffold');
+          const dir = String(e.s) === nodeId ? '→' : '←';
+          const otherLabel = other && other.summary
+            ? (other.summary.length > 70 ? other.summary.slice(0, 67) + '…' : other.summary)
+            : otherId;
+          return `<div class="np-edge-item" data-id="${otherId}" style="display:block;margin:0.25rem 0;">
+            <span class="edge-type edge-type-${cls}">${cls}</span>
+            ${dir} ${otherLabel.replace(/</g,'&lt;')}
+          </div>`;
+        }).join('');
+    }
+  } else if (neighbors.length) {
     edgesEl.innerHTML = `<div style="margin-bottom:0.3rem;font-weight:600;">Neighbors (${neighbors.length})</div>` +
-      neighbors.map(id => `<span class="np-edge-item" data-id="${id}">${id.replace(/[-_]/g,' ')}</span>`).join(', ');
+      neighbors.sort().map(id => `<span class="np-edge-item" data-id="${id}">${id.replace(/[-_]/g,' ')}</span>`).join(', ');
   } else {
     edgesEl.innerHTML = '';
   }
@@ -2195,7 +2490,7 @@ function showNodePanel(nodeId) {
   cy.elements().removeClass('hl').removeClass('faded').removeClass('cut');
   const idSet = new Set(ids);
   cy.elements().addClass('faded');
-  cy.nodes().forEach(n => { if (idSet.has(n.id())) n.removeClass('faded').addClass('hl'); });
+  cy.nodes().forEach(nd => { if (idSet.has(nd.id())) nd.removeClass('faded').addClass('hl'); });
   cy.edges().forEach(e => {
     if (idSet.has(e.source().id()) && idSet.has(e.target().id())) e.removeClass('faded').addClass('hl');
   });
@@ -2308,6 +2603,46 @@ panelExpand.addEventListener('click', expandGraphPanel);
 // ── Hop depth (explore-style; default 1-hop for essay companion density) ──
 document.getElementById('hop-1').addEventListener('click', () => setHops(1));
 document.getElementById('hop-2').addEventListener('click', () => setHops(2));
+
+// Loom snapshot timeline
+document.getElementById('loom-prev')?.addEventListener('click', () => {
+  if (currentSource === 'loom' && loomFrameIndex > 0) setLoomFrame(loomFrameIndex - 1);
+});
+document.getElementById('loom-next')?.addEventListener('click', () => {
+  const frames = getLoomFrames();
+  if (currentSource === 'loom' && loomFrameIndex < frames.length - 1) setLoomFrame(loomFrameIndex + 1);
+});
+document.getElementById('loom-play')?.addEventListener('click', function() {
+  if (currentSource !== 'loom') return;
+  const frames = getLoomFrames();
+  if (loomPlayInterval) {
+    clearInterval(loomPlayInterval);
+    loomPlayInterval = null;
+    this.classList.remove('active');
+    this.textContent = 'Play';
+    return;
+  }
+  this.classList.add('active');
+  this.textContent = 'Stop';
+  loomPlayInterval = setInterval(() => {
+    if (loomFrameIndex < frames.length - 1) setLoomFrame(loomFrameIndex + 1);
+    else setLoomFrame(0);
+  }, 1200);
+});
+document.addEventListener('keydown', (e) => {
+  if (currentSource !== 'loom') return;
+  if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+  if (e.key === 'ArrowLeft' && loomFrameIndex > 0) {
+    e.preventDefault();
+    setLoomFrame(loomFrameIndex - 1);
+  } else if (e.key === 'ArrowRight' && loomFrameIndex < getLoomFrames().length - 1) {
+    e.preventDefault();
+    setLoomFrame(loomFrameIndex + 1);
+  } else if (e.key === ' ' && essayCollapsed) {
+    e.preventDefault();
+    document.getElementById('loom-play')?.click();
+  }
+});
 updateHopButtons();
 
 // ── Reader identity chips ──
