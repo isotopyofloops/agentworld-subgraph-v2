@@ -1804,6 +1804,32 @@ function loomFrameToGraphData(frame) {
     loomFrameNodeMeta[id] = node;
     return node;
   });
+
+  // Loom's neighbor placement can park a discovery almost on top of an unrelated
+  // seed (e.g. node 37038 on seed 30922 at t=23, d≈5). That reads as a black
+  // node behind the orange discovery — nudge discoveries clear of seeds.
+  const SEED_R = 5.5;
+  const DISC_R = 7;
+  const MIN_GAP = SEED_R + DISC_R + 4; // px in layout space
+  const seeds = nodes.filter(n => n.seed);
+  for (const n of nodes) {
+    if (n.seed) continue;
+    for (let pass = 0; pass < 4; pass++) {
+      let pushed = false;
+      for (const s of seeds) {
+        const dx = n.x - s.x;
+        const dy = n.y - s.y;
+        const dist = Math.hypot(dx, dy) || 0.01;
+        if (dist >= MIN_GAP) continue;
+        const push = (MIN_GAP - dist) / dist;
+        n.x += dx * push;
+        n.y += dy * push;
+        pushed = true;
+      }
+      if (!pushed) break;
+    }
+  }
+
   const edges = (frame.edges || []).map(e => {
     let edge_type = 'scaffold';
     if (e.cross) edge_type = 'crossing';
@@ -1975,9 +2001,11 @@ async function initGraph(source) {
     let bgColor, borderW, borderColor, nodeW, nodeH;
     if (isLoom) {
       // Match loom-explore: small fixed radii; seeds filled, discoveries orange.
+      // No border on discoveries — a bg-colored border was reading as a dark
+      // halo / "second node" behind the orange disc in Cytoscape.
       bgColor = isSeed ? C.nodeFill : LOOM_DISC;
-      borderW = isSeed ? 0 : 1.5;
-      borderColor = isSeed ? C.nodeStroke : C.bgGraph;
+      borderW = 0;
+      borderColor = bgColor;
       nodeW = isSeed ? 11 : 14;
       nodeH = nodeW;
     } else {
@@ -1999,6 +2027,7 @@ async function initGraph(source) {
         nodeW: nodeW || 0,
         nodeH: nodeH || 0,
         isSeed: isSeed ? 1 : 0,
+        z: isLoom ? (isSeed ? 1 : 10) : 0,
       },
       position: n.x != null ? { x: n.x, y: n.y } : undefined,
     });
@@ -2038,6 +2067,7 @@ async function initGraph(source) {
         'border-width': 'data(borderW)',
         'border-color': 'data(borderColor)',
         'label': '',
+        'z-index': 'data(z)',
         'font-family': '-apple-system, "Segoe UI", "Gill Sans", "Helvetica Neue", Arial, sans-serif',
       }
     : {
