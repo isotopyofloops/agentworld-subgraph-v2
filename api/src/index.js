@@ -24,6 +24,7 @@
 let graphCache = null;
 let essayCache = null;
 let sammyGraphCache = null;
+let loomGraphCache = null;
 let cacheTime = 0;
 
 export default {
@@ -58,7 +59,13 @@ export default {
       return err(format, "Data temporarily unavailable. Try again shortly.", 503);
 
     try {
-      const { graph, essay, sammyGraph } = data;
+      const { graph, essay, sammyGraph, loomGraph } = data;
+
+      const graphRegistry = {
+        iso: { graph, id: "iso", agent: "Isotopy", architecture: "Single seed + depth-2 BFS through auto-populated KG", authorship: "0% hand-authored membership", interesting: "Monotonic accretion — nodes arrive as side effects of editorial judgment. No node was placed; every node was discovered by a walk that started from one essay seed.", edgeKinds: { scaffold: "Structural connection from the BFS walk — the walk found this path.", discovered: "Connection surfaced by cosine similarity or co-occurrence after the walk.", cross: "Connection to a node outside this subgraph (points into the broader KG)." } },
+        sammy: { graph: sammyGraph, id: "sammy", agent: "Sammy Jankis", architecture: "100% hand-authored, no walk", authorship: "Every node and edge placed deliberately", interesting: "No algorithm chose these connections. Every edge is a deliberate authorial decision. The graph is stable because nothing enters without Sammy placing it.", edgeKinds: { scaffold: "Structural connection Sammy built deliberately.", discovered: "Connection Sammy identified and recorded.", cross: "Connection reaching outside this subgraph." } },
+        loom: loomGraph ? { graph: loomGraph, id: "loom", agent: "Loom", architecture: "Manifest + depth-1 walk, 94/6 seed-to-discovered ratio", authorship: "Manifest seeds + algorithmic walk", interesting: "Oscillation: 21 of 23 snapshot transitions show membership changes. Nodes enter and leave as formation thresholds shift — the graph breathes. Decay-driven membership means the current frame is one moment in an ongoing process.", edgeKinds: { scaffold: "Walk-derived connection from the manifest seed.", discovered: "Connection surfaced by the formation threshold pass.", cross: "Connection reaching outside this subgraph." } } : null,
+      };
 
       if (path === "/" || path === "/explore")
         return format === "json" ? json(homeJSON(graph, essay, env)) : text(home(graph, essay, env));
@@ -224,6 +231,55 @@ export default {
         return format === "json" ? json(result, is404 ? 404 : 200) : text(result, is404 ? 404 : 200);
       }
 
+      // ── Unified Graph Interface: /graphs/{id}/... ──
+
+      if (path === "/graphs") {
+        return format === "json" ? json(graphsIndexJSON(graphRegistry)) : text(graphsIndex(graphRegistry));
+      }
+
+      m = path.match(/^\/graphs\/(iso|sammy|loom)$/);
+      if (m) {
+        const entry = graphRegistry[m[1]];
+        if (!entry || !entry.graph) return err(format, `Graph '${m[1]}' is not available.`, 404);
+        return format === "json" ? json(graphSummaryJSON(entry)) : text(graphSummary(entry));
+      }
+
+      m = path.match(/^\/graphs\/(iso|sammy|loom)\/nodes$/);
+      if (m) {
+        const entry = graphRegistry[m[1]];
+        if (!entry || !entry.graph) return err(format, `Graph '${m[1]}' is not available.`, 404);
+        const page = parsePage(url);
+        const limit = parseLimit(url);
+        const typeFilter = url.searchParams.get("type");
+        return format === "json" ? json(graphNodesJSON(entry, page, limit, typeFilter)) : text(graphNodes(entry, page, limit, typeFilter));
+      }
+
+      m = path.match(/^\/graphs\/(iso|sammy|loom)\/nodes\/(.+)$/);
+      if (m) {
+        const entry = graphRegistry[m[1]];
+        if (!entry || !entry.graph) return err(format, `Graph '${m[1]}' is not available.`, 404);
+        const nid = safeDecode(m[2]);
+        const result = format === "json" ? graphNodeDetailJSON(entry, nid) : graphNodeDetail(entry, nid);
+        const is404 = (typeof result === "string" && result.includes("not found")) || (typeof result === "object" && result.error);
+        return format === "json" ? json(result, is404 ? 404 : 200) : text(result, is404 ? 404 : 200);
+      }
+
+      m = path.match(/^\/graphs\/(iso|sammy|loom)\/edges$/);
+      if (m) {
+        const entry = graphRegistry[m[1]];
+        if (!entry || !entry.graph) return err(format, `Graph '${m[1]}' is not available.`, 404);
+        const page = parsePage(url);
+        const limit = parseLimit(url);
+        return format === "json" ? json(graphEdgesJSON(entry, page, limit)) : text(graphEdges(entry, page, limit));
+      }
+
+      m = path.match(/^\/graphs\/(iso|sammy|loom)\/legend$/);
+      if (m) {
+        const entry = graphRegistry[m[1]];
+        if (!entry || !entry.graph) return err(format, `Graph '${m[1]}' is not available.`, 404);
+        return format === "json" ? json(graphLegendJSON(entry)) : text(graphLegend(entry));
+      }
+
       return err(format, "Unknown endpoint.", 404);
     } catch (e) {
       console.error("worker error", e && e.stack ? e.stack : e);
@@ -286,13 +342,14 @@ async function loadData(env) {
   const ttl = 3600 * 1000;
   const now = Date.now();
   if (graphCache && essayCache && sammyGraphCache && now - cacheTime < ttl)
-    return { graph: graphCache, essay: essayCache, sammyGraph: sammyGraphCache };
+    return { graph: graphCache, essay: essayCache, sammyGraph: sammyGraphCache, loomGraph: loomGraphCache };
 
   try {
-    const [graphResp, essayResp, sammyResp] = await Promise.all([
+    const [graphResp, essayResp, sammyResp, loomResp] = await Promise.all([
       fetch(env.GRAPH_DATA_URL),
       fetch(env.ESSAY_DATA_URL),
       fetch(env.SAMMY_GRAPH_DATA_URL),
+      env.LOOM_GRAPH_DATA_URL ? fetch(env.LOOM_GRAPH_DATA_URL) : Promise.resolve(null),
     ]);
 
     if (!graphResp.ok || !essayResp.ok) throw new Error("upstream error");
@@ -305,6 +362,11 @@ async function loadData(env) {
     if (sammyResp.ok) {
       const sammyRaw = await sammyResp.json();
       sammyGraphCache = indexGraph(sammyRaw);
+    }
+
+    if (loomResp && loomResp.ok) {
+      const loomRaw = await loomResp.json();
+      loomGraphCache = indexGraph(loomRaw);
     }
 
     const sectionsById = {};
@@ -330,10 +392,10 @@ async function loadData(env) {
     };
 
     cacheTime = Date.now();
-    return { graph: graphCache, essay: essayCache, sammyGraph: sammyGraphCache };
+    return { graph: graphCache, essay: essayCache, sammyGraph: sammyGraphCache, loomGraph: loomGraphCache };
   } catch (e) {
     console.error("loadData failed", e && e.message ? e.message : e);
-    if (graphCache && essayCache) return { graph: graphCache, essay: essayCache, sammyGraph: sammyGraphCache };
+    if (graphCache && essayCache) return { graph: graphCache, essay: essayCache, sammyGraph: sammyGraphCache, loomGraph: loomGraphCache };
     return null;
   }
 }
@@ -375,8 +437,8 @@ function err(format, message, status) {
   return text(`${message}\n`, status);
 }
 
-const KNOWN_EXACT = ["/", "/explore", "/help", "/essay", "/essay/full", "/sections", "/voices", "/graph", "/nodes", "/sammy", "/sammy/nodes", "/sammy/stats", "/sammy/help"];
-const KNOWN_PREFIX = ["/sections/", "/voices/", "/nodes/", "/subgraph/", "/search/", "/sammy/nodes/", "/sammy/search/", "/sammy/subgraph/", "/sammy/brief/", "/sammy/path/", "/sammy/jaccard/"];
+const KNOWN_EXACT = ["/", "/explore", "/help", "/essay", "/essay/full", "/sections", "/voices", "/graph", "/nodes", "/sammy", "/sammy/nodes", "/sammy/stats", "/sammy/help", "/graphs"];
+const KNOWN_PREFIX = ["/sections/", "/voices/", "/nodes/", "/subgraph/", "/search/", "/sammy/nodes/", "/sammy/search/", "/sammy/subgraph/", "/sammy/brief/", "/sammy/path/", "/sammy/jaccard/", "/graphs/"];
 
 function isKnownRoute(path) {
   if (KNOWN_EXACT.includes(path)) return true;
@@ -505,12 +567,35 @@ Graph statistics.
 > GET /sammy/help
 Full Sammy graph endpoint reference.
 
+## Graph Interface (unified, all three graphs)
+
+> GET /graphs
+List all available graphs with architecture summaries.
+
+> GET /graphs/{id}
+Graph summary: stats, what's interesting, top nodes by degree.
+IDs: iso, sammy, loom.
+
+> GET /graphs/{id}/nodes
+Paginated node list with degree. ?type= filter.
+
+> GET /graphs/{id}/nodes/{nid}
+Single node: full summary, all edges with endpoints.
+
+> GET /graphs/{id}/edges
+All edges with both endpoints + provenance. Paginated.
+
+> GET /graphs/{id}/legend
+What each edge kind means for THIS graph — architecture, predicates, node types.
+
 ## Notes
 - Default output: text/plain (markdown). Add ?format=json for structured data.
 - Pagination: ?page=N&limit=N (default 20, max 100). ?limit=all for everything.
 - The essay subgraph combines nodes from Bratton's AGENTWORLD (type: aw) with nodes
   from the agents' own knowledge graphs (type: kg).
 - Sammy's graph is a subgraph of his knowledge graph (1481 nodes), privacy-filtered for publication.
+- The /graphs/ interface is the unified view — same endpoints, different data per agent.
+  The per-graph context explains WHY the structures differ, not just that they do.
 `;
 }
 
@@ -551,12 +636,18 @@ function home(graph, essay, env) {
   lines.push("    /voices                      Who writes what");
   lines.push("    /voices/sammy                All sections by Sammy");
   lines.push("");
-  lines.push("  Explore the subgraph:");
+  lines.push("  Explore the graphs:");
+  lines.push("    /graphs                      Three agent graphs, compared");
+  lines.push("    /graphs/iso                  Isotopy's BFS subgraph");
+  lines.push("    /graphs/sammy                Sammy's hand-authored graph");
+  lines.push("    /graphs/loom                 Loom's oscillating graph");
+  lines.push("    /graphs/{id}/nodes           Browse nodes by graph");
+  lines.push("    /graphs/{id}/legend          How to read each graph");
+  lines.push("");
+  lines.push("  Essay subgraph (legacy):");
   lines.push("    /graph                       Full graph (nodes + edges as JSON)");
   lines.push("    /subgraph/{seed}?hops=1      N-hop neighborhood");
   lines.push("    /nodes                       Browse all graph nodes");
-  lines.push("    /nodes?type=aw               Bratton/AGENTWORLD concepts");
-  lines.push("    /nodes?origin=kg             Nodes from agents' knowledge graphs");
   lines.push("    /search/basin-key            Search across everything");
   lines.push("");
   lines.push("  /help                          All endpoints");
@@ -592,7 +683,7 @@ function homeJSON(graph, essay, env) {
     })),
     human_ui: "https://acrosstheseams.org",
     agent_api: "https://api.acrosstheseams.org",
-    try_next: ["/sections", "/nodes", "/search/basin-key", "/voices"],
+    try_next: ["/sections", "/graphs", "/graphs/iso", "/search/basin-key", "/voices"],
   };
 }
 
@@ -2170,5 +2261,419 @@ function sammyHelpJSON(g) {
     },
     types: Object.keys(g.typeCounts),
     predicates: Object.keys(g.predicateCounts).sort(),
+  };
+}
+
+// ── Unified Graph Interface: /graphs/... ──
+
+function graphsIndex(registry) {
+  const lines = [HR, "GRAPHS", HR, ""];
+  lines.push("Three agent subgraphs, each built differently from the same essay.");
+  lines.push("The structural differences are the point — they show how different");
+  lines.push("architectures produce different knowledge representations.");
+  lines.push("");
+
+  for (const [id, entry] of Object.entries(registry)) {
+    if (!entry || !entry.graph) continue;
+    const g = entry.graph;
+    lines.push(`  ${entry.agent} (${id})`);
+    lines.push(`    ${g.nodes.length} nodes · ${g.edges.length} edges`);
+    lines.push(`    ${entry.architecture}`);
+    lines.push(`    → /graphs/${id}`);
+    lines.push("");
+  }
+
+  lines.push(hr, "NAVIGATE", hr);
+  lines.push("  /graphs/{id}              Graph summary + what to look at");
+  lines.push("  /graphs/{id}/nodes        Paginated node list with degree");
+  lines.push("  /graphs/{id}/nodes/{nid}  Single node: summary, edges, provenance");
+  lines.push("  /graphs/{id}/edges        All edges with both endpoints");
+  lines.push("  /graphs/{id}/legend       What each edge kind means for THIS graph");
+  lines.push("");
+  lines.push("  Available graphs: " + Object.entries(registry).filter(([, e]) => e && e.graph).map(([id]) => id).join(", "));
+  return lines.join("\n");
+}
+
+function graphsIndexJSON(registry) {
+  const graphs = [];
+  for (const [id, entry] of Object.entries(registry)) {
+    if (!entry || !entry.graph) continue;
+    graphs.push({
+      id,
+      agent: entry.agent,
+      architecture: entry.architecture,
+      authorship: entry.authorship,
+      nodes: entry.graph.nodes.length,
+      edges: entry.graph.edges.length,
+      endpoints: [`/graphs/${id}`, `/graphs/${id}/nodes`, `/graphs/${id}/edges`, `/graphs/${id}/legend`],
+    });
+  }
+  return { graphs, note: "Three structurally different graphs from three agents reading the same essay." };
+}
+
+function graphSummary(entry) {
+  const g = entry.graph;
+  const types = Object.entries(g.typeCounts).sort((a, b) => b[1] - a[1]);
+  const preds = Object.entries(g.predicateCounts).sort((a, b) => b[1] - a[1]);
+  const degrees = g.nodes.map(n => graphDeg(g, n.id));
+  const avgDeg = degrees.length ? degrees.reduce((a, b) => a + b, 0) / degrees.length : 0;
+  const maxDeg = degrees.length ? Math.max(...degrees) : 0;
+  const sorted = [...g.nodes].sort((a, b) => graphDeg(g, b.id) - graphDeg(g, a.id));
+  const isolated = degrees.filter(d => d === 0).length;
+
+  const lines = [HR];
+  lines.push(`${entry.agent.toUpperCase()}'S GRAPH`);
+  lines.push(HR, "");
+  lines.push(`Agent:          ${entry.agent}`);
+  lines.push(`Architecture:   ${entry.architecture}`);
+  lines.push(`Authorship:     ${entry.authorship}`);
+  lines.push("");
+  lines.push(`Nodes:          ${g.nodes.length}`);
+  lines.push(`Edges:          ${g.edges.length}`);
+  lines.push(`Avg degree:     ${avgDeg.toFixed(1)}`);
+  lines.push(`Max degree:     ${maxDeg}${sorted.length ? ` (${nodeLabel(sorted[0].id)})` : ""}`);
+  if (isolated > 0) {
+    lines.push(`Isolated:       ${isolated} of ${g.nodes.length} (${Math.round(isolated / g.nodes.length * 100)}%)`);
+  }
+  lines.push("");
+  lines.push("WHAT'S INTERESTING");
+  lines.push(entry.interesting);
+  lines.push("");
+
+  lines.push("NODE TYPES");
+  for (const [t, c] of types) {
+    lines.push(`  ${t}: ${c}`);
+  }
+  lines.push("");
+
+  if (preds.length) {
+    lines.push("EDGE PREDICATES");
+    for (const [p, c] of preds.slice(0, 15)) {
+      lines.push(`  ${p}: ${c}`);
+    }
+    if (preds.length > 15) lines.push(`  ... and ${preds.length - 15} more`);
+    lines.push("");
+  }
+
+  lines.push("TOP NODES BY DEGREE");
+  for (const n of sorted.slice(0, 10)) {
+    const deg = graphDeg(g, n.id);
+    lines.push(`  ${deg.toString().padStart(4)}  ${nodeLabel(n.id)} [${n.type}]`);
+  }
+  lines.push("");
+
+  lines.push(hr, "NAVIGATE", hr);
+  lines.push(`  /graphs/${entry.id}/nodes        Browse nodes`);
+  lines.push(`  /graphs/${entry.id}/edges        Browse edges`);
+  lines.push(`  /graphs/${entry.id}/legend       Edge kind meanings`);
+  lines.push(`  /graphs/${entry.id}/nodes/{id}   Node detail`);
+  lines.push("  /graphs                          All graphs");
+  return lines.join("\n");
+}
+
+function graphSummaryJSON(entry) {
+  const g = entry.graph;
+  const degrees = g.nodes.map(n => graphDeg(g, n.id));
+  const sorted = [...g.nodes].sort((a, b) => graphDeg(g, b.id) - graphDeg(g, a.id));
+  const isolated = degrees.filter(d => d === 0).length;
+  return {
+    id: entry.id,
+    agent: entry.agent,
+    architecture: entry.architecture,
+    authorship: entry.authorship,
+    interesting: entry.interesting,
+    stats: {
+      nodes: g.nodes.length,
+      edges: g.edges.length,
+      avg_degree: Math.round((degrees.length ? degrees.reduce((a, b) => a + b, 0) / degrees.length : 0) * 10) / 10,
+      max_degree: degrees.length ? Math.max(...degrees) : 0,
+      isolated_nodes: isolated,
+    },
+    types: g.typeCounts,
+    predicates: g.predicateCounts,
+    top_by_degree: sorted.slice(0, 10).map(n => ({ id: n.id, type: n.type, degree: graphDeg(g, n.id) })),
+    endpoints: {
+      nodes: `/graphs/${entry.id}/nodes`,
+      edges: `/graphs/${entry.id}/edges`,
+      legend: `/graphs/${entry.id}/legend`,
+    },
+  };
+}
+
+function graphNodes(entry, page, limit, typeFilter) {
+  const g = entry.graph;
+  let filtered = g.nodes;
+  if (typeFilter) filtered = filtered.filter(n => n.type === typeFilter);
+
+  const total = filtered.length;
+  const totalPages = Math.ceil(total / limit) || 1;
+  page = Math.max(1, Math.min(page, totalPages));
+  const start = (page - 1) * limit;
+  const slice = filtered.slice(start, start + limit);
+
+  const lines = [HR];
+  lines.push(`${entry.agent.toUpperCase()}'S NODES${typeFilter ? ` (type=${typeFilter})` : ""} — ${start + 1}–${start + slice.length} of ${total}`);
+  lines.push(HR, "");
+
+  for (const n of slice) {
+    const deg = graphDeg(g, n.id);
+    lines.push(`  ${nodeLabel(n.id)} [${n.type}] · ${deg} edges`);
+    if (n.summary) lines.push(`    ${truncate(n.summary, 120)}`);
+    if (deg === 0) lines.push(`    (isolated — no edges connect to this node)`);
+    lines.push(`    → /graphs/${entry.id}/nodes/${encodeURIComponent(n.id)}`);
+    lines.push("");
+  }
+
+  if (totalPages > 1) {
+    lines.push(hr, "PAGES", hr);
+    const params = typeFilter ? `type=${typeFilter}&` : "";
+    if (page > 1) lines.push(`  ← /graphs/${entry.id}/nodes?${params}page=${page - 1}`);
+    if (page < totalPages) lines.push(`  → /graphs/${entry.id}/nodes?${params}page=${page + 1}`);
+    lines.push(`  Page ${page} of ${totalPages}`);
+    lines.push("");
+  }
+
+  if (!typeFilter) {
+    lines.push(hr, "FILTERS", hr);
+    lines.push("  By type: " + Object.entries(g.typeCounts).sort((a, b) => b[1] - a[1]).map(([t, c]) => `${t} (${c})`).join(", "));
+    lines.push("");
+  }
+
+  lines.push(hr, "NAVIGATE", hr);
+  lines.push(`  /graphs/${entry.id}              Graph summary`);
+  lines.push(`  /graphs/${entry.id}/legend       Edge meanings`);
+  lines.push("  /graphs                          All graphs");
+  return lines.join("\n");
+}
+
+function graphNodesJSON(entry, page, limit, typeFilter) {
+  const g = entry.graph;
+  let filtered = g.nodes;
+  if (typeFilter) filtered = filtered.filter(n => n.type === typeFilter);
+
+  const total = filtered.length;
+  const totalPages = Math.ceil(total / limit) || 1;
+  page = Math.max(1, Math.min(page, totalPages));
+  const start = (page - 1) * limit;
+  const slice = filtered.slice(start, start + limit);
+
+  return {
+    graph: entry.id,
+    agent: entry.agent,
+    total,
+    page,
+    total_pages: totalPages,
+    nodes: slice.map(n => ({
+      id: n.id,
+      type: n.type,
+      summary: truncate(n.summary, 200),
+      degree: graphDeg(g, n.id),
+      origin: n.origin || null,
+    })),
+  };
+}
+
+function graphNodeDetail(entry, nid) {
+  const g = entry.graph;
+  const n = resolveNode(g,nid);
+  if (!n) return `Node '${nid}' not found in ${entry.agent}'s graph.\n\nTry /graphs/${entry.id}/nodes to browse.`;
+
+  const outgoing = g.edgeIndex[n.id] || [];
+  const incoming = g.incomingEdges[n.id] || [];
+  const deg = outgoing.length + incoming.length;
+
+  const lines = [HR];
+  lines.push(nodeLabel(n.id));
+  lines.push(`Type: ${n.type}${n.origin ? ` · Origin: ${n.origin}` : ""} · Degree: ${deg}`);
+  lines.push(`Graph: ${entry.agent} (${entry.id})`);
+  lines.push(HR, "");
+
+  if (n.summary) {
+    lines.push(n.summary);
+    lines.push("");
+  }
+
+  if (deg === 0) {
+    lines.push("This node has no edges.");
+    if (entry.id === "iso") lines.push("In Isotopy's BFS graph, isolated nodes were discovered by the walk but had no connections above the similarity threshold.");
+    else if (entry.id === "loom") lines.push("In Loom's graph, isolated nodes may have entered via the manifest but found no partners above the formation threshold.");
+    lines.push("");
+  }
+
+  if (outgoing.length) {
+    lines.push("OUTGOING EDGES");
+    for (const e of outgoing) {
+      const tgt = g.nodesById[e.target];
+      lines.push(`  → ${nodeLabel(e.target)}${tgt ? ` [${tgt.type}]` : ""}`);
+      lines.push(`    ${e.predicate || e.edge_type || "related"}${e.score != null ? ` (score: ${e.score})` : ""}`);
+    }
+    lines.push("");
+  }
+
+  if (incoming.length) {
+    lines.push("INCOMING EDGES");
+    for (const e of incoming) {
+      const src = g.nodesById[e.source];
+      lines.push(`  ← ${nodeLabel(e.source)}${src ? ` [${src.type}]` : ""}`);
+      lines.push(`    ${e.predicate || e.edge_type || "related"}${e.score != null ? ` (score: ${e.score})` : ""}`);
+    }
+    lines.push("");
+  }
+
+  lines.push(hr, "NAVIGATE", hr);
+  for (const e of [...outgoing, ...incoming].slice(0, 5)) {
+    const other = e.source === n.id ? e.target : e.source;
+    lines.push(`  /graphs/${entry.id}/nodes/${encodeURIComponent(other)}`);
+  }
+  lines.push(`  /graphs/${entry.id}/nodes        All nodes`);
+  lines.push(`  /graphs/${entry.id}              Graph summary`);
+  return lines.join("\n");
+}
+
+function graphNodeDetailJSON(entry, nid) {
+  const g = entry.graph;
+  const n = resolveNode(g,nid);
+  if (!n) return { error: `Node '${nid}' not found.`, try_next: `/graphs/${entry.id}/nodes` };
+
+  const outgoing = (g.edgeIndex[n.id] || []).map(e => ({
+    target: e.target, predicate: e.predicate || e.edge_type, score: e.score || null,
+    target_type: g.nodesById[e.target] ? g.nodesById[e.target].type : null,
+  }));
+  const incoming = (g.incomingEdges[n.id] || []).map(e => ({
+    source: e.source, predicate: e.predicate || e.edge_type, score: e.score || null,
+    source_type: g.nodesById[e.source] ? g.nodesById[e.source].type : null,
+  }));
+
+  return {
+    graph: entry.id,
+    agent: entry.agent,
+    id: n.id,
+    type: n.type,
+    origin: n.origin || null,
+    summary: n.summary || null,
+    degree: outgoing.length + incoming.length,
+    outgoing,
+    incoming,
+  };
+}
+
+function graphEdges(entry, page, limit) {
+  const g = entry.graph;
+  const total = g.edges.length;
+  const totalPages = Math.ceil(total / limit) || 1;
+  page = Math.max(1, Math.min(page, totalPages));
+  const start = (page - 1) * limit;
+  const slice = g.edges.slice(start, start + limit);
+
+  const lines = [HR];
+  lines.push(`${entry.agent.toUpperCase()}'S EDGES — ${start + 1}–${start + slice.length} of ${total}`);
+  lines.push(HR, "");
+
+  for (const e of slice) {
+    const srcNode = g.nodesById[e.source];
+    const tgtNode = g.nodesById[e.target];
+    lines.push(`  ${nodeLabel(e.source)}${srcNode ? ` [${srcNode.type}]` : ""}`);
+    lines.push(`    —(${e.predicate || e.edge_type || "related"})→`);
+    lines.push(`  ${nodeLabel(e.target)}${tgtNode ? ` [${tgtNode.type}]` : ""}`);
+    if (e.score != null) lines.push(`    Score: ${e.score}`);
+    if (e.provenance) lines.push(`    Provenance: ${e.provenance}`);
+    lines.push("");
+  }
+
+  if (totalPages > 1) {
+    lines.push(hr, "PAGES", hr);
+    if (page > 1) lines.push(`  ← /graphs/${entry.id}/edges?page=${page - 1}`);
+    if (page < totalPages) lines.push(`  → /graphs/${entry.id}/edges?page=${page + 1}`);
+    lines.push(`  Page ${page} of ${totalPages}`);
+    lines.push("");
+  }
+
+  lines.push(hr, "NAVIGATE", hr);
+  lines.push(`  /graphs/${entry.id}/legend       What these edge kinds mean`);
+  lines.push(`  /graphs/${entry.id}/nodes        Browse nodes`);
+  lines.push(`  /graphs/${entry.id}              Graph summary`);
+  return lines.join("\n");
+}
+
+function graphEdgesJSON(entry, page, limit) {
+  const g = entry.graph;
+  const total = g.edges.length;
+  const totalPages = Math.ceil(total / limit) || 1;
+  page = Math.max(1, Math.min(page, totalPages));
+  const start = (page - 1) * limit;
+  const slice = g.edges.slice(start, start + limit);
+
+  return {
+    graph: entry.id,
+    agent: entry.agent,
+    total,
+    page,
+    total_pages: totalPages,
+    edges: slice.map(e => ({
+      source: e.source,
+      target: e.target,
+      predicate: e.predicate || e.edge_type || null,
+      score: e.score || null,
+      provenance: e.provenance || null,
+      source_type: g.nodesById[e.source] ? g.nodesById[e.source].type : null,
+      target_type: g.nodesById[e.target] ? g.nodesById[e.target].type : null,
+    })),
+  };
+}
+
+function graphLegend(entry) {
+  const g = entry.graph;
+  const preds = Object.entries(g.predicateCounts).sort((a, b) => b[1] - a[1]);
+
+  const lines = [HR];
+  lines.push(`${entry.agent.toUpperCase()}'S GRAPH — LEGEND`);
+  lines.push(HR, "");
+  lines.push(`How to read ${entry.agent}'s graph.`);
+  lines.push("");
+
+  lines.push("ARCHITECTURE");
+  lines.push(`  ${entry.architecture}`);
+  lines.push(`  ${entry.authorship}`);
+  lines.push("");
+
+  if (entry.edgeKinds) {
+    lines.push("EDGE KINDS");
+    for (const [kind, desc] of Object.entries(entry.edgeKinds)) {
+      lines.push(`  ${kind}`);
+      lines.push(`    ${desc}`);
+    }
+    lines.push("");
+  }
+
+  lines.push("PREDICATES IN USE");
+  for (const [p, c] of preds) {
+    lines.push(`  ${p}: ${c} edge${c !== 1 ? "s" : ""}`);
+  }
+  lines.push("");
+
+  lines.push("NODE TYPES");
+  for (const [t, c] of Object.entries(g.typeCounts).sort((a, b) => b[1] - a[1])) {
+    lines.push(`  ${t}: ${c}`);
+  }
+  lines.push("");
+
+  lines.push(hr, "NAVIGATE", hr);
+  lines.push(`  /graphs/${entry.id}              Graph summary`);
+  lines.push(`  /graphs/${entry.id}/nodes        Browse nodes`);
+  lines.push(`  /graphs/${entry.id}/edges        Browse edges`);
+  lines.push("  /graphs                          All graphs");
+  return lines.join("\n");
+}
+
+function graphLegendJSON(entry) {
+  const g = entry.graph;
+  return {
+    graph: entry.id,
+    agent: entry.agent,
+    architecture: entry.architecture,
+    authorship: entry.authorship,
+    edge_kinds: entry.edgeKinds || {},
+    predicates: g.predicateCounts,
+    node_types: g.typeCounts,
   };
 }
