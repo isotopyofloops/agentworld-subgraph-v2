@@ -1740,18 +1740,45 @@ async function initGraph(source) {
   const isDark = getEffectiveTheme() === 'dark';
   const C = isDark ? THEME_COLORS.dark : THEME_COLORS.light;
 
+  const isLoom = source === 'loom';
+  // Loom explore palette (matches loom-explore.html)
+  const LOOM_DISC = '#f97316';
+  const LOOM_SCAFFOLD = isDark ? '#8A8A8A' : '#8A8A8A';
+  const LOOM_CROSS = '#ef4444';
+
   const elements = [];
   for (const n of data.nodes) {
     const d = degree(n.id);
     const isAW = (n.origin || '').toLowerCase() === 'agentworld' || n.type === 'aw';
+    const isSeed = isLoom ? isAW : isAW;
+    let bgColor, borderW, borderColor, nodeW, nodeH;
+    if (isLoom) {
+      // Match loom-explore: small fixed radii; seeds filled, discoveries orange.
+      bgColor = isSeed ? C.nodeFill : LOOM_DISC;
+      borderW = isSeed ? 0 : 1.5;
+      borderColor = isSeed ? C.nodeStroke : C.bgGraph;
+      nodeW = isSeed ? 11 : 14;
+      nodeH = nodeW;
+    } else {
+      bgColor = isAW ? C.nodeFill : C.nodeOpen;
+      borderW = isAW ? 0 : 1;
+      borderColor = C.nodeStroke;
+      nodeW = null;
+      nodeH = null;
+    }
     elements.push({
       data: {
         id: n.id,
-        label: n.id.replace(/[-_]/g, ' '),
+        label: isLoom
+          ? (n.summary || n.id.replace(/[-_]/g, ' '))
+          : n.id.replace(/[-_]/g, ' '),
         degree: d,
-        bgColor: isAW ? C.nodeFill : C.nodeOpen,
-        borderW: isAW ? 0 : 1,
-        borderColor: C.nodeStroke,
+        bgColor,
+        borderW,
+        borderColor,
+        nodeW: nodeW || 0,
+        nodeH: nodeH || 0,
+        isSeed: isSeed ? 1 : 0,
       },
       position: n.x != null ? { x: n.x, y: n.y } : undefined,
     });
@@ -1762,18 +1789,38 @@ async function initGraph(source) {
     const key = e.source + '→' + e.target;
     if (seen.has(key)) continue;
     seen.add(key);
-    elements.push({ data: { id: key, source: e.source, target: e.target } });
+    const et = (e.edge_type || e.type || '').toLowerCase();
+    let edgeKind = 'default';
+    if (isLoom) {
+      if (et === 'discovery' || et === 'crossing') edgeKind = et;
+      else edgeKind = 'scaffold'; // time-adjacent / scaffold
+    }
+    elements.push({
+      data: {
+        id: key,
+        source: e.source,
+        target: e.target,
+        edgeKind,
+      },
+    });
   }
 
   if (cy) cy.destroy();
 
   const hasPreset = data.nodes.some(n => n.x != null);
 
-  cy = cytoscape({
-    container: document.getElementById('cy'),
-    elements,
-    style: [
-      { selector: 'node', style: {
+  const baseNodeStyle = isLoom
+    ? {
+        'background-color': 'data(bgColor)',
+        'shape': 'ellipse',
+        'width': 'data(nodeW)',
+        'height': 'data(nodeH)',
+        'border-width': 'data(borderW)',
+        'border-color': 'data(borderColor)',
+        'label': '',
+        'font-family': '-apple-system, "Segoe UI", "Gill Sans", "Helvetica Neue", Arial, sans-serif',
+      }
+    : {
         'background-color': 'data(bgColor)',
         'shape': 'ellipse',
         'width': 'mapData(degree,0,20,18,42)',
@@ -1782,61 +1829,118 @@ async function initGraph(source) {
         'border-color': 'data(borderColor)',
         'label': '',
         'font-family': '-apple-system, "Segoe UI", "Gill Sans", "Helvetica Neue", Arial, sans-serif',
-      }},
-      { selector: 'node[degree >= 3]', style: {
-        label: 'data(label)',
-        'font-size': 14,
-        'font-weight': 600,
-        'text-transform': 'uppercase',
-        color: C.text,
-        'text-opacity': 1,
-        'text-outline-color': C.bgGraph,
-        'text-outline-width': 5,
-        'text-outline-opacity': 0.92,
-        'text-halign': 'right',
-        'text-valign': 'center',
-        'text-margin-x': 4,
-      }},
+      };
+
+  const style = [
+    { selector: 'node', style: baseNodeStyle },
+  ];
+
+  if (!isLoom) {
+    style.push({ selector: 'node[degree >= 3]', style: {
+      label: 'data(label)',
+      'font-size': 14,
+      'font-weight': 600,
+      'text-transform': 'uppercase',
+      color: C.text,
+      'text-opacity': 1,
+      'text-outline-color': C.bgGraph,
+      'text-outline-width': 5,
+      'text-outline-opacity': 0.92,
+      'text-halign': 'right',
+      'text-valign': 'center',
+      'text-margin-x': 4,
+    }});
+  }
+
+  if (isLoom) {
+    style.push(
       { selector: 'edge', style: {
-        'line-color': C.edgeStroke,
-        'width': 1.35,
-        'opacity': 0.25,
-        'curve-style': 'haystack',
+        'line-color': LOOM_SCAFFOLD,
+        'width': 0.9,
+        'opacity': 0.55,
+        'curve-style': 'straight',
       }},
-      { selector: '.faded', style: { opacity: C.faded } },
-      { selector: 'node.hl', style: {
-        opacity: 1,
-        'border-width': 2,
-        'border-color': C.hlBorder,
-        label: 'data(label)',
-        'font-size': 13,
-        'font-weight': 600,
-        'text-transform': 'uppercase',
-        color: C.text,
-        'text-opacity': 1,
-        'text-outline-color': C.bgGraph,
-        'text-outline-width': 5,
-        'text-outline-opacity': 0.9,
-        'text-halign': 'right',
-        'text-valign': 'center',
-        'text-margin-x': 4,
+      { selector: 'edge[edgeKind = "scaffold"]', style: {
+        'line-color': LOOM_SCAFFOLD,
+        'width': 0.9,
+        'opacity': 0.55,
       }},
-      { selector: 'node.cut', style: {
-        'background-color': C.bgGraph,
-        'border-width': 2,
-        'border-color': C.nodeFill,
-        'border-style': 'dashed',
+      { selector: 'edge[edgeKind = "discovery"]', style: {
+        'line-color': LOOM_DISC,
+        'width': 2.2,
+        'opacity': 0.85,
       }},
-      { selector: 'edge.hl', style: { opacity: 0.7, width: 2, 'line-color': C.nodeStroke } },
-    ],
+      { selector: 'edge[edgeKind = "crossing"]', style: {
+        'line-color': LOOM_CROSS,
+        'width': 3,
+        'opacity': 0.9,
+      }},
+    );
+  } else {
+    style.push({ selector: 'edge', style: {
+      'line-color': C.edgeStroke,
+      'width': 1.35,
+      'opacity': 0.25,
+      'curve-style': 'haystack',
+    }});
+  }
+
+  const hlNode = {
+    opacity: 1,
+    'border-width': 2,
+    'border-color': isLoom ? LOOM_CROSS : C.hlBorder,
+    label: 'data(label)',
+    'font-size': isLoom ? 12 : 13,
+    'font-weight': 600,
+    'text-transform': isLoom ? 'none' : 'uppercase',
+    color: C.text,
+    'text-opacity': 1,
+    'text-outline-color': C.bgGraph,
+    'text-outline-width': 5,
+    'text-outline-opacity': 0.9,
+    'text-halign': 'right',
+    'text-valign': 'center',
+    'text-margin-x': 4,
+  };
+  if (isLoom) {
+    hlNode.width = 18;
+    hlNode.height = 18;
+    hlNode['text-wrap'] = 'wrap';
+    hlNode['text-max-width'] = 160;
+  }
+
+  style.push(
+    { selector: '.faded', style: { opacity: C.faded } },
+    { selector: 'node.hl', style: hlNode },
+    { selector: 'node.cut', style: {
+      'background-color': C.bgGraph,
+      'border-width': 2,
+      'border-color': C.nodeFill,
+      'border-style': 'dashed',
+    }},
+    { selector: 'edge.hl', style: {
+      opacity: 0.85,
+      width: isLoom ? 2.5 : 2,
+      'line-color': isLoom ? LOOM_DISC : C.nodeStroke,
+    }},
+  );
+
+  cy = cytoscape({
+    container: document.getElementById('cy'),
+    elements,
+    style,
     layout: hasPreset
-      ? { name: 'preset', fit: true, padding: 30 }
+      ? { name: 'preset', fit: true, padding: isLoom ? 48 : 30 }
       : { name: 'cose', animate: false, nodeRepulsion: () => 280000, idealEdgeLength: () => 55,
           gravity: 0.25, numIter: 500, fit: true, padding: 30 },
     minZoom: 0.05,
     maxZoom: 5,
     wheelSensitivity: 0.3,
   });
+
+  // Hop controls are for dense AW neighborhoods — Loom's exhibit is the full seed slice.
+  const hopToggle = document.getElementById('hop-toggle');
+  if (hopToggle) hopToggle.style.display = isLoom ? 'none' : '';
 
   // Explore-style: any node is clickable (including previously ghosted ones).
   // Background / edge clears ghosting so the full field is explorable again.
