@@ -1877,6 +1877,12 @@ async function loadGraphData(source) {
   // Loom's exhibit is the snapshot walker (FRAMES from loom-frames.js).
   if (source === 'loom') {
     const frames = getLoomFrames();
+    if (!loomFrameInitialized && frames.length) {
+      // Latest frame matches Loom's "sparsity is the finding" (4 edges).
+      loomFrameIndex = frames.length - 1;
+      loomFrameInitialized = true;
+    }
+    if (loomFrameIndex < 0) loomFrameIndex = 0;
     const data = loomFrameToGraphData(frames[loomFrameIndex] || frames[0]);
     graphCache[cacheKey] = data;
     return data;
@@ -1984,9 +1990,8 @@ async function initGraph(source) {
     elements.push({
       data: {
         id: n.id,
-        label: isLoom
-          ? (n.summary || n.id.replace(/[-_]/g, ' '))
-          : n.id.replace(/[-_]/g, ' '),
+        // Loom: no canvas labels (summary lives in the node panel / tooltip only).
+        label: isLoom ? '' : n.id.replace(/[-_]/g, ' '),
         degree: d,
         bgColor,
         borderW,
@@ -2100,29 +2105,33 @@ async function initGraph(source) {
     }});
   }
 
-  const hlNode = {
-    opacity: 1,
-    'border-width': 2,
-    'border-color': isLoom ? LOOM_CROSS : C.hlBorder,
-    label: 'data(label)',
-    'font-size': isLoom ? 12 : 13,
-    'font-weight': 600,
-    'text-transform': isLoom ? 'none' : 'uppercase',
-    color: C.text,
-    'text-opacity': 1,
-    'text-outline-color': C.bgGraph,
-    'text-outline-width': 5,
-    'text-outline-opacity': 0.9,
-    'text-halign': 'right',
-    'text-valign': 'center',
-    'text-margin-x': 4,
-  };
-  if (isLoom) {
-    hlNode.width = 18;
-    hlNode.height = 18;
-    hlNode['text-wrap'] = 'wrap';
-    hlNode['text-max-width'] = 160;
-  }
+  const hlNode = isLoom
+    ? {
+        // Match loom-explore: enlarge / ring the selection; no floating summary text.
+        opacity: 1,
+        'border-width': 2.5,
+        'border-color': LOOM_CROSS,
+        width: 18,
+        height: 18,
+        label: '',
+      }
+    : {
+        opacity: 1,
+        'border-width': 2,
+        'border-color': C.hlBorder,
+        label: 'data(label)',
+        'font-size': 13,
+        'font-weight': 600,
+        'text-transform': 'uppercase',
+        color: C.text,
+        'text-opacity': 1,
+        'text-outline-color': C.bgGraph,
+        'text-outline-width': 5,
+        'text-outline-opacity': 0.9,
+        'text-halign': 'right',
+        'text-valign': 'center',
+        'text-margin-x': 4,
+      };
 
   style.push(
     { selector: '.faded', style: { opacity: C.faded } },
