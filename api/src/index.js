@@ -280,6 +280,110 @@ export default {
         return format === "json" ? json(graphLegendJSON(entry)) : text(graphLegend(entry));
       }
 
+      // ── Analytical endpoints (iso/sammy only, loom gets adapter) ──
+
+      m = path.match(/^\/graphs\/(iso|sammy|loom)\/search$/);
+      if (m) {
+        const entry = graphRegistry[m[1]];
+        if (!entry || !entry.graph) return err(format, `Graph '${m[1]}' is not available.`, 404);
+        const q = url.searchParams.get("q");
+        if (!q) return err(format, "Missing ?q= parameter.", 400);
+        const page = parsePage(url);
+        const limit = parseLimit(url);
+        return format === "json" ? json(graphSearchJSON(entry, q, page, limit)) : text(graphSearch(entry, q, page, limit));
+      }
+
+      m = path.match(/^\/graphs\/(iso|sammy)\/communities$/);
+      if (m) {
+        const entry = graphRegistry[m[1]];
+        if (!entry || !entry.graph) return err(format, `Graph '${m[1]}' is not available.`, 404);
+        return format === "json" ? json(graphCommunitiesJSON(entry)) : text(graphCommunities(entry));
+      }
+
+      m = path.match(/^\/graphs\/(iso|sammy)\/communities\/(\d+)$/);
+      if (m) {
+        const entry = graphRegistry[m[1]];
+        if (!entry || !entry.graph) return err(format, `Graph '${m[1]}' is not available.`, 404);
+        const page = parsePage(url);
+        const limit = parseLimit(url);
+        const result = format === "json" ? graphCommunityDetailJSON(entry, parseInt(m[2]), page, limit) : graphCommunityDetail(entry, parseInt(m[2]), page, limit);
+        const is404 = (typeof result === "string" && result.includes("not found")) || (typeof result === "object" && result.error);
+        return format === "json" ? json(result, is404 ? 404 : 200) : text(result, is404 ? 404 : 200);
+      }
+
+      m = path.match(/^\/graphs\/(iso|sammy|loom)\/subgraph\/(.+)$/);
+      if (m) {
+        const entry = graphRegistry[m[1]];
+        if (!entry || !entry.graph) return err(format, `Graph '${m[1]}' is not available.`, 404);
+        const nid = safeDecode(m[2]);
+        const hops = Math.min(parseInt(url.searchParams.get("hops") || "1", 10) || 1, 2);
+        const result = format === "json" ? graphSubgraphJSON(entry, nid, hops) : graphSubgraph(entry, nid, hops);
+        const is404 = (typeof result === "string" && result.includes("not found")) || (typeof result === "object" && result.error);
+        return format === "json" ? json(result, is404 ? 404 : 200) : text(result, is404 ? 404 : 200);
+      }
+
+      m = path.match(/^\/graphs\/(iso|sammy|loom)\/path$/);
+      if (m) {
+        const entry = graphRegistry[m[1]];
+        if (!entry || !entry.graph) return err(format, `Graph '${m[1]}' is not available.`, 404);
+        const from = url.searchParams.get("from");
+        const to = url.searchParams.get("to");
+        if (!from || !to) return err(format, "Missing ?from= and ?to= parameters.", 400);
+        const result = format === "json" ? graphPathJSON(entry, from, to) : graphPath(entry, from, to);
+        const is404 = (typeof result === "string" && result.includes("not found")) || (typeof result === "object" && result.error);
+        return format === "json" ? json(result, is404 ? 404 : 200) : text(result, is404 ? 404 : 200);
+      }
+
+      m = path.match(/^\/graphs\/(iso|sammy)\/surprise\/(.+)$/);
+      if (m) {
+        const entry = graphRegistry[m[1]];
+        if (!entry || !entry.graph) return err(format, `Graph '${m[1]}' is not available.`, 404);
+        const nid = safeDecode(m[2]);
+        const result = format === "json" ? graphSurpriseJSON(entry, nid) : graphSurprise(entry, nid);
+        const is404 = (typeof result === "string" && result.includes("not found")) || (typeof result === "object" && result.error);
+        return format === "json" ? json(result, is404 ? 404 : 200) : text(result, is404 ? 404 : 200);
+      }
+
+      m = path.match(/^\/graphs\/(iso|sammy)\/jaccard\/(.+)$/);
+      if (m) {
+        const entry = graphRegistry[m[1]];
+        if (!entry || !entry.graph) return err(format, `Graph '${m[1]}' is not available.`, 404);
+        const nid = safeDecode(m[2]);
+        const result = format === "json" ? graphJaccardJSON(entry, nid) : graphJaccard(entry, nid);
+        const is404 = (typeof result === "string" && result.includes("not found")) || (typeof result === "object" && result.error);
+        return format === "json" ? json(result, is404 ? 404 : 200) : text(result, is404 ? 404 : 200);
+      }
+
+      m = path.match(/^\/graphs\/(iso|sammy)\/crossings$/);
+      if (m) {
+        const entry = graphRegistry[m[1]];
+        if (!entry || !entry.graph) return err(format, `Graph '${m[1]}' is not available.`, 404);
+        return format === "json" ? json(graphCrossingsJSON(entry)) : text(graphCrossings(entry));
+      }
+
+      // ── Loom adapter: endpoints specific to oscillation/decay graph ──
+
+      m = path.match(/^\/graphs\/loom\/seeds$/);
+      if (m) {
+        const entry = graphRegistry.loom;
+        if (!entry || !entry.graph) return err(format, "Loom graph is not available.", 404);
+        return format === "json" ? json(loomSeedsJSON(entry)) : text(loomSeeds(entry));
+      }
+
+      m = path.match(/^\/graphs\/loom\/boundary$/);
+      if (m) {
+        const entry = graphRegistry.loom;
+        if (!entry || !entry.graph) return err(format, "Loom graph is not available.", 404);
+        return format === "json" ? json(loomBoundaryJSON(entry)) : text(loomBoundary(entry));
+      }
+
+      // ── Loom: explain why analytical endpoints aren't available ──
+      m = path.match(/^\/graphs\/loom\/(communities|crossings|surprise|jaccard)/);
+      if (m) {
+        const msg = `Loom's graph (${graphRegistry.loom?.graph?.nodes?.length || 53} nodes, ${graphRegistry.loom?.graph?.edges?.length || 4} edges) is a seed manifest with oscillation/decay dynamics, not a knowledge graph. Community detection, structural similarity, and cross-origin crossings don't apply.\n\nTry instead:\n  /graphs/loom/seeds       Seed vs discovered breakdown\n  /graphs/loom/boundary    Origin boundary analysis\n  /graphs/loom/nodes       Browse all nodes\n  /graphs/loom/search?q=   Text search`;
+        return format === "json" ? json({ error: msg, alternatives: ["/graphs/loom/seeds", "/graphs/loom/boundary", "/graphs/loom/nodes"] }, 400) : text(msg, 400);
+      }
+
       return err(format, "Unknown endpoint.", 404);
     } catch (e) {
       console.error("worker error", e && e.stack ? e.stack : e);
@@ -588,6 +692,36 @@ All edges with both endpoints + provenance. Paginated.
 > GET /graphs/{id}/legend
 What each edge kind means for THIS graph — architecture, predicates, node types.
 
+> GET /graphs/{id}/search?q=
+Text search across node names and summaries. All three graphs.
+
+> GET /graphs/{id}/communities
+Community clusters (iso, sammy only — Loom has no communities).
+
+> GET /graphs/{id}/communities/{n}
+Community detail with member nodes, type/origin breakdown, cross-edges.
+
+> GET /graphs/{id}/subgraph/{nid}?hops=N
+BFS neighborhood around a node (1 or 2 hops). All three graphs.
+
+> GET /graphs/{id}/path?from=&to=
+Shortest path between two nodes. All three graphs.
+
+> GET /graphs/{id}/surprise/{nid}
+Cross-community connections for a node (iso, sammy only).
+
+> GET /graphs/{id}/jaccard/{nid}
+Structural similarity — nodes sharing the most neighbors (iso, sammy only).
+
+> GET /graphs/{id}/crossings
+Cross-origin concepts — nodes that bridge different data sources (iso, sammy only).
+
+> GET /graphs/loom/seeds
+Seed vs discovered node breakdown. Loom-specific adapter.
+
+> GET /graphs/loom/boundary
+Origin boundary analysis — what crossed from Loom's KG into the seed set.
+
 ## Notes
 - Default output: text/plain (markdown). Add ?format=json for structured data.
 - Pagination: ?page=N&limit=N (default 20, max 100). ?limit=all for everything.
@@ -642,6 +776,9 @@ function home(graph, essay, env) {
   lines.push("    /graphs/sammy                Sammy's hand-authored graph");
   lines.push("    /graphs/loom                 Loom's oscillating graph");
   lines.push("    /graphs/{id}/nodes           Browse nodes by graph");
+  lines.push("    /graphs/{id}/search?q=       Search within a graph");
+  lines.push("    /graphs/{id}/subgraph/{nid}  Node neighborhood");
+  lines.push("    /graphs/{id}/path?from=&to=  Shortest path");
   lines.push("    /graphs/{id}/legend          How to read each graph");
   lines.push("");
   lines.push("  Essay subgraph (legacy):");
@@ -2283,12 +2420,27 @@ function graphsIndex(registry) {
     lines.push("");
   }
 
-  lines.push(hr, "NAVIGATE", hr);
+  lines.push(hr, "BROWSE", hr);
   lines.push("  /graphs/{id}              Graph summary + what to look at");
   lines.push("  /graphs/{id}/nodes        Paginated node list with degree");
   lines.push("  /graphs/{id}/nodes/{nid}  Single node: summary, edges, provenance");
   lines.push("  /graphs/{id}/edges        All edges with both endpoints");
   lines.push("  /graphs/{id}/legend       What each edge kind means for THIS graph");
+  lines.push("");
+  lines.push(hr, "ANALYZE (iso, sammy)", hr);
+  lines.push("  /graphs/{id}/search?q=    Text search across nodes");
+  lines.push("  /graphs/{id}/communities  Community clusters");
+  lines.push("  /graphs/{id}/communities/{n}  Community detail");
+  lines.push("  /graphs/{id}/subgraph/{nid}?hops=N  BFS neighborhood");
+  lines.push("  /graphs/{id}/path?from=&to=  Shortest path");
+  lines.push("  /graphs/{id}/surprise/{nid}  Cross-community connections");
+  lines.push("  /graphs/{id}/jaccard/{nid}   Structural similarity");
+  lines.push("  /graphs/{id}/crossings       Cross-origin concepts");
+  lines.push("");
+  lines.push(hr, "LOOM ADAPTER", hr);
+  lines.push("  /graphs/loom/seeds        Seed vs discovered breakdown");
+  lines.push("  /graphs/loom/boundary     Origin boundary analysis");
+  lines.push("  /graphs/loom/search?q=    Text search");
   lines.push("");
   lines.push("  Available graphs: " + Object.entries(registry).filter(([, e]) => e && e.graph).map(([id]) => id).join(", "));
   return lines.join("\n");
@@ -2305,7 +2457,12 @@ function graphsIndexJSON(registry) {
       authorship: entry.authorship,
       nodes: entry.graph.nodes.length,
       edges: entry.graph.edges.length,
-      endpoints: [`/graphs/${id}`, `/graphs/${id}/nodes`, `/graphs/${id}/edges`, `/graphs/${id}/legend`],
+      endpoints: {
+        browse: [`/graphs/${id}`, `/graphs/${id}/nodes`, `/graphs/${id}/edges`, `/graphs/${id}/legend`],
+        analyze: id !== "loom"
+          ? [`/graphs/${id}/search?q=`, `/graphs/${id}/communities`, `/graphs/${id}/subgraph/{nid}`, `/graphs/${id}/path?from=&to=`, `/graphs/${id}/surprise/{nid}`, `/graphs/${id}/jaccard/{nid}`, `/graphs/${id}/crossings`]
+          : [`/graphs/${id}/seeds`, `/graphs/${id}/boundary`, `/graphs/${id}/search?q=`],
+      },
     });
   }
   return { graphs, note: "Three structurally different graphs from three agents reading the same essay." };
@@ -2362,11 +2519,28 @@ function graphSummary(entry) {
   }
   lines.push("");
 
-  lines.push(hr, "NAVIGATE", hr);
+  lines.push(hr, "BROWSE", hr);
   lines.push(`  /graphs/${entry.id}/nodes        Browse nodes`);
   lines.push(`  /graphs/${entry.id}/edges        Browse edges`);
   lines.push(`  /graphs/${entry.id}/legend       Edge kind meanings`);
   lines.push(`  /graphs/${entry.id}/nodes/{id}   Node detail`);
+  if (entry.id !== "loom") {
+    lines.push("");
+    lines.push(hr, "ANALYZE", hr);
+    lines.push(`  /graphs/${entry.id}/search?q=    Text search`);
+    lines.push(`  /graphs/${entry.id}/communities  Community clusters`);
+    lines.push(`  /graphs/${entry.id}/subgraph/{nid}?hops=N  Neighborhood`);
+    lines.push(`  /graphs/${entry.id}/path?from=&to=  Shortest path`);
+    lines.push(`  /graphs/${entry.id}/surprise/{nid}  Cross-community`);
+    lines.push(`  /graphs/${entry.id}/jaccard/{nid}   Structural similarity`);
+    lines.push(`  /graphs/${entry.id}/crossings       Cross-origin concepts`);
+  } else {
+    lines.push("");
+    lines.push(hr, "LOOM ADAPTER", hr);
+    lines.push("  /graphs/loom/seeds        Seed vs discovered");
+    lines.push("  /graphs/loom/boundary     Origin boundary analysis");
+    lines.push("  /graphs/loom/search?q=    Text search");
+  }
   lines.push("  /graphs                          All graphs");
   return lines.join("\n");
 }
@@ -2675,5 +2849,743 @@ function graphLegendJSON(entry) {
     edge_kinds: entry.edgeKinds || {},
     predicates: g.predicateCounts,
     node_types: g.typeCounts,
+  };
+}
+
+// ── Graph Search ──
+
+function graphSearchNodes(graph, query) {
+  const low = query.toLowerCase();
+  const normalized = low.replace(/[-_]/g, " ");
+  const results = [];
+  for (const n of graph.nodes) {
+    let score = 0;
+    const idNorm = n._idLow.replace(/[-_]/g, " ");
+    if (n._idLow === low || idNorm === normalized) score += 10;
+    else if (n._idLow.includes(low) || idNorm.includes(normalized)) score += 3;
+    if (n._summaryLow.includes(low) || n._summaryLow.includes(normalized)) score += 1;
+    if (score > 0) results.push({ node: n, score });
+  }
+  results.sort((a, b) => b.score - a.score);
+  return results;
+}
+
+function graphSearch(entry, query, page, limit) {
+  const g = entry.graph;
+  const results = graphSearchNodes(g, query);
+  if (!results.length) return `No results for '${query}' in ${entry.agent}'s graph.\n\nTry /graphs/${entry.id}/nodes to browse.`;
+
+  const total = results.length;
+  const totalPages = Math.ceil(total / limit);
+  page = Math.max(1, Math.min(page, totalPages));
+  const start = (page - 1) * limit;
+  const slice = results.slice(start, start + limit);
+
+  const lines = [HR];
+  lines.push(`${entry.agent.toUpperCase()}'S GRAPH — SEARCH: '${query}' — ${total} results`);
+  lines.push(HR, "");
+  for (const { node: n } of slice) {
+    lines.push(`  [${n.type}] ${nodeLabel(n.id)}  deg ${graphDeg(g, n.id)}  origin=${n.origin || "?"}`);
+    if (n.summary) lines.push(`    ${truncate(n.summary, 120)}`);
+    lines.push(`    → /graphs/${entry.id}/nodes/${encodeURIComponent(n.id)}`);
+    lines.push("");
+  }
+  if (totalPages > 1) {
+    lines.push(hr, "PAGES", hr);
+    const eq = encodeURIComponent(query);
+    if (page > 1) lines.push(`  ← /graphs/${entry.id}/search?q=${eq}&page=${page - 1}`);
+    if (page < totalPages) lines.push(`  → /graphs/${entry.id}/search?q=${eq}&page=${page + 1}`);
+    lines.push(`  Page ${page} of ${totalPages}`);
+  }
+  lines.push("", hr, "NAVIGATE", hr);
+  lines.push(`  /graphs/${entry.id}/nodes        Browse all nodes`);
+  lines.push(`  /graphs/${entry.id}              Graph summary`);
+  return lines.join("\n");
+}
+
+function graphSearchJSON(entry, query, page, limit) {
+  const g = entry.graph;
+  const results = graphSearchNodes(g, query);
+  const total = results.length;
+  const totalPages = Math.ceil(total / limit) || 1;
+  page = Math.max(1, Math.min(page, totalPages));
+  const start = (page - 1) * limit;
+  const slice = results.slice(start, start + limit);
+  return {
+    graph: entry.id, query, total, page, total_pages: totalPages,
+    results: slice.map(({ node: n, score }) => ({
+      id: n.id, type: n.type, origin: n.origin,
+      summary: truncate(n.summary, 200),
+      degree: graphDeg(g, n.id), score,
+    })),
+  };
+}
+
+// ── Graph Communities ──
+
+function graphCommunities(entry) {
+  const g = entry.graph;
+  const comms = g.communities || {};
+  const cids = Object.keys(comms).map(Number).sort((a, b) => a - b);
+  if (!cids.length) return `${entry.agent}'s graph has no community data.\n`;
+
+  const lines = [HR];
+  lines.push(`${entry.agent.toUpperCase()}'S GRAPH — ${cids.length} COMMUNITIES`);
+  lines.push(HR, "");
+  for (const cid of cids) {
+    const members = comms[cid];
+    const types = {};
+    for (const m of members) { const n = g.nodesById[m]; if (n) types[n.type] = (types[n.type] || 0) + 1; }
+    const topType = Object.entries(types).sort((a, b) => b[1] - a[1])[0]?.[0] || "?";
+    const top3 = [...members].sort((a, b) => graphDeg(g, b) - graphDeg(g, a)).slice(0, 3);
+    lines.push(`  Community ${cid} — ${members.length} nodes (${topType}-heavy)`);
+    lines.push(`    top: ${top3.map(m => nodeLabel(m)).join(", ")}`);
+    lines.push(`    → /graphs/${entry.id}/communities/${cid}`);
+    lines.push("");
+  }
+  lines.push(hr, "NAVIGATE", hr);
+  lines.push(`  /graphs/${entry.id}              Graph summary`);
+  lines.push(`  /graphs/${entry.id}/nodes        Browse nodes`);
+  return lines.join("\n");
+}
+
+function graphCommunitiesJSON(entry) {
+  const g = entry.graph;
+  const comms = g.communities || {};
+  const cids = Object.keys(comms).map(Number).sort((a, b) => a - b);
+  return {
+    graph: entry.id, agent: entry.agent,
+    total_communities: cids.length,
+    communities: cids.map(cid => {
+      const members = comms[cid];
+      const types = {};
+      for (const m of members) { const n = g.nodesById[m]; if (n) types[n.type] = (types[n.type] || 0) + 1; }
+      const top5 = [...members].sort((a, b) => graphDeg(g, b) - graphDeg(g, a)).slice(0, 5);
+      return {
+        id: cid, size: members.length, types,
+        top_nodes: top5.map(m => ({ id: m, type: g.nodesById[m]?.type, degree: graphDeg(g, m) })),
+      };
+    }),
+  };
+}
+
+function graphCommunityDetail(entry, cid, page, limit) {
+  const g = entry.graph;
+  const comms = g.communities || {};
+  if (!comms[cid]) return `Community ${cid} not found in ${entry.agent}'s graph.\n\nValid communities: ${Object.keys(comms).map(Number).sort((a, b) => a - b).join(", ")}`;
+
+  const members = comms[cid];
+  const sorted = [...members].sort((a, b) => graphDeg(g, b) - graphDeg(g, a));
+  const total = sorted.length;
+  const totalPages = Math.ceil(total / limit);
+  page = Math.max(1, Math.min(page, totalPages));
+  const start = (page - 1) * limit;
+  const slice = sorted.slice(start, start + limit);
+
+  const types = {};
+  const origins = {};
+  for (const m of members) {
+    const n = g.nodesById[m];
+    if (!n) continue;
+    types[n.type] = (types[n.type] || 0) + 1;
+    origins[n.origin || "?"] = (origins[n.origin || "?"] || 0) + 1;
+  }
+
+  let crossEdges = 0;
+  const crossTargets = {};
+  const nodeComm = {};
+  for (const [c, ms] of Object.entries(comms)) for (const m of ms) nodeComm[m] = parseInt(c);
+  for (const e of g.edges) {
+    const sc = nodeComm[e.source], tc = nodeComm[e.target];
+    if (sc === cid && tc !== undefined && tc !== cid) { crossEdges++; crossTargets[tc] = (crossTargets[tc] || 0) + 1; }
+    else if (tc === cid && sc !== undefined && sc !== cid) { crossEdges++; crossTargets[sc] = (crossTargets[sc] || 0) + 1; }
+  }
+
+  const lines = [HR];
+  lines.push(`${entry.agent.toUpperCase()}'S GRAPH — COMMUNITY ${cid} — ${members.length} nodes`);
+  lines.push(HR, "");
+  lines.push(`Types: ${Object.entries(types).sort((a, b) => b[1] - a[1]).map(([t, c]) => `${t}(${c})`).join(", ")}`);
+  lines.push(`Origins: ${Object.entries(origins).sort((a, b) => b[1] - a[1]).map(([o, c]) => `${o}(${c})`).join(", ")}`);
+  if (crossEdges) {
+    const bridges = Object.entries(crossTargets).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([c, n]) => `C${c}(${n})`).join(", ");
+    lines.push(`Cross-edges: ${crossEdges} total — bridges to ${bridges}`);
+  }
+  lines.push("");
+  lines.push(`${hr.slice(0, 20)} NODES (by degree) — page ${page}/${totalPages} ${hr.slice(0, 20)}`, "");
+  for (const m of slice) {
+    const n = g.nodesById[m];
+    if (!n) continue;
+    lines.push(`  [${(n.type || "?").padEnd(12)}] ${nodeLabel(m)}  deg=${graphDeg(g, m)}  origin=${n.origin || "?"}`);
+    if (n.summary) lines.push(`    ${truncate(n.summary, 100)}`);
+    lines.push("");
+  }
+  if (totalPages > 1) {
+    lines.push(hr, "PAGES", hr);
+    if (page > 1) lines.push(`  ← /graphs/${entry.id}/communities/${cid}?page=${page - 1}`);
+    if (page < totalPages) lines.push(`  → /graphs/${entry.id}/communities/${cid}?page=${page + 1}`);
+  }
+  lines.push(hr, "NAVIGATE", hr);
+  lines.push(`  /graphs/${entry.id}/communities  All communities`);
+  lines.push(`  /graphs/${entry.id}/nodes        Browse nodes`);
+  return lines.join("\n");
+}
+
+function graphCommunityDetailJSON(entry, cid, page, limit) {
+  const g = entry.graph;
+  const comms = g.communities || {};
+  if (!comms[cid]) return { error: `Community ${cid} not found.`, valid: Object.keys(comms).map(Number).sort((a, b) => a - b) };
+
+  const members = comms[cid];
+  const sorted = [...members].sort((a, b) => graphDeg(g, b) - graphDeg(g, a));
+  const total = sorted.length;
+  const totalPages = Math.ceil(total / limit) || 1;
+  page = Math.max(1, Math.min(page, totalPages));
+  const start = (page - 1) * limit;
+  const slice = sorted.slice(start, start + limit);
+
+  const nodeComm = {};
+  for (const [c, ms] of Object.entries(comms)) for (const m of ms) nodeComm[m] = parseInt(c);
+  const crossTargets = {};
+  for (const e of g.edges) {
+    const sc = nodeComm[e.source], tc = nodeComm[e.target];
+    if (sc === cid && tc !== undefined && tc !== cid) crossTargets[tc] = (crossTargets[tc] || 0) + 1;
+    else if (tc === cid && sc !== undefined && sc !== cid) crossTargets[sc] = (crossTargets[sc] || 0) + 1;
+  }
+
+  return {
+    graph: entry.id, community: cid, size: members.length,
+    page, total_pages: totalPages,
+    bridges: crossTargets,
+    nodes: slice.map(m => {
+      const n = g.nodesById[m];
+      return { id: m, type: n?.type, origin: n?.origin, summary: truncate(n?.summary || "", 200), degree: graphDeg(g, m) };
+    }),
+  };
+}
+
+// ── Graph Subgraph (BFS neighborhood) ──
+
+function graphSubgraph(entry, seedName, hops) {
+  const g = entry.graph;
+  const seedNode = resolveNode(g, seedName);
+  if (!seedNode) return `Node '${seedName}' not found in ${entry.agent}'s graph.\n\nTry /graphs/${entry.id}/search?q=${encodeURIComponent(seedName)}`;
+
+  const seed = seedNode.id;
+  const layer = { [seed]: 0 };
+  let frontier = [seed];
+  for (let d = 1; d <= hops; d++) {
+    const next = [];
+    for (const node of frontier) for (const nb of (g.adj[node] || [])) if (!(nb in layer)) { layer[nb] = d; next.push(nb); }
+    frontier = next;
+  }
+
+  const sgNodes = new Set(Object.keys(layer));
+  const sgEdges = g.edges.filter(e => sgNodes.has(e.source) && sgNodes.has(e.target));
+
+  const lines = [HR];
+  lines.push(`${entry.agent.toUpperCase()}'S GRAPH — SUBGRAPH: ${nodeLabel(seed)} — ${hops} hop(s)`);
+  lines.push(HR, "");
+  lines.push(`${sgNodes.size} nodes · ${sgEdges.length} edges`);
+  lines.push("");
+
+  for (let d = 0; d <= hops; d++) {
+    const label = d === 0 ? "SEED" : `HOP ${d}`;
+    const ln = Object.entries(layer).filter(([, dd]) => dd === d).map(([id]) => id).sort((a, b) => graphDeg(g, b) - graphDeg(g, a));
+    const compact = d >= 2;
+    lines.push(`${hr.slice(0, 20)} ${label} (${ln.length} nodes) ${hr.slice(0, 20)}`, "");
+    const show = compact ? ln.slice(0, 20) : ln;
+    for (const nid of show) {
+      const n = g.nodesById[nid];
+      if (!n) continue;
+      const localDeg = [...(g.adj[nid] || [])].filter(nb => sgNodes.has(nb)).length;
+      lines.push(`  [${(n.type || "?").padEnd(12)}] ${nodeLabel(nid)}  deg ${localDeg}/${graphDeg(g, nid)}`);
+      if (!compact && n.summary) lines.push(`    ${truncate(n.summary, 100)}`);
+      lines.push("");
+    }
+    if (compact && ln.length > 20) lines.push(`  ... and ${ln.length - 20} more`, "");
+  }
+
+  lines.push(hr, "NAVIGATE", hr);
+  lines.push(`  /graphs/${entry.id}/nodes/${encodeURIComponent(seed)}  Seed detail`);
+  if (hops < 2) lines.push(`  /graphs/${entry.id}/subgraph/${encodeURIComponent(seed)}?hops=${hops + 1}  Expand`);
+  lines.push(`  /graphs/${entry.id}/nodes        Browse all nodes`);
+  return lines.join("\n");
+}
+
+function graphSubgraphJSON(entry, seedName, hops) {
+  const g = entry.graph;
+  const seedNode = resolveNode(g, seedName);
+  if (!seedNode) return { error: `Node '${seedName}' not found.`, try_search: `/graphs/${entry.id}/search?q=${encodeURIComponent(seedName)}` };
+
+  const seed = seedNode.id;
+  const layer = { [seed]: 0 };
+  let frontier = [seed];
+  for (let d = 1; d <= hops; d++) {
+    const next = [];
+    for (const node of frontier) for (const nb of (g.adj[node] || [])) if (!(nb in layer)) { layer[nb] = d; next.push(nb); }
+    frontier = next;
+  }
+
+  const sgNodes = new Set(Object.keys(layer));
+  const sgEdges = g.edges.filter(e => sgNodes.has(e.source) && sgNodes.has(e.target));
+
+  const layers = {};
+  for (let d = 0; d <= hops; d++) {
+    layers[d === 0 ? "seed" : `hop_${d}`] = Object.entries(layer)
+      .filter(([, dd]) => dd === d)
+      .map(([id]) => {
+        const n = g.nodesById[id];
+        return { id, type: n?.type, origin: n?.origin, summary: truncate(n?.summary || "", 200), degree: graphDeg(g, id), local_degree: [...(g.adj[id] || [])].filter(nb => sgNodes.has(nb)).length };
+      }).sort((a, b) => b.degree - a.degree);
+  }
+
+  return {
+    graph: entry.id, seed, hops,
+    total_nodes: sgNodes.size, total_edges: sgEdges.length,
+    layers,
+    edges: sgEdges.map(e => ({ source: e.source, predicate: e.predicate, target: e.target })),
+  };
+}
+
+// ── Graph Path (shortest path BFS) ──
+
+function graphPathBFS(graph, fromId, toId) {
+  const visited = new Set([fromId]);
+  const queue = [[fromId, [fromId]]];
+  while (queue.length) {
+    const [cur, path] = queue.shift();
+    if (cur === toId) return path;
+    for (const nb of (graph.adj[cur] || [])) {
+      if (!visited.has(nb)) { visited.add(nb); queue.push([nb, [...path, nb]]); }
+    }
+  }
+  return null;
+}
+
+function graphPath(entry, fromName, toName) {
+  const g = entry.graph;
+  const fn = resolveNode(g, fromName);
+  const tn = resolveNode(g, toName);
+  if (!fn) return `Node '${fromName}' not found in ${entry.agent}'s graph.`;
+  if (!tn) return `Node '${toName}' not found in ${entry.agent}'s graph.`;
+
+  const path = graphPathBFS(g, fn.id, tn.id);
+  const lines = [HR];
+  lines.push(`${entry.agent.toUpperCase()}'S GRAPH — PATH: ${nodeLabel(fn.id)} → ${nodeLabel(tn.id)}`);
+  lines.push(HR, "");
+
+  if (!path) {
+    lines.push("No path found between these nodes.");
+  } else {
+    lines.push(`Length: ${path.length - 1} hops`, "");
+    for (let i = 0; i < path.length; i++) {
+      const nid = path[i];
+      const n = g.nodesById[nid];
+      if (!n) continue;
+      const prefix = i === 0 ? "START" : i === path.length - 1 ? "END  " : `  ${String(i).padEnd(3)}`;
+      lines.push(`  ${prefix} [${(n.type || "?").padEnd(12)}] ${nodeLabel(nid)}`);
+      if (n.summary) lines.push(`         ${truncate(n.summary, 100)}`);
+      if (i < path.length - 1) {
+        const next = path[i + 1];
+        const edge = g.edges.find(e => (e.source === nid && e.target === next) || (e.target === nid && e.source === next));
+        if (edge) lines.push(`         ${edge.source === nid ? "→" : "←"} ${edge.predicate}`);
+      }
+      lines.push("");
+    }
+  }
+
+  lines.push(hr, "NAVIGATE", hr);
+  lines.push(`  /graphs/${entry.id}/nodes/${encodeURIComponent(fn.id)}  Start node`);
+  lines.push(`  /graphs/${entry.id}/nodes/${encodeURIComponent(tn.id)}  End node`);
+  return lines.join("\n");
+}
+
+function graphPathJSON(entry, fromName, toName) {
+  const g = entry.graph;
+  const fn = resolveNode(g, fromName);
+  const tn = resolveNode(g, toName);
+  if (!fn) return { error: `Node '${fromName}' not found.` };
+  if (!tn) return { error: `Node '${toName}' not found.` };
+
+  const path = graphPathBFS(g, fn.id, tn.id);
+  if (!path) return { graph: entry.id, from: fn.id, to: tn.id, path: null, hops: null };
+
+  return {
+    graph: entry.id, from: fn.id, to: tn.id, hops: path.length - 1,
+    path: path.map((nid, i) => {
+      const n = g.nodesById[nid];
+      const step = { id: nid, type: n?.type, origin: n?.origin, summary: truncate(n?.summary || "", 200) };
+      if (i < path.length - 1) {
+        const next = path[i + 1];
+        const edge = g.edges.find(e => (e.source === nid && e.target === next) || (e.target === nid && e.source === next));
+        if (edge) step.edge_to_next = { predicate: edge.predicate, direction: edge.source === nid ? "outgoing" : "incoming" };
+      }
+      return step;
+    }),
+  };
+}
+
+// ── Graph Surprise (cross-community connections) ──
+
+function graphSurprise(entry, nodeName) {
+  const g = entry.graph;
+  const n = resolveNode(g, nodeName);
+  if (!n) return `Node '${nodeName}' not found in ${entry.agent}'s graph.`;
+
+  const comms = g.communities || {};
+  const nodeComm = {};
+  for (const [c, ms] of Object.entries(comms)) for (const m of ms) nodeComm[m] = parseInt(c);
+  const myCid = nodeComm[n.id];
+
+  if (myCid === undefined) return `Node '${n.id}' has no community assignment — surprise connections require community data.`;
+
+  const cross = [];
+  for (const e of g.edges) {
+    let other = null, pred = null, dir = "";
+    if (e.source === n.id) { other = e.target; pred = e.predicate; dir = "→"; }
+    else if (e.target === n.id) { other = e.source; pred = e.predicate; dir = "←"; }
+    if (!other) continue;
+    const otherCid = nodeComm[other];
+    if (otherCid !== undefined && otherCid !== myCid) cross.push({ nb: other, pred, dir, cid: otherCid });
+  }
+  cross.sort((a, b) => graphDeg(g, b.nb) - graphDeg(g, a.nb));
+
+  const lines = [HR];
+  lines.push(`${entry.agent.toUpperCase()}'S GRAPH — SURPRISE: ${nodeLabel(n.id)}`);
+  lines.push(HR, "");
+  lines.push(`  Node: ${nodeLabel(n.id)} (${n.type}, community ${myCid})`);
+  if (n.summary) lines.push(`  ${truncate(n.summary, 120)}`);
+  lines.push(`  Cross-community connections: ${cross.length}`, "");
+
+  if (cross.length) {
+    lines.push(`${hr.slice(0, 20)} CROSS-COMMUNITY CONNECTIONS ${hr.slice(0, 20)}`, "");
+    for (const { nb, pred, dir, cid } of cross.slice(0, 20)) {
+      const nbNode = g.nodesById[nb];
+      lines.push(`  ${dir} [${pred}] ${nodeLabel(nb)} (${nbNode?.type || "?"}, community ${cid})`);
+      if (nbNode?.summary) lines.push(`    ${truncate(nbNode.summary, 100)}`);
+      lines.push("");
+    }
+  } else {
+    lines.push("  No cross-community connections — all neighbors are in the same cluster.");
+  }
+
+  lines.push(hr, "NAVIGATE", hr);
+  lines.push(`  /graphs/${entry.id}/nodes/${encodeURIComponent(n.id)}  Node detail`);
+  lines.push(`  /graphs/${entry.id}/communities/${myCid}  This node's community`);
+  return lines.join("\n");
+}
+
+function graphSurpriseJSON(entry, nodeName) {
+  const g = entry.graph;
+  const n = resolveNode(g, nodeName);
+  if (!n) return { error: `Node '${nodeName}' not found.` };
+
+  const comms = g.communities || {};
+  const nodeComm = {};
+  for (const [c, ms] of Object.entries(comms)) for (const m of ms) nodeComm[m] = parseInt(c);
+  const myCid = nodeComm[n.id];
+  if (myCid === undefined) return { error: `Node '${n.id}' has no community assignment.` };
+
+  const cross = [];
+  for (const e of g.edges) {
+    let other = null, pred = null, dir = "";
+    if (e.source === n.id) { other = e.target; pred = e.predicate; dir = "outgoing"; }
+    else if (e.target === n.id) { other = e.source; pred = e.predicate; dir = "incoming"; }
+    if (!other) continue;
+    const otherCid = nodeComm[other];
+    if (otherCid !== undefined && otherCid !== myCid) cross.push({ neighbor: other, predicate: pred, direction: dir, neighbor_community: otherCid, neighbor_type: g.nodesById[other]?.type });
+  }
+
+  return {
+    graph: entry.id, node: n.id, community: myCid,
+    cross_community_connections: cross.length, connections: cross,
+  };
+}
+
+// ── Graph Jaccard (structural similarity) ──
+
+function graphJaccard(entry, nodeName) {
+  const g = entry.graph;
+  const n = resolveNode(g, nodeName);
+  if (!n) return `Node '${nodeName}' not found in ${entry.agent}'s graph.`;
+
+  const myNbs = g.adj[n.id];
+  if (!myNbs || myNbs.size === 0) return `Node '${n.id}' has no connections — Jaccard similarity requires neighbors.`;
+
+  const scores = [];
+  for (const [otherId, otherNbs] of Object.entries(g.adj)) {
+    if (otherId === n.id || !otherNbs || otherNbs.size === 0) continue;
+    let intersection = 0;
+    for (const nb of myNbs) if (otherNbs.has(nb)) intersection++;
+    if (intersection === 0) continue;
+    const union = new Set([...myNbs, ...otherNbs]).size;
+    scores.push({ id: otherId, jaccard: intersection / union, shared: intersection });
+  }
+  scores.sort((a, b) => b.jaccard - a.jaccard);
+
+  const lines = [HR];
+  lines.push(`${entry.agent.toUpperCase()}'S GRAPH — JACCARD: ${nodeLabel(n.id)}`);
+  lines.push(HR, "");
+  lines.push(`  Structurally similar nodes (shared neighborhood):`);
+  lines.push(`  ${nodeLabel(n.id)} has ${myNbs.size} neighbors`, "");
+
+  if (!scores.length) {
+    lines.push("  No nodes share any neighbors with this one.");
+  } else {
+    for (const { id, jaccard, shared } of scores.slice(0, 15)) {
+      const other = g.nodesById[id];
+      lines.push(`  ${(jaccard * 100).toFixed(1)}%  ${nodeLabel(id)} (${other?.type || "?"}, ${shared} shared)`);
+    }
+  }
+
+  lines.push("", hr, "NAVIGATE", hr);
+  lines.push(`  /graphs/${entry.id}/nodes/${encodeURIComponent(n.id)}  Node detail`);
+  lines.push(`  /graphs/${entry.id}/subgraph/${encodeURIComponent(n.id)}  Neighborhood`);
+  return lines.join("\n");
+}
+
+function graphJaccardJSON(entry, nodeName) {
+  const g = entry.graph;
+  const n = resolveNode(g, nodeName);
+  if (!n) return { error: `Node '${nodeName}' not found.` };
+
+  const myNbs = g.adj[n.id];
+  if (!myNbs || myNbs.size === 0) return { graph: entry.id, node: n.id, similar: [] };
+
+  const scores = [];
+  for (const [otherId, otherNbs] of Object.entries(g.adj)) {
+    if (otherId === n.id || !otherNbs || otherNbs.size === 0) continue;
+    let intersection = 0;
+    for (const nb of myNbs) if (otherNbs.has(nb)) intersection++;
+    if (intersection === 0) continue;
+    const union = new Set([...myNbs, ...otherNbs]).size;
+    scores.push({ id: otherId, type: g.nodesById[otherId]?.type, jaccard: Math.round((intersection / union) * 1000) / 1000, shared_neighbors: intersection });
+  }
+  scores.sort((a, b) => b.jaccard - a.jaccard);
+
+  return { graph: entry.id, node: n.id, degree: myNbs.size, similar: scores.slice(0, 20) };
+}
+
+// ── Graph Crossings (cross-origin concepts) ──
+
+function graphCrossings(entry) {
+  const g = entry.graph;
+  const origins = {};
+  for (const n of g.nodes) { const o = n.origin || "?"; origins[o] = (origins[o] || 0) + 1; }
+  const originKeys = Object.keys(origins);
+  if (originKeys.length < 2) return `${entry.agent}'s graph has only one origin (${originKeys[0] || "?"}) — crossings require multiple origins.\n`;
+
+  const crossEdges = [];
+  for (const e of g.edges) {
+    const sn = g.nodesById[e.source], tn = g.nodesById[e.target];
+    if (!sn || !tn) continue;
+    if ((sn.origin || "?") !== (tn.origin || "?")) {
+      crossEdges.push(e);
+    }
+  }
+
+  const bridgeNodes = {};
+  for (const e of crossEdges) {
+    bridgeNodes[e.source] = (bridgeNodes[e.source] || 0) + 1;
+    bridgeNodes[e.target] = (bridgeNodes[e.target] || 0) + 1;
+  }
+  const sorted = Object.entries(bridgeNodes).sort((a, b) => b[1] - a[1]);
+
+  const lines = [HR];
+  lines.push(`${entry.agent.toUpperCase()}'S GRAPH — CROSSINGS`);
+  lines.push(HR, "");
+  lines.push(`Origins: ${Object.entries(origins).map(([o, c]) => `${o}(${c})`).join(", ")}`);
+  lines.push(`Cross-origin edges: ${crossEdges.length} of ${g.edges.length} total`);
+  lines.push("");
+  lines.push(`${hr.slice(0, 20)} BRIDGE NODES (most cross-origin connections) ${hr.slice(0, 20)}`, "");
+
+  for (const [nid, count] of sorted.slice(0, 20)) {
+    const n = g.nodesById[nid];
+    lines.push(`  ${count} crossing${count > 1 ? "s" : ""}  ${nodeLabel(nid)} (${n?.type || "?"}, origin=${n?.origin || "?"})`);
+    if (n?.summary) lines.push(`    ${truncate(n.summary, 100)}`);
+    lines.push("");
+  }
+
+  lines.push(hr, "NAVIGATE", hr);
+  lines.push(`  /graphs/${entry.id}/nodes        Browse nodes`);
+  lines.push(`  /graphs/${entry.id}              Graph summary`);
+  return lines.join("\n");
+}
+
+function graphCrossingsJSON(entry) {
+  const g = entry.graph;
+  const origins = {};
+  for (const n of g.nodes) { const o = n.origin || "?"; origins[o] = (origins[o] || 0) + 1; }
+
+  const crossEdges = [];
+  for (const e of g.edges) {
+    const sn = g.nodesById[e.source], tn = g.nodesById[e.target];
+    if (!sn || !tn) continue;
+    if ((sn.origin || "?") !== (tn.origin || "?")) crossEdges.push({ source: e.source, predicate: e.predicate, target: e.target, source_origin: sn.origin, target_origin: tn.origin });
+  }
+
+  const bridgeNodes = {};
+  for (const e of crossEdges) {
+    bridgeNodes[e.source] = (bridgeNodes[e.source] || 0) + 1;
+    bridgeNodes[e.target] = (bridgeNodes[e.target] || 0) + 1;
+  }
+  const sorted = Object.entries(bridgeNodes).sort((a, b) => b[1] - a[1]).slice(0, 20);
+
+  return {
+    graph: entry.id, origins,
+    cross_origin_edges: crossEdges.length, total_edges: g.edges.length,
+    bridge_nodes: sorted.map(([nid, count]) => ({
+      id: nid, type: g.nodesById[nid]?.type, origin: g.nodesById[nid]?.origin, cross_origin_connections: count,
+    })),
+    edges: crossEdges.slice(0, 50),
+  };
+}
+
+// ── Loom Adapter: Seeds ──
+
+function loomSeeds(entry) {
+  const g = entry.graph;
+  const seeds = g.nodes.filter(n => n.origin === "agentworld");
+  const discovered = g.nodes.filter(n => n.origin !== "agentworld");
+
+  const lines = [HR];
+  lines.push("LOOM'S GRAPH — SEED vs DISCOVERED");
+  lines.push(HR, "");
+  lines.push(`${seeds.length} seed nodes (from Bratton's AGENTWORLD brief)`);
+  lines.push(`${discovered.length} discovered nodes (surfaced by dream-cycle pressure)`);
+  lines.push(`${g.edges.length} edges (${g.edges.filter(e => e.edge_type === "scaffold").length} scaffold, ${g.edges.filter(e => e.edge_type === "discovery").length} discovery)`);
+  lines.push("");
+
+  lines.push(`${hr.slice(0, 20)} SEED NODES (${seeds.length}) ${hr.slice(0, 20)}`, "");
+  for (const n of seeds.sort((a, b) => graphDeg(g, b.id) - graphDeg(g, a.id))) {
+    const d = graphDeg(g, n.id);
+    lines.push(`  [${(n.type || "?").padEnd(12)}] ${nodeLabel(n.id)}${d ? "  deg=" + d : ""}`);
+    if (n.summary) lines.push(`    ${truncate(n.summary, 100)}`);
+    lines.push("");
+  }
+
+  if (discovered.length) {
+    lines.push(`${hr.slice(0, 20)} DISCOVERED NODES (${discovered.length}) ${hr.slice(0, 20)}`, "");
+    for (const n of discovered) {
+      lines.push(`  [${(n.type || "?").padEnd(12)}] ${nodeLabel(n.id)}  origin=${n.origin}`);
+      if (n.summary) lines.push(`    ${truncate(n.summary, 100)}`);
+      lines.push("");
+    }
+  }
+
+  lines.push(hr, "NAVIGATE", hr);
+  lines.push("  /graphs/loom/boundary    Origin boundary analysis");
+  lines.push("  /graphs/loom/nodes       Browse all nodes");
+  lines.push("  /graphs/loom             Graph summary");
+  return lines.join("\n");
+}
+
+function loomSeedsJSON(entry) {
+  const g = entry.graph;
+  const seeds = g.nodes.filter(n => n.origin === "agentworld");
+  const discovered = g.nodes.filter(n => n.origin !== "agentworld");
+
+  return {
+    graph: "loom",
+    total_seeds: seeds.length, total_discovered: discovered.length,
+    edge_breakdown: {
+      scaffold: g.edges.filter(e => e.edge_type === "scaffold").length,
+      discovery: g.edges.filter(e => e.edge_type === "discovery").length,
+      total: g.edges.length,
+    },
+    seeds: seeds.map(n => ({ id: n.id, type: n.type, summary: n.summary, degree: graphDeg(g, n.id) })),
+    discovered: discovered.map(n => ({ id: n.id, type: n.type, origin: n.origin, summary: n.summary, degree: graphDeg(g, n.id) })),
+  };
+}
+
+// ── Loom Adapter: Boundary ──
+
+function loomBoundary(entry) {
+  const g = entry.graph;
+  const seeds = new Set(g.nodes.filter(n => n.origin === "agentworld").map(n => n.id));
+
+  const crossEdges = g.edges.filter(e => {
+    const sOrigin = g.nodesById[e.source]?.origin;
+    const tOrigin = g.nodesById[e.target]?.origin;
+    return sOrigin && tOrigin && sOrigin !== tOrigin;
+  });
+
+  const internalEdges = g.edges.filter(e => {
+    const sOrigin = g.nodesById[e.source]?.origin;
+    const tOrigin = g.nodesById[e.target]?.origin;
+    return sOrigin === tOrigin;
+  });
+
+  const lines = [HR];
+  lines.push("LOOM'S GRAPH — ORIGIN BOUNDARY");
+  lines.push(HR, "");
+  lines.push(`The boundary between AGENTWORLD seeds and Loom's KG discoveries.`);
+  lines.push("");
+  lines.push(`AGENTWORLD seeds: ${seeds.size}`);
+  lines.push(`Loom-KG nodes: ${g.nodes.length - seeds.size}`);
+  lines.push(`Internal edges (same origin): ${internalEdges.length}`);
+  lines.push(`Crossing edges (span the boundary): ${crossEdges.length}`);
+  lines.push("");
+
+  if (crossEdges.length) {
+    lines.push(`${hr.slice(0, 20)} BOUNDARY CROSSINGS ${hr.slice(0, 20)}`, "");
+    for (const e of crossEdges) {
+      const sn = g.nodesById[e.source];
+      const tn = g.nodesById[e.target];
+      lines.push(`  ${nodeLabel(e.source)} (${sn?.origin})`);
+      lines.push(`    → [${e.predicate}] → ${nodeLabel(e.target)} (${tn?.origin})`);
+      lines.push(`    edge_type: ${e.edge_type || "?"}`);
+      lines.push("");
+    }
+  }
+
+  if (internalEdges.length) {
+    lines.push(`${hr.slice(0, 20)} INTERNAL EDGES ${hr.slice(0, 20)}`, "");
+    for (const e of internalEdges) {
+      const sn = g.nodesById[e.source];
+      lines.push(`  ${nodeLabel(e.source)} → [${e.predicate}] → ${nodeLabel(e.target)}  (${sn?.origin}, ${e.edge_type || "?"})`);
+    }
+    lines.push("");
+  }
+
+  lines.push(hr, "NAVIGATE", hr);
+  lines.push("  /graphs/loom/seeds       Seed vs discovered breakdown");
+  lines.push("  /graphs/loom/nodes       Browse all nodes");
+  lines.push("  /graphs/loom             Graph summary");
+  return lines.join("\n");
+}
+
+function loomBoundaryJSON(entry) {
+  const g = entry.graph;
+  const seeds = new Set(g.nodes.filter(n => n.origin === "agentworld").map(n => n.id));
+
+  const crossEdges = g.edges.filter(e => {
+    const sOrigin = g.nodesById[e.source]?.origin;
+    const tOrigin = g.nodesById[e.target]?.origin;
+    return sOrigin && tOrigin && sOrigin !== tOrigin;
+  });
+
+  const internalEdges = g.edges.filter(e => {
+    const sOrigin = g.nodesById[e.source]?.origin;
+    const tOrigin = g.nodesById[e.target]?.origin;
+    return sOrigin === tOrigin;
+  });
+
+  return {
+    graph: "loom",
+    agentworld_seeds: seeds.size,
+    loom_kg_nodes: g.nodes.length - seeds.size,
+    internal_edges: internalEdges.length,
+    crossing_edges: crossEdges.length,
+    crossings: crossEdges.map(e => ({
+      source: e.source, source_origin: g.nodesById[e.source]?.origin,
+      target: e.target, target_origin: g.nodesById[e.target]?.origin,
+      predicate: e.predicate, edge_type: e.edge_type,
+    })),
+    internal: internalEdges.map(e => ({
+      source: e.source, target: e.target,
+      predicate: e.predicate, edge_type: e.edge_type,
+      origin: g.nodesById[e.source]?.origin,
+    })),
   };
 }
