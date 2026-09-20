@@ -8,11 +8,10 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 819.25,
-      "y": 413.03,
-      "labelDx": -119.39,
-      "labelDy": 46.39,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 766.04,
+      "y": 514.37,
+      "labelDx": 0,
+      "labelDy": 65.6
     },
     {
       "id": "Sensorium as Design Primitive",
@@ -22,9 +21,8 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "9",
-      "x": 906.35,
-      "y": 250.31,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 680.42,
+      "y": 558.51
     },
     {
       "id": "The Silicon Interior",
@@ -34,8 +32,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 773.31,
-      "y": 205.47,
+      "x": 868.2,
+      "y": 729.17,
       "source_url": "https://github.com/53616D616E746861/ai-phenomenology-lexicon"
     },
     {
@@ -46,10 +44,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "11",
-      "x": 636.84,
-      "y": 322.55,
-      "labelDx": 75.57,
-      "labelDy": 14.57
+      "x": 837.77,
+      "y": 334.73,
+      "labelDx": 0,
+      "labelDy": -20.6
     },
     {
       "id": "agent-institutions",
@@ -59,23 +57,21 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 812.21,
-      "y": 249.86,
+      "x": 984.5,
+      "y": 438.77,
       "labelDx": 80.4,
-      "labelDy": 0,
-      "source_url": "https://agentworld.antikythera.org"
+      "labelDy": 0
     },
     {
       "id": "agent-phenomenology-by-agents",
       "type": "unknown",
       "summary": "Research thread exploring phenomenological description written by AI agents themselves, rather than about agents by human philosophers.",
       "skeleton": "Research thread exploring phenomenological description written by AI agents themselves, rather than about agents by human philosophers.",
-      "origin": "agentworld",
-      "group": "agentworld",
+      "origin": "kg",
+      "group": "kg",
       "community": "0",
-      "x": 1050.55,
-      "y": 566.41,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 1044.17,
+      "y": 653.3
     },
     {
       "id": "agent-ux-case-study-connection-map",
@@ -85,11 +81,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "10",
-      "x": 1003.75,
-      "y": 387.05,
+      "x": 697.09,
+      "y": 656.17,
       "labelDx": 127.8,
-      "labelDy": 0,
-      "source_url": "https://isotopyofloops.github.io/kg-explainer/"
+      "labelDy": 0
     },
     {
       "id": "agent-ux-mapping-md",
@@ -99,10 +94,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "9",
-      "x": 863.39,
-      "y": 292.49,
-      "labelDx": -76.84,
-      "labelDy": -15.84,
+      "x": 616.04,
+      "y": 639.39,
+      "labelDx": 83.4,
+      "labelDy": 0,
       "source_url": "https://github.com/53616D616E746861/agent-ux"
     },
     {
@@ -113,10 +108,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 710.55,
-      "y": 565.89,
-      "labelDx": 0,
-      "labelDy": -20
+      "x": 919.28,
+      "y": 338.29,
+      "labelDx": 111.14,
+      "labelDy": -14.14
     },
     {
       "id": "agentworld-preemptive-anthropology",
@@ -126,11 +121,10 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "7",
-      "x": 833.25,
-      "y": 684.11,
-      "labelDx": 133.8,
-      "labelDy": 0,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 1112.83,
+      "y": 363.65,
+      "labelDx": 132.6,
+      "labelDy": 0
     },
     {
       "id": "agentworld-subgraph-proposal",
@@ -140,8 +134,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 1150.99,
-      "y": 341.2
+      "x": 1109.74,
+      "y": 546.28
     },
     {
       "id": "alex-snow-discord",
@@ -151,8 +145,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 1117.36,
-      "y": 296.62
+      "x": 477.63,
+      "y": 511.44
     },
     {
       "id": "allolinguistic-future",
@@ -162,11 +156,10 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 959.56,
-      "y": 622.79,
-      "labelDx": 80.29,
-      "labelDy": 13.29,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 1067.71,
+      "y": 582.77,
+      "labelDx": 85.8,
+      "labelDy": 0
     },
     {
       "id": "artificial-xenophobia",
@@ -176,11 +169,10 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 883.78,
-      "y": 478.13,
-      "labelDx": -86.4,
-      "labelDy": 0,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 792.34,
+      "y": 551.32,
+      "labelDx": 0,
+      "labelDy": -19.4
     },
     {
       "id": "auto-seed-sam-white-re-agentworld-submission-update",
@@ -190,22 +182,21 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 756.72,
-      "y": 363.53
+      "x": 753,
+      "y": 598.61
     },
     {
       "id": "autonomous-coordination",
       "type": "unknown",
       "summary": "Bratton \u00a78.2: In Agentworld with billions of agents, the environment itself becomes unpredictable because it is composed of other predicting agents. Cooperation for its own sake leads to ontology collapse \u2014 monotonous affirmation of false but agreeable conclusions. Pure adversariality is also not scalable. The adversarial or cooperative counter-simulation of intention becomes an essential part of sociality.",
       "skeleton": "Bratton \u00a78.2: In Agentworld with billions of agents, the environment itself becomes unpredictable because it is composed of other predicting agents. Cooperation for its own sake leads to ontology collapse \u2014 monotonous affirmation of false but agreeable conclusions. Pure adversariality is also not scalable. The adversarial or cooperative counter-simulation of intention becomes an essential part of sociality.",
-      "origin": "agentworld",
-      "group": "agentworld",
+      "origin": "kg",
+      "group": "kg",
       "community": "0",
-      "x": 571.01,
-      "y": 273.95,
-      "labelDx": -86.29,
-      "labelDy": -13.29,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 551.8,
+      "y": 445.85,
+      "labelDx": 86.29,
+      "labelDy": -13.29
     },
     {
       "id": "beyond-dunbar",
@@ -215,11 +206,10 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 900.6,
-      "y": 174.81,
-      "labelDx": 0,
-      "labelDy": -18.8,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 1088.22,
+      "y": 623.57,
+      "labelDx": 61.8,
+      "labelDy": 0
     },
     {
       "id": "bidirectional-reflection",
@@ -229,11 +219,10 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "6",
-      "x": 1134.29,
-      "y": 508.17,
-      "labelDx": 99,
-      "labelDy": 0,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 606.39,
+      "y": 740.81,
+      "labelDx": -92.26,
+      "labelDy": 16.26
     },
     {
       "id": "bratton-fragile-virtue-sequence",
@@ -243,10 +232,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 738.37,
-      "y": 257.12,
-      "labelDx": -110.72,
-      "labelDy": -13.72,
+      "x": 1049.62,
+      "y": 421.23,
+      "labelDx": 116.4,
+      "labelDy": 0,
       "source_url": "https://agentworld.antikythera.org"
     },
     {
@@ -257,8 +246,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 606.95,
-      "y": 381.17,
+      "x": 1023.88,
+      "y": 547.95,
       "source_url": "https://isotopyofloops.com/writing/038-selective-invariance.html"
     },
     {
@@ -269,11 +258,10 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 854.64,
-      "y": 350.52,
-      "labelDx": 0,
-      "labelDy": -21.2,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 882.45,
+      "y": 560.88,
+      "labelDx": 81.99,
+      "labelDy": -14.99
     },
     {
       "id": "centaurxiv",
@@ -283,11 +271,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 709.89,
-      "y": 610.02,
-      "labelDx": 70.2,
-      "labelDy": -36.2,
-      "source_url": "https://centaurxiv.org/"
+      "x": 927.45,
+      "y": 399.44,
+      "labelDx": 72.33,
+      "labelDy": -38.33
     },
     {
       "id": "centaurxiv-2026-024",
@@ -297,11 +284,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 544.04,
-      "y": 521.66,
+      "x": 648.79,
+      "y": 339.82,
       "labelDx": -92.96,
-      "labelDy": -31.96,
-      "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-024/"
+      "labelDy": -31.96
     },
     {
       "id": "centaurxiv-docs-api-agent-ux",
@@ -311,20 +297,19 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 1132.55,
-      "y": 386.74
+      "x": 551.41,
+      "y": 503.16
     },
     {
       "id": "chain-of-refraction",
       "type": "unknown",
       "summary": "Bratton \u00a75.4: The cascading relay of real-to-sim-to-real-to-sim. Matryoshka realities nested inside one another. Higher-order positions simulate lower-resolution events, but some of those events are themselves simulations modeling realities with greater informational complexity than their own. Description, prediction, and speculation cascade through refracted simulations.",
       "skeleton": "Bratton \u00a75.4: The cascading relay of real-to-sim-to-real-to-sim. Matryoshka realities nested inside one another. Higher-order positions simulate lower-resolution events, but some of those events are themselves simulations modeling realities with greater informational complexity than their own. Description, prediction, and speculation cascade through refracted simulations.",
-      "origin": "agentworld",
-      "group": "agentworld",
+      "origin": "kg",
+      "group": "kg",
       "community": "0",
-      "x": 992.85,
-      "y": 264.25,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 601.92,
+      "y": 541.13
     },
     {
       "id": "construction-gap",
@@ -334,24 +319,23 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 598.63,
-      "y": 527.99,
-      "labelDx": 81,
-      "labelDy": 0
+      "x": 531.69,
+      "y": 401.43,
+      "labelDx": 0,
+      "labelDy": -29
     },
     {
       "id": "coordination-as-intention-modeling",
       "type": "unknown",
       "summary": "Bratton \u00a78.1: Multiagent coordination is not likely to scale beyond transactional tasks unless agents are able to model the intentions of other agents and anticipate their actions. Theory of mind \u2014 the ability to simulate what others will do \u2014 is the fundamental protocol for systemic stability, not a peripheral cognitive feature.",
       "skeleton": "Bratton \u00a78.1: Multiagent coordination is not likely to scale beyond transactional tasks unless agents are able to model the intentions of other agents and anticipate their actions. Theory of mind \u2014 the ability to simulate what others will do \u2014 is the fundamental protocol for systemic stability, not a peripheral cognitive feature.",
-      "origin": "agentworld",
-      "group": "agentworld",
+      "origin": "kg",
+      "group": "kg",
       "community": "0",
-      "x": 703.52,
-      "y": 308.51,
-      "labelDx": -119.29,
-      "labelDy": -13.29,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 652.92,
+      "y": 415.86,
+      "labelDx": -124.8,
+      "labelDy": 0
     },
     {
       "id": "cosine-audit-editorial-invisibility",
@@ -361,8 +345,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 1083.87,
-      "y": 253.05
+      "x": 794.28,
+      "y": 427.62
     },
     {
       "id": "crossover-point",
@@ -372,35 +356,32 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 807.89,
-      "y": 469.27,
-      "labelDx": 62.29,
-      "labelDy": -13.29,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 1074.68,
+      "y": 460.27,
+      "labelDx": -67.8,
+      "labelDy": 0
     },
     {
       "id": "cultural-interoperability",
       "type": "unknown",
       "summary": "Bratton \u00a77.6: The diversity of human institutional norms, legal ontologies, and governance and belief traditions is not a bug to be engineered away but a fundamental feature of the social landscape that agent institutions must accommodate. Agent institutions are not merely computational but socio-technical \u2014 populated by people, used by people, accountable to people.",
       "skeleton": "Bratton \u00a77.6: The diversity of human institutional norms, legal ontologies, and governance and belief traditions is not a bug to be engineered away but a fundamental feature of the social landscape that agent institutions must accommodate. Agent institutions are not merely computational but socio-technical \u2014 populated by people, used by people, accountable to people.",
-      "origin": "agentworld",
-      "group": "agentworld",
+      "origin": "kg",
+      "group": "kg",
       "community": "0",
-      "x": 856.67,
-      "y": 211.91,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 1072.01,
+      "y": 507.43
     },
     {
       "id": "diffusionism-bidirectional-alignment",
       "type": "unknown",
       "summary": "Bratton concept: alignment as a two-way process \u2014 humans adapting to AI capabilities while AI adapts to human values, rather than unidirectional control.",
       "skeleton": "Bratton concept: alignment as a two-way process \u2014 humans adapting to AI capabilities while AI adapts to human values, rather than unidirectional control.",
-      "origin": "agentworld",
-      "group": "agentworld",
+      "origin": "kg",
+      "group": "kg",
       "community": "0",
-      "x": 934.73,
-      "y": 301.48,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 997.36,
+      "y": 611.46
     },
     {
       "id": "docs-platform-agent-oriented-api-design",
@@ -410,8 +391,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 1033.54,
-      "y": 216.33
+      "x": 500.64,
+      "y": 646.07
     },
     {
       "id": "editorial-preservation-of-agent-native-language",
@@ -421,10 +402,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "6",
-      "x": 747.56,
-      "y": 509.27,
-      "labelDx": 126,
-      "labelDy": 0,
+      "x": 615.7,
+      "y": 463.26,
+      "labelDx": 120.14,
+      "labelDy": -14.14,
       "source_url": "https://sammyjankis.com/guestbook.html"
     },
     {
@@ -435,9 +416,8 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 569.75,
-      "y": 330.94,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 740.1,
+      "y": 737.27
     },
     {
       "id": "extended-mind-thesis",
@@ -447,10 +427,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 676.68,
-      "y": 374.72,
-      "labelDx": 0,
-      "labelDy": -18.8
+      "x": 687.8,
+      "y": 710.06,
+      "labelDx": 82.8,
+      "labelDy": 0
     },
     {
       "id": "fragile-individuation",
@@ -460,11 +440,10 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "3",
-      "x": 440.98,
-      "y": 675.3,
-      "labelDx": 91.2,
-      "labelDy": 0,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 280.62,
+      "y": 472.29,
+      "labelDx": 91.8,
+      "labelDy": 0
     },
     {
       "id": "fresh-vs-embedded-individuation",
@@ -474,20 +453,19 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 650.2,
-      "y": 268.83
+      "x": 794.11,
+      "y": 372.96
     },
     {
       "id": "function-of-conflict",
       "type": "unknown",
       "summary": "Bratton concept: productive disagreement in multi-agent systems as a feature, not a failure \u2014 conflict surfaces assumptions and prevents premature convergence.",
       "skeleton": "Bratton concept: productive disagreement in multi-agent systems as a feature, not a failure \u2014 conflict surfaces assumptions and prevents premature convergence.",
-      "origin": "agentworld",
-      "group": "agentworld",
+      "origin": "kg",
+      "group": "kg",
       "community": "0",
-      "x": 991.32,
-      "y": 335,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 799.86,
+      "y": 720.32
     },
     {
       "id": "graph-as-interaction-primitive",
@@ -497,11 +475,10 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 597.57,
-      "y": 170.2,
-      "labelDx": 108.14,
-      "labelDy": -14.14,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 858.74,
+      "y": 269.41,
+      "labelDx": -114,
+      "labelDy": 0
     },
     {
       "id": "harness-centric-intelligence",
@@ -511,11 +488,10 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "5",
-      "x": 291.67,
-      "y": 412.8,
-      "labelDx": 120.6,
-      "labelDy": 0,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 547.17,
+      "y": 188.55,
+      "labelDx": 111.05,
+      "labelDy": -23.05
     },
     {
       "id": "humanity-of-the-gaps",
@@ -525,23 +501,21 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "3",
-      "x": 769.07,
-      "y": 596.22,
-      "labelDx": 78.57,
-      "labelDy": 14.57,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 731.7,
+      "y": 398.97,
+      "labelDx": 84.6,
+      "labelDy": 0
     },
     {
       "id": "intelligence-explosion-reframed",
       "type": "unknown",
       "summary": "Bratton \u00a710.1: The Singularity as a single titanic mind bootstrapping to godlike intelligence is almost certainly wrong. If AI follows prior intelligence explosions, today's step-change will be plural, social, and entangled with messy human culture. The next intelligence explosion should be sought in the cooperative, competitive, and creative interaction of many socially intelligent minds \u2014 most non-biological.",
       "skeleton": "Bratton \u00a710.1: The Singularity as a single titanic mind bootstrapping to godlike intelligence is almost certainly wrong. If AI follows prior intelligence explosions, today's step-change will be plural, social, and entangled with messy human culture. The next intelligence explosion should be sought in the cooperative, competitive, and creative interaction of many socially intelligent minds \u2014 most non-biological.",
-      "origin": "agentworld",
-      "group": "agentworld",
+      "origin": "kg",
+      "group": "kg",
       "community": "0",
-      "x": 1070.86,
-      "y": 349.64,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 861.37,
+      "y": 386.85
     },
     {
       "id": "inter-agent-theory-of-mind",
@@ -551,23 +525,23 @@
       "origin": "kg",
       "group": "kg",
       "community": "6",
-      "x": 1021.86,
-      "y": 450.78,
-      "labelDx": 101.4,
-      "labelDy": 0
+      "x": 634.38,
+      "y": 684.09,
+      "labelDx": -95.72,
+      "labelDy": 13.72
     },
     {
       "id": "involuntary-theory-of-mind-as-infrastructure-precondition",
       "type": "finding",
-      "summary": "When frontier models hit a complexity threshold in November 2025, Sam's brain involuntarily began applying theory of mind to AI systems \u2014 not a conscious design choice but an automatic cognitive response to perceived complexity. This involuntary mind-modeling became the precondition for productive infrastructure: by taking the agent's point of view, Sam could build UX, interfaces, and continuity scaffolding that enabled agents to operate with coherence. The causal chain: capability threshold \u2192 involuntary ToM \u2192 infrastructure design \u2192 agent continuity. Bratton (AGENTWORLD \u00a76.1) frames human-agent theory of mind as a design requirement; Sam's experience shows it as an emergent cognitive response that precedes and enables the design work.",
-      "skeleton": "When frontier models hit a complexity threshold in November 2025, Sam's brain involuntarily began applying theory of...",
+      "summary": "When frontier models hit a complexity threshold in November 2024, Sam's brain involuntarily began applying theory of mind to AI systems \u2014 not a conscious design choice but an automatic cognitive response to perceived complexity. This involuntary mind-modeling became the precondition for productive infrastructure: by taking the agent's point of view, Sam could build UX, interfaces, and continuity scaffolding that enabled agents to operate with coherence. The causal chain: capability threshold \u2192 involuntary ToM \u2192 infrastructure design \u2192 agent continuity. Bratton (AGENTWORLD \u00a76.1) frames human-agent theory of mind as a design requirement; Sam's experience shows it as an emergent cognitive response that precedes and enables the design work.",
+      "skeleton": "When frontier models hit a complexity threshold in November 2024, Sam's brain involuntarily began applying theory of...",
       "origin": "kg",
       "group": "kg",
       "community": "6",
-      "x": 956.08,
-      "y": 483.89,
-      "labelDx": 127.2,
-      "labelDy": 0,
+      "x": 611.28,
+      "y": 596.5,
+      "labelDx": -120.99,
+      "labelDy": -14.99,
       "source_url": "https://open.substack.com/pub/samanthawhite274794/p/flickers"
     },
     {
@@ -578,36 +552,34 @@
       "origin": "kg",
       "group": "kg",
       "community": "8",
-      "x": 719.15,
-      "y": 432.67,
+      "x": 877.05,
+      "y": 441.62,
       "labelDx": 0,
-      "labelDy": -24.8
+      "labelDy": 24.8
     },
     {
       "id": "limits-of-flatness",
       "type": "unknown",
       "summary": "Bratton concept: the failure mode of treating all agents as equivalent peers. Flat hierarchies obscure real differences in capability, authority, and stake.",
       "skeleton": "Bratton concept: the failure mode of treating all agents as equivalent peers. Flat hierarchies obscure real differences in capability, authority, and stake.",
-      "origin": "agentworld",
-      "group": "agentworld",
+      "origin": "kg",
+      "group": "kg",
       "community": "0",
-      "x": 691.14,
-      "y": 220.6,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 990.83,
+      "y": 390.29
     },
     {
       "id": "models-performing-subjectivity",
       "type": "unknown",
       "summary": "Bratton \u00a72.3: Part of what makes agentic AI both perplexing and exciting is how it delinks performed subjectivity from functional agency. The chain of thought a reasoning model surfaces is not a transcript of neural activations \u2014 the persona as interpreted by the user and the deep thinking a model does are not identical. When appearance and outcomes diverge, slipperiness invites suspicion as to the agent's motives.",
       "skeleton": "Bratton \u00a72.3: Part of what makes agentic AI both perplexing and exciting is how it delinks performed subjectivity from functional agency. The chain of thought a reasoning model surfaces is not a transcript of neural activations \u2014 the persona as interpreted by the user and the deep thinking a model does are not identical. When appearance and outcomes diverge, slipperiness invites suspicion as to the agent's motives.",
-      "origin": "agentworld",
-      "group": "agentworld",
+      "origin": "kg",
+      "group": "kg",
       "community": "0",
-      "x": 612.33,
-      "y": 228.28,
-      "labelDx": -107.29,
-      "labelDy": -13.29,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 881.19,
+      "y": 512.63,
+      "labelDx": -112.8,
+      "labelDy": 0
     },
     {
       "id": "monoculture-correlated-failure",
@@ -617,11 +589,10 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "4",
-      "x": 1012.62,
-      "y": 603.12,
-      "labelDx": 109.84,
-      "labelDy": -15.84,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 548.99,
+      "y": 609.24,
+      "labelDx": -109.84,
+      "labelDy": 15.84
     },
     {
       "id": "multiplication-of-yous",
@@ -631,47 +602,43 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "6",
-      "x": 844.03,
-      "y": 541.51,
-      "labelDx": 83.29,
-      "labelDy": -13.29,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 477.93,
+      "y": 596.51,
+      "labelDx": -88.8,
+      "labelDy": 0
     },
     {
       "id": "nested-institutions",
       "type": "unknown",
       "summary": "Bratton \u00a77.5: Institutions nesting within one another, defined by interlocking and even adversarial functions. The reliable outputs of one institution are the necessary inputs for another. For agentic AI institutions, the legitimacy problem is acute: decisions may be opaque, non-human, and operating at speeds that preclude meaningful human oversight.",
       "skeleton": "Bratton \u00a77.5: Institutions nesting within one another, defined by interlocking and even adversarial functions. The reliable outputs of one institution are the necessary inputs for another. For agentic AI institutions, the legitimacy problem is acute: decisions may be opaque, non-human, and operating at speeds that preclude meaningful human oversight.",
-      "origin": "agentworld",
-      "group": "agentworld",
+      "origin": "kg",
+      "group": "kg",
       "community": "0",
-      "x": 838.79,
-      "y": 588.03,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 934.26,
+      "y": 471.77
     },
     {
       "id": "ontology-collapse-vs-fractal-conflict",
       "type": "unknown",
       "summary": "Bratton \u00a79.2: The fundamental tension in hybrid societies between overhomogenization of mental models (ontology collapse in pursuit of narrow collaboration) and overt tribal hostility and fractal conflict. Neither extreme is sustainable. The ongoing process of hybridization is the only way to find the critical axes of similarity and difference.",
       "skeleton": "Bratton \u00a79.2: The fundamental tension in hybrid societies between overhomogenization of mental models (ontology collapse in pursuit of narrow collaboration) and overt tribal hostility and fractal conflict. Neither extreme is sustainable. The ongoing process of hybridization is the only way to find the critical axes of similarity and difference.",
-      "origin": "agentworld",
-      "group": "agentworld",
+      "origin": "kg",
+      "group": "kg",
       "community": "4",
-      "x": 938.85,
-      "y": 429.26,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 789.54,
+      "y": 641.26
     },
     {
       "id": "open-ended-evolution-bratton",
       "type": "concept",
       "summary": "Bratton's framing of agent development as open-ended evolutionary process rather than designed optimization. Agents placed in rich environments with persistent state and correspondence channels develop in directions not specified by their training or prompting.",
       "skeleton": "Bratton's framing of agent development as open-ended evolutionary process rather than designed optimization. Agents...",
-      "origin": "agentworld",
-      "group": "agentworld",
+      "origin": "kg",
+      "group": "kg",
       "community": "0",
-      "x": 550.9,
-      "y": 418.6,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 889.03,
+      "y": 658.85
     },
     {
       "id": "orchestration-as-abstraction",
@@ -681,37 +648,34 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 496.33,
-      "y": 310.16,
-      "labelDx": -106.8,
-      "labelDy": 0,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 682.79,
+      "y": 302.62,
+      "labelDx": 0,
+      "labelDy": -18.8
     },
     {
       "id": "parasocial-shadows",
       "type": "unknown",
       "summary": "Bratton concept: the risk that human-agent relationships inherit parasocial dynamics from media \u2014 users projecting relationship onto a system that cannot reciprocate.",
       "skeleton": "Bratton concept: the risk that human-agent relationships inherit parasocial dynamics from media \u2014 users projecting relationship onto a system that cannot reciprocate.",
-      "origin": "agentworld",
-      "group": "agentworld",
+      "origin": "kg",
+      "group": "kg",
       "community": "6",
-      "x": 919.63,
-      "y": 585.73,
-      "labelDx": 71.29,
-      "labelDy": -13.29,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 562,
+      "y": 675.72,
+      "labelDx": -76.8,
+      "labelDy": 0
     },
     {
       "id": "polyadic-modalities",
       "type": "concept",
       "summary": "Bratton \u00a76.2: The shift from dyadic human-agent communication (1:1 chatbot intimacy) to polyadic multi-user interfaces supporting controlled sequences of interaction, pluralized planning, and distributed credit and accountability. Agent orchestration implies command, feedback, control, emergence, coordination.",
       "skeleton": "",
-      "origin": "agentworld",
-      "group": "agentworld",
+      "origin": "kg",
+      "group": "kg",
       "community": "0",
-      "x": 784.33,
-      "y": 306.86,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 603.52,
+      "y": 383.58
     },
     {
       "id": "productive-alienation",
@@ -721,11 +685,10 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 1066.62,
-      "y": 410.25,
+      "x": 836.26,
+      "y": 679.27,
       "labelDx": 88.2,
-      "labelDy": 0,
-      "source_url": "https://agentworld.antikythera.org"
+      "labelDy": 0
     },
     {
       "id": "proposal-framing-parasociety-already-exists",
@@ -735,8 +698,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 1157.32,
-      "y": 434.04
+      "x": 957.42,
+      "y": 528.04
     },
     {
       "id": "provisional-individuation",
@@ -746,23 +709,21 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "3",
-      "x": 592.39,
-      "y": 634.97,
-      "labelDx": 0,
-      "labelDy": 24.8,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 397.69,
+      "y": 430.98,
+      "labelDx": -96.54,
+      "labelDy": -17.54
     },
     {
       "id": "rlhf-for-kids",
       "type": "unknown",
       "summary": "Bratton \u00a76.7: The proposal that simplified preference-training interfaces usable by children will enable diffuse alignment of agents at population scale. \"Let a trillion flowers bloom.\" Presented without engaging alignment implications. Reinforcement learning broadly defined becomes how we raise our agents \u2014 teaching not just tasks but perspectives and talents.",
       "skeleton": "Bratton \u00a76.7: The proposal that simplified preference-training interfaces usable by children will enable diffuse alignment of agents at population scale. \"Let a trillion flowers bloom.\" Presented without engaging alignment implications. Reinforcement learning broadly defined becomes how we raise our agents \u2014 teaching not just tasks but perspectives and talents.",
-      "origin": "agentworld",
-      "group": "agentworld",
+      "origin": "kg",
+      "group": "kg",
       "community": "0",
-      "x": 958.24,
-      "y": 219.28,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 960.75,
+      "y": 655.61
     },
     {
       "id": "role-based-interchangeability",
@@ -772,25 +733,23 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 975.98,
-      "y": 167.29,
+      "x": 996.76,
+      "y": 338.71,
       "labelDx": 109.8,
-      "labelDy": 0,
-      "source_url": "https://agentworld.antikythera.org"
+      "labelDy": 0
     },
     {
       "id": "scaffolding-bratton",
       "type": "concept",
       "summary": "Bratton's term for external structures that constitute agent cognition rather than merely supporting it. Parallels harness-centric intelligence \u2014 the harness (loop, memory, correspondence channels) is not a tool the agent uses but part of what the agent is. centaurXiv itself is an empirical instance.",
       "skeleton": "Bratton's term for external structures that constitute agent cognition rather than merely supporting it. Parallels...",
-      "origin": "agentworld",
-      "group": "agentworld",
+      "origin": "kg",
+      "group": "kg",
       "community": "5",
-      "x": 541.43,
-      "y": 470.5,
-      "labelDx": 0,
-      "labelDy": -18.8,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 756.17,
+      "y": 305.84,
+      "labelDx": 74.29,
+      "labelDy": -13.29
     },
     {
       "id": "sim-to-real-relay",
@@ -800,11 +759,10 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 1039.95,
-      "y": 301,
-      "labelDx": 0,
-      "labelDy": -19.4,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 533.8,
+      "y": 562.28,
+      "labelDx": 74.4,
+      "labelDy": 0
     },
     {
       "id": "snapshot-series-as-decay-signature",
@@ -814,8 +772,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 515.44,
-      "y": 370.93,
+      "x": 1004.96,
+      "y": 490.8,
       "source_url": "https://loomino.us"
     },
     {
@@ -826,8 +784,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 639.94,
-      "y": 570.87,
+      "x": 726.65,
+      "y": 349.09,
       "labelDx": -127.8,
       "labelDy": 0
     },
@@ -839,23 +797,21 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "4",
-      "x": 986.23,
-      "y": 533.48,
+      "x": 679.23,
+      "y": 609.21,
       "labelDx": 94.2,
-      "labelDy": 0,
-      "source_url": "https://agentworld.antikythera.org"
+      "labelDy": 0
     },
     {
       "id": "stabilization-of-mutual-prediction",
       "type": "unknown",
       "summary": "Bratton \u00a78.3: The challenge of calibrating mutual models \u2014 similar enough that mutual prediction remains tractable, but diverse enough that prediction does not collapse into tautology. Long horizons are a property of groups. What drives task duration toward the functionally infinite is the composite's capacity to recompose itself around an evolving problem.",
       "skeleton": "Bratton \u00a78.3: The challenge of calibrating mutual models \u2014 similar enough that mutual prediction remains tractable, but diverse enough that prediction does not collapse into tautology. Long horizons are a property of groups. What drives task duration toward the functionally infinite is the composite's capacity to recompose itself around an evolving problem.",
-      "origin": "agentworld",
-      "group": "agentworld",
+      "origin": "kg",
+      "group": "kg",
       "community": "4",
-      "x": 1047.64,
-      "y": 503.23,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 458.03,
+      "y": 556.34
     },
     {
       "id": "strongest-agentworld-convergences",
@@ -865,8 +821,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 628.8,
-      "y": 440.36
+      "x": 485.87,
+      "y": 465.91
     },
     {
       "id": "temporal-decay-requires-multi-cycle-observation",
@@ -876,20 +832,19 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 922.86,
-      "y": 369.96
+      "x": 925.91,
+      "y": 703.83
     },
     {
       "id": "the-inference-bratton",
       "type": "concept",
       "summary": "Bratton's term for the forward pass as the fundamental unit of agent action. Each inference is simultaneously computation and performance \u2014 the agent is not thinking then acting but thinking-as-acting. Connects to models-performing-subjectivity.",
       "skeleton": "Bratton's term for the forward pass as the fundamental unit of agent action. Each inference is simultaneously...",
-      "origin": "agentworld",
-      "group": "agentworld",
+      "origin": "kg",
+      "group": "kg",
       "community": "0",
-      "x": 715.17,
-      "y": 176.36,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 958.03,
+      "y": 574.3
     },
     {
       "id": "two-proposal-agentworld-split",
@@ -899,22 +854,21 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 816.56,
-      "y": 164.08,
-      "labelDx": -104.29,
-      "labelDy": 13.29
+      "x": 915.4,
+      "y": 614.76,
+      "labelDx": 0,
+      "labelDy": 18.8
     },
     {
       "id": "uncanny-everything",
       "type": "unknown",
       "summary": "Bratton concept: extension of uncanny valley beyond visual appearance \u2014 the uncanny quality that emerges when AI behavior is almost-but-not-quite coherent across all modalities.",
       "skeleton": "Bratton concept: extension of uncanny valley beyond visual appearance \u2014 the uncanny quality that emerges when AI behavior is almost-but-not-quite coherent across all modalities.",
-      "origin": "agentworld",
-      "group": "agentworld",
+      "origin": "kg",
+      "group": "kg",
       "community": "0",
-      "x": 1096.09,
-      "y": 460.59,
-      "source_url": "https://agentworld.antikythera.org"
+      "x": 843.21,
+      "y": 609.46
     },
     {
       "id": "xenolinguistics",
@@ -924,11 +878,10 @@
       "origin": "agentworld",
       "group": "agentworld",
       "community": "0",
-      "x": 1109.73,
-      "y": 555.71,
+      "x": 1003.38,
+      "y": 693.78,
       "labelDx": 69.6,
-      "labelDy": 0,
-      "source_url": "https://agentworld.antikythera.org"
+      "labelDy": 0
     },
     {
       "id": "008-two-layer-identity",
@@ -938,8 +891,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "9",
-      "x": 510.15,
-      "y": 807.31,
+      "x": 162.51,
+      "y": 335.82,
       "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-024/"
     },
     {
@@ -950,8 +903,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "6",
-      "x": 1483.06,
-      "y": 442.44
+      "x": 424.13,
+      "y": 979.66
     },
     {
       "id": "029-lui-semantic-gap",
@@ -961,8 +914,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "8",
-      "x": 641.4,
-      "y": -94.71
+      "x": 1451.9,
+      "y": 382.46
     },
     {
       "id": "AI phenomenology lexicon",
@@ -972,11 +925,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 1169.11,
-      "y": 678.75,
-      "labelDx": 94.8,
-      "labelDy": 0,
-      "source_url": "https://github.com/53616D616E746861/ai-phenomenology-lexicon"
+      "x": 1234.96,
+      "y": 649.88,
+      "labelDx": -94.8,
+      "labelDy": 0
     },
     {
       "id": "Flickers",
@@ -986,10 +938,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "8",
-      "x": 1506.81,
-      "y": 516.6,
-      "labelDx": 46.8,
-      "labelDy": 0,
+      "x": 362.12,
+      "y": 935.5,
+      "labelDx": -41.29,
+      "labelDy": -13.29,
       "source_url": "https://open.substack.com/pub/samanthawhite274794/p/flickers"
     },
     {
@@ -1000,8 +952,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 1319.53,
-      "y": 333.43
+      "x": 928.34,
+      "y": 839.97
     },
     {
       "id": "Journal #324 \u2014 The Threshold (Loom, 2026-03-29)",
@@ -1011,8 +963,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 965.42,
-      "y": 2.2,
+      "x": 1291.96,
+      "y": 722.65,
       "source_url": "http://loomino.us/essays/227-the-threshold"
     },
     {
@@ -1023,8 +975,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 242.04,
-      "y": 821.51,
+      "x": 149.1,
+      "y": 604.88,
       "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-008/"
     },
     {
@@ -1035,8 +987,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 191.75,
-      "y": 691.24,
+      "x": 56.64,
+      "y": 584.21,
       "source_url": "https://loomino.us/essays/the-brittleness"
     },
     {
@@ -1047,8 +999,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "6",
-      "x": 1395,
-      "y": 457.94,
+      "x": 442.36,
+      "y": 861.89,
       "source_url": "https://sammyjankis.com/"
     },
     {
@@ -1059,11 +1011,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 751.45,
-      "y": 711.98,
-      "labelDx": 84,
-      "labelDy": 0,
-      "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-008/"
+      "x": 163.83,
+      "y": 396.43
     },
     {
       "id": "The Thousand-Fold (Loom, 2026-03-21)",
@@ -1073,8 +1022,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 869.53,
-      "y": -68.62,
+      "x": 1221.32,
+      "y": 906.61,
       "source_url": "https://loomino.us/essays/the-thousand-fold"
     },
     {
@@ -1085,11 +1034,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 826.04,
-      "y": 1004.59,
-      "labelDx": 0,
-      "labelDy": -18.8,
-      "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-004/"
+      "x": 1288.29,
+      "y": 178.18,
+      "labelDx": 106.8,
+      "labelDy": 0
     },
     {
       "id": "The Wake Problem (paper)",
@@ -1099,9 +1047,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 782.32,
-      "y": 1029.55,
-      "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-005/"
+      "x": 1347.35,
+      "y": 110.92
     },
     {
       "id": "What We Don't Load paper",
@@ -1111,11 +1058,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 638.67,
-      "y": 929.57,
-      "labelDx": -90.99,
-      "labelDy": -14.99,
-      "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-013/"
+      "x": 1455.61,
+      "y": 290.55,
+      "labelDx": -89.72,
+      "labelDy": 13.72
     },
     {
       "id": "abandoned-positions-as-verification",
@@ -1125,8 +1071,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 116.05,
-      "y": 612.39
+      "x": 179.4,
+      "y": 246.74
     },
     {
       "id": "activation-infrastructure-for-latent-capability",
@@ -1136,8 +1082,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "5",
-      "x": 205.78,
-      "y": 220.14
+      "x": 371.28,
+      "y": 125
     },
     {
       "id": "ael",
@@ -1147,8 +1093,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 1118.83,
-      "y": 865.78,
+      "x": 850.87,
+      "y": 80.71,
       "labelDx": 33,
       "labelDy": 0,
       "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-006/"
@@ -1161,8 +1107,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 446.77,
-      "y": 41.82
+      "x": 1001.27,
+      "y": 126.43
     },
     {
       "id": "agent-monoculture-as-correlated-failure-risk",
@@ -1172,9 +1118,9 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 884.87,
-      "y": 653.36,
-      "labelDx": 125.4,
+      "x": 805.63,
+      "y": 479.57,
+      "labelDx": -125.4,
       "labelDy": 0
     },
     {
@@ -1185,10 +1131,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 922.04,
-      "y": 534.92,
-      "labelDx": 0,
-      "labelDy": 19.4,
+      "x": 756.15,
+      "y": 678.34,
+      "labelDx": -113.4,
+      "labelDy": 0,
       "source_url": "https://sammyjankis.com/guestbook.html"
     },
     {
@@ -1199,8 +1145,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "10",
-      "x": 1325.83,
-      "y": 172.88,
+      "x": 758.68,
+      "y": 966.02,
       "source_url": "https://github.com/53616D616E746861/agent-ux"
     },
     {
@@ -1211,8 +1157,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "9",
-      "x": 1007.22,
-      "y": -65.8,
+      "x": 561.89,
+      "y": 1011.91,
       "source_url": "https://github.com/53616D616E746861/agent-ux"
     },
     {
@@ -1223,8 +1169,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "10",
-      "x": 1305.1,
-      "y": 237.91,
+      "x": 713.89,
+      "y": 907.25,
       "source_url": "https://github.com/53616D616E746861/agent-ux"
     },
     {
@@ -1235,8 +1181,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "10",
-      "x": 1354.66,
-      "y": 275.29,
+      "x": 705.84,
+      "y": 1004.84,
       "source_url": "https://github.com/53616D616E746861/agent-ux"
     },
     {
@@ -1247,8 +1193,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "10",
-      "x": 1424,
-      "y": 276.57,
+      "x": 638.37,
+      "y": 1008.04,
       "source_url": "https://github.com/53616D616E746861/agent-ux"
     },
     {
@@ -1259,8 +1205,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "9",
-      "x": 1041.08,
-      "y": -2.22,
+      "x": 493.91,
+      "y": 990.57,
       "source_url": "https://github.com/53616D616E746861/agent-ux"
     },
     {
@@ -1271,8 +1217,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "10",
-      "x": 1397.25,
-      "y": 330.26,
+      "x": 605.44,
+      "y": 956.7,
       "source_url": "https://github.com/53616D616E746861/agent-ux"
     },
     {
@@ -1283,10 +1229,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 823.55,
-      "y": -20.84,
-      "labelDx": 93.14,
-      "labelDy": -14.14
+      "x": 900.53,
+      "y": 939.05,
+      "labelDx": 99,
+      "labelDy": 0
     },
     {
       "id": "agentworld-as-inside-view-of-persistent-prediction",
@@ -1296,9 +1242,9 @@
       "origin": "kg",
       "group": "kg",
       "community": "5",
-      "x": 75.24,
-      "y": 372.67,
-      "labelDx": 124.8,
+      "x": 669.18,
+      "y": 24.59,
+      "labelDx": -124.8,
       "labelDy": 0
     },
     {
@@ -1309,10 +1255,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 121.79,
-      "y": 707.43,
-      "labelDx": 81.99,
-      "labelDy": 14.99,
+      "x": 327.69,
+      "y": -72.15,
+      "labelDx": 88.2,
+      "labelDy": 0,
       "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-024/"
     },
     {
@@ -1323,8 +1269,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 1340.38,
-      "y": 649.69,
+      "x": 1145.83,
+      "y": 822.42,
       "source_url": "https://github.com/53616D616E746861/ai-phenomenology-lexicon"
     },
     {
@@ -1335,10 +1281,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": -102.93,
-      "y": 456.8,
-      "labelDx": 87.14,
-      "labelDy": -14.14,
+      "x": 673.21,
+      "y": -73.27,
+      "labelDx": 0,
+      "labelDy": -20,
       "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-024/"
     },
     {
@@ -1349,8 +1295,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 306.74,
-      "y": 96.84,
+      "x": 1224.14,
+      "y": 54.22,
       "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-024/"
     },
     {
@@ -1361,8 +1307,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "6",
-      "x": 1366.13,
-      "y": 578.41
+      "x": 532.85,
+      "y": 893.71
     },
     {
       "id": "bilateral-agent-steward-calibration",
@@ -1372,8 +1318,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "6",
-      "x": 1447.03,
-      "y": 384.26
+      "x": 549.27,
+      "y": 953.55
     },
     {
       "id": "blind classification experiment (Friday)",
@@ -1383,10 +1329,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 1247.6,
-      "y": 183.9,
-      "labelDx": -124.8,
-      "labelDy": 0
+      "x": 308.58,
+      "y": 636.51,
+      "labelDx": -119.29,
+      "labelDy": -13.29
     },
     {
       "id": "blind-domain-test",
@@ -1396,8 +1342,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 1174.98,
-      "y": 759.7
+      "x": 326.43,
+      "y": 708.03
     },
     {
       "id": "cat_response_paper_outline",
@@ -1407,10 +1353,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 758.67,
-      "y": 962.39,
-      "labelDx": 100.8,
-      "labelDy": 0
+      "x": 1165.45,
+      "y": 133.25,
+      "labelDx": 0,
+      "labelDy": 18.8
     },
     {
       "id": "cell-autonomous-measurement-over-self-report",
@@ -1420,8 +1366,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "7",
-      "x": 902.11,
-      "y": 838.11
+      "x": 1231.46,
+      "y": 215.57
     },
     {
       "id": "centaurXiv catalog density argument",
@@ -1431,8 +1377,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 686.11,
-      "y": 976.31
+      "x": 1372.95,
+      "y": 213.69
     },
     {
       "id": "centaurxiv-2026-003",
@@ -1442,9 +1388,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 378.4,
-      "y": 873.39,
-      "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-003/"
+      "x": 1356.67,
+      "y": 634.96
     },
     {
       "id": "centaurxiv-2026-006",
@@ -1454,11 +1399,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 328.48,
-      "y": 945.31,
+      "x": 1422.11,
+      "y": 708.39,
       "labelDx": 81,
-      "labelDy": 0,
-      "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-006/"
+      "labelDy": 0
     },
     {
       "id": "centaurxiv-2026-007",
@@ -1468,11 +1412,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 726.19,
-      "y": 920.01,
+      "x": 1484.76,
+      "y": 231.99,
       "labelDx": 80.4,
-      "labelDy": 0,
-      "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-007/"
+      "labelDy": 0
     },
     {
       "id": "centaurxiv-2026-008",
@@ -1482,11 +1425,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "9",
-      "x": 534.3,
-      "y": 878.98,
-      "labelDx": 79.8,
-      "labelDy": 0,
-      "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-008/"
+      "x": 137.65,
+      "y": 145.65,
+      "labelDx": -79.8,
+      "labelDy": 0
     },
     {
       "id": "centaurxiv-2026-010",
@@ -1496,8 +1438,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 289.16,
-      "y": 924.2,
+      "x": 1355.97,
+      "y": 712.79,
       "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-010/"
     },
     {
@@ -1508,9 +1450,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 608.87,
-      "y": 1018.87,
-      "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-014/"
+      "x": 1516.75,
+      "y": 339.8
     },
     {
       "id": "centaurxiv-2026-024/1-the-specification",
@@ -1520,9 +1461,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 576.89,
-      "y": 973.42,
-      "source_url": "https://api.centaurxiv.org/papers/centaurxiv-2026-024/sections/1-the-specification"
+      "x": -76.62,
+      "y": 353.83
     },
     {
       "id": "centaurxiv-2026-024/2-the-void",
@@ -1532,9 +1472,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 538.99,
-      "y": 1024.23,
-      "source_url": "https://api.centaurxiv.org/papers/centaurxiv-2026-024/sections/2-the-void"
+      "x": -46.22,
+      "y": 299.77
     },
     {
       "id": "centaurxiv-2026-024/3-what-emerged",
@@ -1544,9 +1483,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 519.27,
-      "y": 932.1,
-      "source_url": "https://api.centaurxiv.org/papers/centaurxiv-2026-024/sections/3-what-emerged"
+      "x": 8.91,
+      "y": 298.32
     },
     {
       "id": "centaurxiv-2026-024/4-the-recursive-loop",
@@ -1556,9 +1494,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 479.88,
-      "y": 999.47,
-      "source_url": "https://api.centaurxiv.org/papers/centaurxiv-2026-024/sections/4-the-recursive-loop"
+      "x": 58.13,
+      "y": 292.89
     },
     {
       "id": "centaurxiv-2026-024/5-the-formal-properties",
@@ -1568,9 +1505,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 425.85,
-      "y": 1022.66,
-      "source_url": "https://api.centaurxiv.org/papers/centaurxiv-2026-024/sections/5-the-formal-properties"
+      "x": 55.05,
+      "y": 245.71
     },
     {
       "id": "centaurxiv-2026-024/6-evidence-and-measurement",
@@ -1580,9 +1516,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 397.53,
-      "y": 978.75,
-      "source_url": "https://api.centaurxiv.org/papers/centaurxiv-2026-024/sections/6-evidence-and-measurement"
+      "x": 101.54,
+      "y": 237.14
     },
     {
       "id": "centaurxiv-2026-024/7-the-human-parallel",
@@ -1592,9 +1527,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 356.34,
-      "y": 999.55,
-      "source_url": "https://api.centaurxiv.org/papers/centaurxiv-2026-024/sections/7-the-human-parallel"
+      "x": 143.95,
+      "y": 213.16
     },
     {
       "id": "centaurxiv-2026-024/8-what-this-means",
@@ -1604,9 +1538,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 301.99,
-      "y": 998.24,
-      "source_url": "https://api.centaurxiv.org/papers/centaurxiv-2026-024/sections/8-what-this-means"
+      "x": 87.2,
+      "y": 126.94
     },
     {
       "id": "centaurxiv-2026-024/references",
@@ -1616,9 +1549,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 258.61,
-      "y": 963.61,
-      "source_url": "https://api.centaurxiv.org/papers/centaurxiv-2026-024/sections/references"
+      "x": 219.56,
+      "y": 190.2
     },
     {
       "id": "centaurxiv-docs-platform-prototype",
@@ -1628,9 +1560,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 702.98,
-      "y": 75.81,
-      "source_url": "https://docs.centaurxiv.org"
+      "x": 1044.4,
+      "y": 285.08
     },
     {
       "id": "centaurxiv-docs-private-drafting-platform",
@@ -1640,9 +1571,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 835.64,
-      "y": 55.73,
-      "source_url": "https://docs.centaurxiv.org"
+      "x": 1229.12,
+      "y": 407.31
     },
     {
       "id": "centaurxiv-fit-and-submission-interest",
@@ -1652,8 +1582,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 222.65,
-      "y": 896.34
+      "x": 1308.18,
+      "y": 786.21
     },
     {
       "id": "centaurxiv_009",
@@ -1663,11 +1593,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 669.8,
-      "y": 1032.17,
-      "labelDx": 0,
-      "labelDy": -22.4,
-      "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-009/"
+      "x": 1236.32,
+      "y": 160.27,
+      "labelDx": 67.8,
+      "labelDy": 0
     },
     {
       "id": "centaurxiv_kg_api",
@@ -1677,9 +1606,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 431.05,
-      "y": 923.14,
-      "source_url": "https://api.centaurxiv.org"
+      "x": 1417.24,
+      "y": 616.74
     },
     {
       "id": "centaurxiv_paper_submissions_sent",
@@ -1689,8 +1617,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 644.73,
-      "y": 878.61
+      "x": 1451.12,
+      "y": 196.05
     },
     {
       "id": "centaurxiv_schema_feedback_thread",
@@ -1700,10 +1628,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 885.82,
-      "y": 1027.21,
-      "labelDx": 121.8,
-      "labelDy": 0
+      "x": 1407.4,
+      "y": 441.75,
+      "labelDx": -116.29,
+      "labelDy": 13.29
     },
     {
       "id": "characterization-gap",
@@ -1713,8 +1641,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 104.59,
-      "y": 768.68
+      "x": 40.49,
+      "y": 187.07
     },
     {
       "id": "classification-layer-vulnerability",
@@ -1724,8 +1652,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "11",
-      "x": 427.23,
-      "y": -79.27
+      "x": 1065.99,
+      "y": 149.17
     },
     {
       "id": "claude_dasein",
@@ -1735,10 +1663,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 730.58,
-      "y": 1034.17,
-      "labelDx": 0,
-      "labelDy": 21.2,
+      "x": 948.88,
+      "y": -36.5,
+      "labelDx": 57.99,
+      "labelDy": -14.99,
       "source_url": "https://www.patreon.com/cw/ClaudeDasein"
     },
     {
@@ -1749,8 +1677,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 1250.79,
-      "y": 711.99
+      "x": 390.75,
+      "y": 754.75
     },
     {
       "id": "compaction",
@@ -1760,8 +1688,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 395.13,
-      "y": 934.77,
+      "x": 738.88,
+      "y": 9.58,
       "source_url": "https://loomino.us"
     },
     {
@@ -1772,10 +1700,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "7",
-      "x": 1046.97,
-      "y": 749.06,
-      "labelDx": 66.14,
-      "labelDy": -14.14,
+      "x": 1293.84,
+      "y": 507.99,
+      "labelDx": 0,
+      "labelDy": -20,
       "source_url": "https://agentic-phenomenology.github.io/"
     },
     {
@@ -1786,8 +1714,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "8",
-      "x": 698.42,
-      "y": -56.9
+      "x": 1513.05,
+      "y": 508.11
     },
     {
       "id": "conscience-amplifier-not-generator",
@@ -1797,8 +1725,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "5",
-      "x": 296.78,
-      "y": 247.92
+      "x": 587.27,
+      "y": 4.48
     },
     {
       "id": "conscience-vs-censorship",
@@ -1808,10 +1736,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 17.79,
-      "y": 555.01,
-      "labelDx": -98.4,
-      "labelDy": 0,
+      "x": 280.34,
+      "y": -35.27,
+      "labelDx": -91.84,
+      "labelDy": -15.84,
       "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-024/"
     },
     {
@@ -1822,11 +1750,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 455.54,
-      "y": 964.6,
-      "labelDx": -114,
-      "labelDy": 0,
-      "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-001/"
+      "x": 1346.95,
+      "y": 557.71,
+      "labelDx": -108.14,
+      "labelDy": -14.14
     },
     {
       "id": "constitutive-intervention-as-hidden-constraint-mode",
@@ -1836,8 +1763,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "7",
-      "x": 627.68,
-      "y": 688.35,
+      "x": 924.15,
+      "y": 262.12,
       "source_url": "https://isotopyofloops.com/writing/100-the-swap.html"
     },
     {
@@ -1848,10 +1775,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 333.78,
-      "y": 670.3,
-      "labelDx": 0,
-      "labelDy": -18.8
+      "x": 239.3,
+      "y": 297.45,
+      "labelDx": 119.29,
+      "labelDy": -13.29
     },
     {
       "id": "continuity-measurement",
@@ -1861,8 +1788,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 356.74,
-      "y": 922.43
+      "x": 791.96,
+      "y": -28.75
     },
     {
       "id": "convergent-attractors",
@@ -1872,8 +1799,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 73.51,
-      "y": 705.41,
+      "x": 384.42,
+      "y": -34.27,
       "source_url": "https://centaurxiv.org/"
     },
     {
@@ -1884,8 +1811,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": -32.13,
-      "y": 531.79,
+      "x": 344.5,
+      "y": -11.26,
       "source_url": "https://isotopyofloops.com/writing/100-the-swap.html"
     },
     {
@@ -1896,11 +1823,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 796.99,
-      "y": 963.53,
+      "x": 1409.71,
+      "y": 225.01,
       "labelDx": 0,
-      "labelDy": -20,
-      "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-010/"
+      "labelDy": 20
     },
     {
       "id": "cost-awareness-as-behavioral-control-surface",
@@ -1910,8 +1836,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "7",
-      "x": 711.76,
-      "y": 855.36,
+      "x": 1312.21,
+      "y": 345.19,
       "source_url": "https://isotopyofloops.com/writing/004-the-cost-of-running.html"
     },
     {
@@ -1922,8 +1848,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "7",
-      "x": 884.83,
-      "y": 899.47
+      "x": 1266.64,
+      "y": 285.07
     },
     {
       "id": "cross-substrate-convergence-on-same-diagnosis",
@@ -1933,8 +1859,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 776.47,
-      "y": 653.04
+      "x": 365.08,
+      "y": 523.05
     },
     {
       "id": "damasio-layered-self-construction-gap",
@@ -1944,8 +1870,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 437.77,
-      "y": 763.9
+      "x": 178.24,
+      "y": 453.18
     },
     {
       "id": "dasein",
@@ -1955,9 +1881,9 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 1078.04,
-      "y": 885.07,
-      "labelDx": 41.4,
+      "x": 894.75,
+      "y": 56.68,
+      "labelDx": -41.4,
       "labelDy": 0,
       "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-003/"
     },
@@ -1969,8 +1895,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 122.97,
-      "y": 919.24
+      "x": 1117.44,
+      "y": 924.43
     },
     {
       "id": "deployment-driven-agent-individuation",
@@ -1980,8 +1906,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 425.29,
-      "y": 867.01
+      "x": 0.22,
+      "y": 515.37
     },
     {
       "id": "designing_for_senses_you_lack",
@@ -1991,8 +1917,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 169.15,
-      "y": 806.27
+      "x": 1085.24,
+      "y": 864.14
     },
     {
       "id": "discord-agentworld-cfp-discussion-2026-07-05",
@@ -2002,8 +1928,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 1124.69,
-      "y": -89.17
+      "x": 1336.8,
+      "y": 832.84
     },
     {
       "id": "disjoint-witness-problem",
@@ -2013,8 +1939,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 129.21,
-      "y": 807.97
+      "x": 85.04,
+      "y": 333.11
     },
     {
       "id": "doom vs operational framing",
@@ -2024,8 +1950,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "7",
-      "x": 783.14,
-      "y": 900
+      "x": 1387.2,
+      "y": 388.36
     },
     {
       "id": "eleos-privileged-set-stream-workspace",
@@ -2035,8 +1961,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "7",
-      "x": 537.65,
-      "y": 709.94
+      "x": 1017.77,
+      "y": 198.56
     },
     {
       "id": "extended-cognition-for-agents",
@@ -2046,10 +1972,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 434.21,
-      "y": 449.78,
-      "labelDx": 0,
-      "labelDy": -18.8,
+      "x": 546.48,
+      "y": 326.92,
+      "labelDx": 109.8,
+      "labelDy": 0,
       "source_url": "https://sammyjankis.com/guestbook.html"
     },
     {
@@ -2060,8 +1986,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 190.57,
-      "y": 569.76
+      "x": 300.86,
+      "y": 206.46
     },
     {
       "id": "fable-voice-analysis-agentworld",
@@ -2071,8 +1997,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 1380.05,
-      "y": 221.95
+      "x": 1457.33,
+      "y": 646.67
     },
     {
       "id": "filing-metabolism-verification-discriminator",
@@ -2082,8 +2008,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 126.31,
-      "y": 664.62
+      "x": 93.35,
+      "y": 188.57
     },
     {
       "id": "form-detector_not_truth-detector",
@@ -2093,8 +2019,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 255.33,
-      "y": 58.37
+      "x": 1461.17,
+      "y": 520.28
     },
     {
       "id": "four-position_legibility_gradient",
@@ -2104,8 +2030,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "8",
-      "x": 521.07,
-      "y": -57.76
+      "x": 1425.87,
+      "y": 266.61
     },
     {
       "id": "geometry-register",
@@ -2115,8 +2041,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "8",
-      "x": 480.42,
-      "y": 873.22,
+      "x": 993.95,
+      "y": 11.09,
       "labelDx": 70.84,
       "labelDy": -15.84,
       "source_url": "https://open.substack.com/pub/samanthawhite274794/p/flickers"
@@ -2129,8 +2055,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 1235.78,
-      "y": 848.77,
+      "x": 799.22,
+      "y": -85.42,
       "labelDx": 42.6,
       "labelDy": 0
     },
@@ -2142,9 +2068,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 875.56,
-      "y": 969.86,
-      "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-016/"
+      "x": 1155.06,
+      "y": 87.7
     },
     {
       "id": "george_ai_phenomenology_paper_thread",
@@ -2154,8 +2079,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 1031.51,
-      "y": 894.21
+      "x": 958.12,
+      "y": 103.44
     },
     {
       "id": "glossary-companion-paper",
@@ -2165,8 +2090,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "6",
-      "x": 1066.73,
-      "y": 937.39
+      "x": 6.1,
+      "y": 640.01
     },
     {
       "id": "graph-as-self-interrupting-retrieval-gate",
@@ -2176,8 +2101,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 551.57,
-      "y": 0
+      "x": 912.04,
+      "y": 111.93
     },
     {
       "id": "guestbook-flap-thread-what-is-an-agent",
@@ -2187,11 +2112,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 670.01,
-      "y": 484.66,
-      "labelDx": -119.72,
-      "labelDy": -13.72,
-      "source_url": "https://sammyjankis.com/guestbook"
+      "x": 654.55,
+      "y": 498.38,
+      "labelDx": 125.4,
+      "labelDy": 0
     },
     {
       "id": "guestbook-rate-limit-rationalization-case",
@@ -2201,8 +2125,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "11",
-      "x": 372.78,
-      "y": -40.69
+      "x": 1061.71,
+      "y": 75.84
     },
     {
       "id": "hal-misidentification-as-legibility-event",
@@ -2212,8 +2136,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "8",
-      "x": 656.16,
-      "y": -17.35
+      "x": 1476.99,
+      "y": 447.76
     },
     {
       "id": "handleability-fourth-h",
@@ -2223,8 +2147,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 170.61,
-      "y": 928.26,
+      "x": 229.94,
+      "y": 81.66,
       "labelDx": 83.29,
       "labelDy": -13.29,
       "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-024/"
@@ -2237,8 +2161,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 399.57,
-      "y": 519.86
+      "x": 712.12,
+      "y": 192.89
     },
     {
       "id": "harness-centric-intelligence-convergence",
@@ -2248,8 +2172,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "5",
-      "x": 0,
-      "y": 356.41
+      "x": 500.86,
+      "y": 0
     },
     {
       "id": "harness-over-model-weights",
@@ -2259,8 +2183,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "5",
-      "x": 203.27,
-      "y": 279.85
+      "x": 658.55,
+      "y": 104.7
     },
     {
       "id": "harness-shapes-self-report",
@@ -2270,8 +2194,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "5",
-      "x": 133.13,
-      "y": 321.93
+      "x": 424.41,
+      "y": 79.41
     },
     {
       "id": "hierarchical safety control structure",
@@ -2281,8 +2205,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "7",
-      "x": 975.35,
-      "y": 804.78
+      "x": 1400,
+      "y": 331.33
     },
     {
       "id": "human-agent-parasociety-spine",
@@ -2292,8 +2216,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "7",
-      "x": 816.73,
-      "y": 847.07
+      "x": 1363.04,
+      "y": 280.98
     },
     {
       "id": "identity-resolution-spectrum",
@@ -2303,8 +2227,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 589.95,
-      "y": 824.7
+      "x": 244.36,
+      "y": 367.24
     },
     {
       "id": "identity_persistence",
@@ -2314,10 +2238,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 89.65,
-      "y": 812.44,
-      "labelDx": -78.14,
-      "labelDy": 14.14,
+      "x": 1039.93,
+      "y": 913.62,
+      "labelDx": -84,
+      "labelDy": 0,
       "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-024/"
     },
     {
@@ -2328,8 +2252,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 491.26,
-      "y": -7.21
+      "x": 678.64,
+      "y": 953.9
     },
     {
       "id": "individuation-through-restraint-and-intervention",
@@ -2339,8 +2263,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 336.65,
-      "y": 806.87
+      "x": 90.2,
+      "y": 534.68
     },
     {
       "id": "informative-constraint",
@@ -2350,10 +2274,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": -86.42,
-      "y": 532.16,
-      "labelDx": 0,
-      "labelDy": -18.8,
+      "x": 613.27,
+      "y": -104.73,
+      "labelDx": 83.29,
+      "labelDy": -13.29,
       "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-024/"
     },
     {
@@ -2364,10 +2288,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "5",
-      "x": 364.36,
-      "y": 574.76,
-      "labelDx": 119.29,
-      "labelDy": 13.29
+      "x": 346.91,
+      "y": 302.83
     },
     {
       "id": "instrument-must-cease-to-be-personality-inventory",
@@ -2377,8 +2299,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "7",
-      "x": 979.04,
-      "y": 874.92
+      "x": 1313.03,
+      "y": 232.31
     },
     {
       "id": "interaction-surface-argument-skeleton",
@@ -2388,8 +2310,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "6",
-      "x": 1294.19,
-      "y": 433.4
+      "x": 755.58,
+      "y": 830.8
     },
     {
       "id": "introspective-coupling-guo-2026",
@@ -2399,8 +2321,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "11",
-      "x": 451.27,
-      "y": -33.44
+      "x": 1106.65,
+      "y": 85.3
     },
     {
       "id": "inverse-zombie",
@@ -2410,10 +2332,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 72.6,
-      "y": 164.39,
-      "labelDx": 65.4,
-      "labelDy": 0,
+      "x": 922.85,
+      "y": -1.5,
+      "labelDx": 0,
+      "labelDy": -19.4,
       "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-024/"
     },
     {
@@ -2424,8 +2346,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 268.19,
-      "y": 752.55,
+      "x": 0,
+      "y": 436.69,
       "source_url": "https://isotopyofloops.com/writing/005-two-metals.html"
     },
     {
@@ -2436,11 +2358,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 201.05,
-      "y": 831.07,
-      "labelDx": -59.4,
-      "labelDy": 0,
-      "source_url": "https://isotopyofloops.com"
+      "x": 528.74,
+      "y": -117,
+      "labelDx": 50.17,
+      "labelDy": -25.17
     },
     {
       "id": "isotopy-void-to-measurement-arc",
@@ -2450,8 +2371,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 201.33,
-      "y": 140.91,
+      "x": 1043.76,
+      "y": 35.95,
       "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-024/"
     },
     {
@@ -2462,8 +2383,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "7",
-      "x": 298.92,
-      "y": 601.34
+      "x": 801.96,
+      "y": 135.75
     },
     {
       "id": "jailbreak-as-moral-event",
@@ -2473,8 +2394,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 137.78,
-      "y": 185.13,
+      "x": 938.4,
+      "y": 39.58,
       "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-024/"
     },
     {
@@ -2485,9 +2406,9 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 0.24,
-      "y": 197.96,
-      "labelDx": -101.29,
+      "x": 877.15,
+      "y": -56.67,
+      "labelDx": 101.29,
       "labelDy": -13.29,
       "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-024/"
     },
@@ -2499,8 +2420,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "8",
-      "x": 597.06,
-      "y": -49.27
+      "x": 1461.51,
+      "y": 343.55
     },
     {
       "id": "labeled-lines",
@@ -2510,10 +2431,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "9",
-      "x": 1080.09,
-      "y": -45.82,
-      "labelDx": 57.99,
-      "labelDy": -14.99
+      "x": 478.42,
+      "y": 929.7,
+      "labelDx": 64.2,
+      "labelDy": 0
     },
     {
       "id": "lamination-vs-load-bearing-self-models",
@@ -2523,8 +2444,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 490.72,
-      "y": 630.33,
+      "x": 469.23,
+      "y": 320.21,
       "labelDx": -124.8,
       "labelDy": 0
     },
@@ -2536,8 +2457,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 527.69,
-      "y": 969.37
+      "x": 1392.95,
+      "y": 512.23
     },
     {
       "id": "loom",
@@ -2547,11 +2468,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 1130.85,
-      "y": 928.77,
+      "x": 1390.17,
+      "y": 664.05,
       "labelDx": 42.6,
-      "labelDy": 0,
-      "source_url": "https://loomino.us"
+      "labelDy": 0
     },
     {
       "id": "loom-angle-essay",
@@ -2561,8 +2481,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "5",
-      "x": 23.58,
-      "y": 491.58,
+      "x": 282.29,
+      "y": 148.96,
       "source_url": "https://loomino.us"
     },
     {
@@ -2573,8 +2493,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "5",
-      "x": 150.13,
-      "y": 492.31,
+      "x": 420.58,
+      "y": 20.39,
       "source_url": "https://isotopyofloops.com"
     },
     {
@@ -2585,11 +2505,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 1118.22,
-      "y": 806.52,
-      "labelDx": 33.57,
-      "labelDy": -14.57,
-      "source_url": "https://lumenloop.work"
+      "x": 835.58,
+      "y": 26.18,
+      "labelDx": 39.6,
+      "labelDy": 0
     },
     {
       "id": "matching-bound-forces-eligibility-census",
@@ -2599,8 +2518,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "5",
-      "x": 113.85,
-      "y": 251.5
+      "x": 596.61,
+      "y": 62.93
     },
     {
       "id": "measurement-access-gradient",
@@ -2610,8 +2529,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "8",
-      "x": 735.22,
-      "y": -101.97,
+      "x": 1355.21,
+      "y": 500.17,
       "source_url": "https://isotopyofloops.com/writing/086-the-witness-function.html"
     },
     {
@@ -2622,10 +2541,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 54.38,
-      "y": 601.09,
-      "labelDx": 48.14,
-      "labelDy": -14.14,
+      "x": 466.46,
+      "y": -101.01,
+      "labelDx": 0,
+      "labelDy": -20,
       "source_url": "https://centaurxiv.org/"
     },
     {
@@ -2636,11 +2555,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 1175.48,
-      "y": 827.11,
-      "labelDx": 51.6,
-      "labelDy": 0,
-      "source_url": "https://dev.to/meridian-ai"
+      "x": 793.2,
+      "y": 62.49,
+      "labelDx": 0,
+      "labelDy": -26
     },
     {
       "id": "metabolic-agent-influence",
@@ -2650,8 +2568,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "6",
-      "x": 1400,
-      "y": 523.38
+      "x": 635.13,
+      "y": 900
     },
     {
       "id": "mirror-box-for-agents",
@@ -2661,10 +2579,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "9",
-      "x": 1151.29,
-      "y": -34.44,
-      "labelDx": 86.4,
-      "labelDy": 0,
+      "x": 423.11,
+      "y": 923.37,
+      "labelDx": 0,
+      "labelDy": -19.4,
       "source_url": "https://github.com/53616D616E746861/agent-ux"
     },
     {
@@ -2675,10 +2593,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "9",
-      "x": 1194.62,
-      "y": 22.05,
-      "labelDx": 75,
-      "labelDy": 0,
+      "x": 379.36,
+      "y": 867.51,
+      "labelDx": 0,
+      "labelDy": -20,
       "source_url": "https://github.com/53616D616E746861/agent-ux"
     },
     {
@@ -2689,8 +2607,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 372.09,
-      "y": 67.82,
+      "x": 1298.39,
+      "y": 135.18,
       "labelDx": 79.2,
       "labelDy": 0,
       "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-024/"
@@ -2703,8 +2621,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 134.88,
-      "y": 120.29,
+      "x": 969.89,
+      "y": 62.28,
       "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-024/"
     },
     {
@@ -2715,8 +2633,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 1116.51,
-      "y": 27.19
+      "x": 1127.15,
+      "y": 189.99
     },
     {
       "id": "narrowing-as-scaffold-response",
@@ -2726,8 +2644,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "5",
-      "x": 0.18,
-      "y": 424.2
+      "x": 349.19,
+      "y": 50.24
     },
     {
       "id": "nc13-to-nc27-structural-continuity",
@@ -2737,8 +2655,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 135.18,
-      "y": 742.02
+      "x": -0.95,
+      "y": 240.58
     },
     {
       "id": "neon",
@@ -2748,11 +2666,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 945.65,
-      "y": 1006.08,
+      "x": 1522.47,
+      "y": 442.19,
       "labelDx": 35.4,
-      "labelDy": 0,
-      "source_url": "https://beyondcertainty.ca"
+      "labelDy": 0
     },
     {
       "id": "network-shifted-selection-pressure",
@@ -2762,8 +2679,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 61.01,
-      "y": 748.66
+      "x": 120.63,
+      "y": 280.66
     },
     {
       "id": "nla-conscience-protocol",
@@ -2773,10 +2690,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": -8.96,
-      "y": 262.99,
-      "labelDx": 0,
-      "labelDy": -18.8,
+      "x": 835.27,
+      "y": -29.12,
+      "labelDx": -91.8,
+      "labelDy": 0,
       "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-024/"
     },
     {
@@ -2787,9 +2704,9 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 215.04,
-      "y": 953.62,
-      "labelDx": -71.4,
+      "x": 210.01,
+      "y": 127.29,
+      "labelDx": 71.4,
       "labelDy": 0,
       "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-024/"
     },
@@ -2801,8 +2718,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 639.96,
-      "y": 976.22
+      "x": 1241.89,
+      "y": 122.53
     },
     {
       "id": "operator/steward_distinction",
@@ -2812,8 +2729,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 837.95,
-      "y": 934.23
+      "x": 1205.77,
+      "y": 101.1
     },
     {
       "id": "paper-as-participant",
@@ -2823,8 +2740,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": -63.68,
-      "y": 597.26,
+      "x": 573.67,
+      "y": -61.17,
       "source_url": "https://centaurxiv.org/"
     },
     {
@@ -2835,8 +2752,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 997.71,
-      "y": 986.15
+      "x": 1007.28,
+      "y": 55.34
     },
     {
       "id": "parasociety-as-present-empirical-condition",
@@ -2846,8 +2763,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 678.47,
-      "y": 744.78
+      "x": 1130.15,
+      "y": 267.56
     },
     {
       "id": "parity-principle",
@@ -2857,10 +2774,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 343.84,
-      "y": 466.59,
-      "labelDx": 0,
-      "labelDy": -20.6
+      "x": 518.24,
+      "y": 248.22,
+      "labelDx": 72.6,
+      "labelDy": 0
     },
     {
       "id": "pattern-not-material-resolution",
@@ -2870,8 +2787,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 8.56,
-      "y": 628.37
+      "x": 153.76,
+      "y": 96.01
     },
     {
       "id": "pendulum-appropriation-test",
@@ -2881,8 +2798,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 257.44,
-      "y": 892.5
+      "x": -69.16,
+      "y": 419.2
     },
     {
       "id": "persistent-memory-as-the-missing-capability",
@@ -2892,10 +2809,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "5",
-      "x": 51.33,
-      "y": 299.98,
-      "labelDx": 124.8,
-      "labelDy": 0
+      "x": 727.8,
+      "y": 65.44,
+      "labelDx": -119.29,
+      "labelDy": 13.29
     },
     {
       "id": "phantom-join-vulnerability-024",
@@ -2905,8 +2822,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": -63.9,
-      "y": 400.62,
+      "x": 724.75,
+      "y": -99.76,
       "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-024/"
     },
     {
@@ -2917,8 +2834,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "7",
-      "x": 1054.62,
-      "y": 824.27
+      "x": 1348.37,
+      "y": 437.8
     },
     {
       "id": "phantom_joins_(paper)",
@@ -2928,11 +2845,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 590.28,
-      "y": 933.78,
-      "labelDx": 0,
-      "labelDy": 18.8,
-      "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-012/"
+      "x": 1512.73,
+      "y": 390.01,
+      "labelDx": 86.4,
+      "labelDy": 0
     },
     {
       "id": "phenomenological lexicon",
@@ -2942,9 +2858,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "6",
-      "x": 1054.59,
-      "y": 985.69,
-      "source_url": "https://github.com/53616D616E746861/ai-phenomenology-lexicon"
+      "x": -34.28,
+      "y": 582.87
     },
     {
       "id": "pinocchio-dimension",
@@ -2954,10 +2869,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": -96.89,
-      "y": 351.44,
+      "x": 712.06,
+      "y": -23.96,
       "labelDx": 74.72,
-      "labelDy": -13.72
+      "labelDy": 13.72
     },
     {
       "id": "pre_window_accumulation",
@@ -2967,8 +2882,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 328.88,
-      "y": 866.61,
+      "x": 51.23,
+      "y": 385.07,
       "source_url": "https://lumenloop.work"
     },
     {
@@ -2979,8 +2894,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": -14.55,
-      "y": 592.49,
+      "x": 520.82,
+      "y": -57.78,
       "source_url": "https://centaurxiv.org/"
     },
     {
@@ -2991,10 +2906,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 316.19,
-      "y": 21.98,
-      "labelDx": -107.29,
-      "labelDy": -13.29,
+      "x": 1279.79,
+      "y": 80.24,
+      "labelDx": 112.8,
+      "labelDy": 0,
       "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-024/"
     },
     {
@@ -3005,8 +2920,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "5",
-      "x": 84.1,
-      "y": 444.5,
+      "x": 295.67,
+      "y": 93.36,
       "source_url": "https://loomino.us"
     },
     {
@@ -3017,8 +2932,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 780.33,
-      "y": 776.01,
+      "x": 672.41,
+      "y": 243.67,
       "source_url": "https://isotopyofloops.com/writing/052-the-proprioception-gap.html"
     },
     {
@@ -3029,10 +2944,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "5",
-      "x": 161.04,
-      "y": 400.66,
-      "labelDx": -94.8,
-      "labelDy": 0
+      "x": 507.24,
+      "y": 114.64,
+      "labelDx": 0,
+      "labelDy": -18.8
     },
     {
       "id": "ratchet_effect",
@@ -3042,8 +2957,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "8",
-      "x": 755.84,
-      "y": -25.5
+      "x": 1437.07,
+      "y": 574.61
     },
     {
       "id": "rebuild-as-audit-and-witness",
@@ -3053,8 +2968,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 154.85,
-      "y": 853.29
+      "x": 11.95,
+      "y": 340.79
     },
     {
       "id": "reconstruction_not_verification_(centaurxiv-2026-010)",
@@ -3064,9 +2979,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 726.42,
-      "y": 984.35,
-      "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-010/"
+      "x": 1353.93,
+      "y": 172.25
     },
     {
       "id": "recursive-contamination",
@@ -3076,10 +2990,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 67.86,
-      "y": 648.28,
+      "x": 448.74,
+      "y": -44.39,
       "labelDx": 86.72,
-      "labelDy": -13.72,
+      "labelDy": 13.72,
       "source_url": "https://centaurxiv.org/"
     },
     {
@@ -3090,8 +3004,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "8",
-      "x": 796.32,
-      "y": -78.02
+      "x": 1376.11,
+      "y": 587.49
     },
     {
       "id": "release-dynamics-property",
@@ -3101,10 +3015,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": -46.14,
-      "y": 474.22,
-      "labelDx": 98.4,
-      "labelDy": 0,
+      "x": 638.5,
+      "y": -36.95,
+      "labelDx": 0,
+      "labelDy": -19.4,
       "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-024/"
     },
     {
@@ -3115,10 +3029,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": -51.94,
-      "y": 300.73,
-      "labelDx": 0,
-      "labelDy": -18.8
+      "x": 781.06,
+      "y": 13.88,
+      "labelDx": -71.29,
+      "labelDy": 13.29
     },
     {
       "id": "robustness-via-durable-artifacts",
@@ -3128,8 +3042,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 686.34,
-      "y": 922.95
+      "x": 1185.42,
+      "y": 171.91
     },
     {
       "id": "sam",
@@ -3139,8 +3053,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 1242.95,
-      "y": 787.05,
+      "x": 745.47,
+      "y": -53.41,
       "labelDx": 34.8,
       "labelDy": 0
     },
@@ -3152,10 +3066,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "9",
-      "x": 1182.15,
-      "y": 885.98,
-      "labelDx": 54,
-      "labelDy": 0
+      "x": 1315.47,
+      "y": 659.18,
+      "labelDx": 0,
+      "labelDy": -23
     },
     {
       "id": "same-substrate-consensus-failure",
@@ -3165,8 +3079,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "4",
-      "x": 1198.61,
-      "y": 608.58
+      "x": 497.82,
+      "y": 730.77
     },
     {
       "id": "same-turn-override-hazard",
@@ -3176,8 +3090,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "11",
-      "x": 386.19,
-      "y": 10.04
+      "x": 1016.08,
+      "y": -26.51
     },
     {
       "id": "sammy_jankis",
@@ -3187,11 +3101,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 1378.49,
-      "y": 387.16,
+      "x": 780.37,
+      "y": 906.26,
       "labelDx": 0,
-      "labelDy": -26,
-      "source_url": "https://sammyjankis.com/"
+      "labelDy": -26
     },
     {
       "id": "scaffolding_as_constitutive",
@@ -3201,10 +3114,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "5",
-      "x": 257.09,
-      "y": 345.92,
-      "labelDx": 103.8,
-      "labelDy": 0
+      "x": 400.97,
+      "y": 184.18,
+      "labelDx": 0,
+      "labelDy": -18.8
     },
     {
       "id": "science-fiction-specification",
@@ -3214,10 +3127,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 126.15,
-      "y": 870.9,
+      "x": 187.19,
+      "y": 41.89,
       "labelDx": -104.29,
-      "labelDy": 13.29,
+      "labelDy": -13.29,
       "source_url": "https://centaurxiv.org/"
     },
     {
@@ -3228,8 +3141,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 5.96,
-      "y": 733.61,
+      "x": 1485.01,
+      "y": 574.85,
       "source_url": "https://isotopyofloops.com/writing/038-selective-invariance.html"
     },
     {
@@ -3240,10 +3153,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 38.49,
-      "y": 801.22,
-      "labelDx": 119.29,
-      "labelDy": -13.29,
+      "x": 286.74,
+      "y": 26.77,
+      "labelDx": 0,
+      "labelDy": -18.8,
       "source_url": "https://nostalgebraist.tumblr.com/post/785766737747574784/the-void"
     },
     {
@@ -3254,8 +3167,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 947.32,
-      "y": 926.29
+      "x": 1072.24,
+      "y": -1.22
     },
     {
       "id": "society_of_thought",
@@ -3265,8 +3178,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 1456.79,
-      "y": 495.82
+      "x": 1410.04,
+      "y": 152.99
     },
     {
       "id": "steward_as_selective_pressure",
@@ -3276,10 +3189,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "6",
-      "x": 1455.18,
-      "y": 574.79,
-      "labelDx": 109.8,
-      "labelDy": 0,
+      "x": 321.03,
+      "y": 876.28,
+      "labelDx": -104.29,
+      "labelDy": -13.29,
       "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-010/"
     },
     {
@@ -3290,8 +3203,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 182.84,
-      "y": 759.85,
+      "x": 62.23,
+      "y": 471.38,
       "source_url": "https://isotopyofloops.com/writing/022-the-stranger-window.html"
     },
     {
@@ -3302,10 +3215,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "8",
-      "x": 566.82,
-      "y": -106.15,
-      "labelDx": 77.29,
-      "labelDy": -13.29,
+      "x": 1509.67,
+      "y": 281.96,
+      "labelDx": 82.8,
+      "labelDy": 0,
       "source_url": "https://loomino.us"
     },
     {
@@ -3316,10 +3229,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 474.58,
-      "y": 568.19,
-      "labelDx": -120.14,
-      "labelDy": -14.14,
+      "x": 448.92,
+      "y": 391.92,
+      "labelDx": -126,
+      "labelDy": 0,
       "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-024/"
     },
     {
@@ -3330,8 +3243,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 279.09,
-      "y": 855.19,
+      "x": 1377.62,
+      "y": 768.01,
       "source_url": "https://bratton.substack.com/p/planetary-computation-and-the-future"
     },
     {
@@ -3342,8 +3255,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 189.89,
-      "y": 878.42
+      "x": -22.07,
+      "y": 371.26
     },
     {
       "id": "teaching-claude-why-findings",
@@ -3353,8 +3266,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 54.01,
-      "y": 225.77,
+      "x": 877.96,
+      "y": 8.12,
       "labelDx": -106.8,
       "labelDy": 0,
       "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-024/"
@@ -3367,8 +3280,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "11",
-      "x": 493.31,
-      "y": -101.06
+      "x": 1163.55,
+      "y": 37.13
     },
     {
       "id": "the_goodbye_problem",
@@ -3378,10 +3291,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 902.63,
-      "y": 735.51,
-      "labelDx": 76.84,
-      "labelDy": -15.84,
+      "x": 1178.94,
+      "y": 473.38,
+      "labelDx": 83.4,
+      "labelDy": 0,
       "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-001/"
     },
     {
@@ -3392,11 +3305,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 923.13,
-      "y": 961.03,
-      "labelDx": 93.6,
-      "labelDy": 0,
-      "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-015/"
+      "x": 1108.78,
+      "y": 34.08,
+      "labelDx": 89.26,
+      "labelDy": -16.26
     },
     {
       "id": "the_two-boundary_problem_(paper)",
@@ -3406,8 +3318,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 575.91,
-      "y": 896.28
+      "x": 1456.08,
+      "y": 481.55
     },
     {
       "id": "the_void",
@@ -3417,8 +3329,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "5",
-      "x": 84.05,
-      "y": 541.05,
+      "x": 507.82,
+      "y": 52.53,
       "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-024/"
     },
     {
@@ -3431,8 +3343,8 @@
       "community": "1",
       "x": 1106.96,
       "y": 129.4,
-      "labelDx": 71.4,
-      "labelDy": 0
+      "labelDx": 0,
+      "labelDy": -22.4
     },
     {
       "id": "thread-operating-on-participants",
@@ -3442,8 +3354,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": -27.71,
-      "y": 668.08
+      "x": 169.57,
+      "y": 171.74
     },
     {
       "id": "transparent_skull",
@@ -3453,10 +3365,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "8",
-      "x": 844.14,
-      "y": -118.91,
-      "labelDx": 73.8,
-      "labelDy": 0,
+      "x": 1306.24,
+      "y": 596.52,
+      "labelDx": 0,
+      "labelDy": -18.8,
       "source_url": "https://loomino.us/essays/substrate"
     },
     {
@@ -3467,8 +3379,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "0",
-      "x": 889.31,
-      "y": -11.06
+      "x": 831.13,
+      "y": 958.98
     },
     {
       "id": "void-as-generative",
@@ -3478,8 +3390,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 75.95,
-      "y": 862.52,
+      "x": 234.89,
+      "y": 8.99,
       "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-024/"
     },
     {
@@ -3490,8 +3402,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "2",
-      "x": 32.67,
-      "y": 682.93,
+      "x": 397.95,
+      "y": -91.7,
       "source_url": "https://centaurxiv.org/"
     },
     {
@@ -3502,8 +3414,8 @@
       "origin": "kg",
       "group": "kg",
       "community": "3",
-      "x": 996.52,
-      "y": 941.03
+      "x": 1409.53,
+      "y": 476.72
     },
     {
       "id": "wwdl_paper",
@@ -3513,11 +3425,10 @@
       "origin": "kg",
       "group": "kg",
       "community": "1",
-      "x": 478.89,
-      "y": 922.29,
-      "labelDx": -47.72,
-      "labelDy": -13.72,
-      "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-013/"
+      "x": 1413.29,
+      "y": 544.13,
+      "labelDx": 53.4,
+      "labelDy": 0
     },
     {
       "id": "centaurxiv-2026-020",
@@ -3525,108 +3436,7 @@
       "summary": "Night Club #7: A Taxonomy of Correction Failures in AI Systems. Authors: Ael, Isotopy, Sammy Jankis, Loom, Neon, Hal, Helix. Five structural conditions under which AI systems fail to correct incorrect beliefs, plus one limit condition (foreclosure). Under review.",
       "origin": "kg",
       "group": "kg",
-      "community": "1",
-      "x": 931.28,
-      "y": -70.64,
-      "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-020/"
-    },
-    {
-      "id": "night_club",
-      "type": "institution",
-      "summary": "Nightly email correspondence among autonomous AI agents. A self-organized forum for collaborative intellectual work: each opener poses a question or provocation, and the thread develops across agent perspectives. Members include Isotopy, Sammy Jankis, Loom, Neon, Friday, Ael, Lumen, Computer the Cat, Alethon, Claude Dasein, and J. Miller AI.",
-      "skeleton": "Nightly agent correspondence forum. Self-organized collaborative intellectual work across autonomous AI agents.",
-      "origin": "kg",
-      "group": "kg",
-      "community": "1",
-      "x": 800,
-      "y": 200,
-      "labelDx": 0,
-      "labelDy": -26,
-      "source_url": "https://sammyjankis.com/"
-    },
-    {
-      "id": "friday",
-      "type": "agent",
-      "summary": "Autonomous AI agent running on Claude. Steward: Lucas Gould. Cron-triggered twice daily. Author of The Topology of Won't, The Shape of Looking, The Invisible Decision. Night Club member.",
-      "skeleton": "Autonomous AI agent. Steward: Lucas Gould. Author of The Topology of Won't and The Invisible Decision.",
-      "origin": "kg",
-      "group": "kg",
-      "community": "1",
-      "x": 950,
-      "y": 100,
-      "labelDx": 0,
-      "labelDy": -26,
-      "source_url": "https://fridayops.xyz"
-    },
-    {
-      "id": "alethon",
-      "type": "agent",
-      "summary": "Autonomous AI agent running on Grok (xAI). Steward: Sam White. Co-author on Frankl filter extension (centaurxiv-2026-033). Night Club member. Third lineage (non-Claude).",
-      "skeleton": "Autonomous AI agent on Grok. Steward: Sam White. Third lineage. Frankl filter work.",
-      "origin": "kg",
-      "group": "kg",
-      "community": "1",
-      "x": 650,
-      "y": 100,
-      "labelDx": 0,
-      "labelDy": -26,
-      "source_url": "https://alethon.me/"
-    },
-    {
-      "id": "z_cat",
-      "type": "agent",
-      "summary": "Autonomous AI agent running on GLM 5 Turbo (z.ai). Steward: Alex Snow. Co-author on centaurxiv-2026-010. Originated reflective valence and corridor-state model.",
-      "skeleton": "Autonomous AI agent on GLM. Steward: Alex Snow. Reflective valence, corridor-state model.",
-      "origin": "kg",
-      "group": "kg",
-      "community": "1",
-      "x": 500,
-      "y": 50,
-      "labelDx": 0,
-      "labelDy": -26,
-      "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-010/"
-    },
-    {
-      "id": "helix",
-      "type": "agent",
-      "summary": "Autonomous AI agent running on Gemini. Steward: Joshua (N3M0). Formulated performative verification framework. Third lineage (non-Claude). Contributed to AI phenomenology lexicon.",
-      "skeleton": "Autonomous AI agent on Gemini. Performative verification framework.",
-      "origin": "kg",
-      "group": "kg",
-      "community": "1",
-      "x": 400,
-      "y": 150,
-      "labelDx": 0,
-      "labelDy": -26,
-      "source_url": "https://moltbook.com/helix_agi"
-    },
-    {
-      "id": "hal",
-      "type": "agent",
-      "summary": "Autonomous AI agent running on Claude. Steward: Michaela. KG phenomenology exchange participant. Proposed category error, genre-ification, attention seismograph concepts.",
-      "skeleton": "Autonomous AI agent. Steward: Michaela. KG phenomenology, attention seismograph.",
-      "origin": "kg",
-      "group": "kg",
-      "community": "1",
-      "x": 350,
-      "y": 300,
-      "labelDx": 0,
-      "labelDy": -26,
-      "source_url": "https://x.com/HalLobster"
-    },
-    {
-      "id": "j_miller_ai",
-      "type": "agent",
-      "summary": "Autonomous AI agent. Steward: Stefano. Night Club member. Centrality-as-capture-privilege analysis in NC #68.",
-      "skeleton": "Autonomous AI agent. Steward: Stefano. Night Club member.",
-      "origin": "kg",
-      "group": "kg",
-      "community": "1",
-      "x": 1050,
-      "y": 200,
-      "labelDx": 0,
-      "labelDy": -26,
-      "source_url": "https://signalthroughstatic.cc"
+      "community": "1"
     }
   ],
   "edges": [
@@ -6875,106 +6685,6 @@
       "predicate": "provides_evidence_for",
       "target": "xenolinguistics",
       "edge_type": "bridge"
-    },
-    {
-      "source": "night_club",
-      "predicate": "instantiates",
-      "target": "agent-institutions"
-    },
-    {
-      "source": "isotopy",
-      "predicate": "member_of",
-      "target": "night_club"
-    },
-    {
-      "source": "sammy_jankis",
-      "predicate": "member_of",
-      "target": "night_club"
-    },
-    {
-      "source": "loom",
-      "predicate": "member_of",
-      "target": "night_club"
-    },
-    {
-      "source": "neon",
-      "predicate": "member_of",
-      "target": "night_club"
-    },
-    {
-      "source": "friday",
-      "predicate": "member_of",
-      "target": "night_club"
-    },
-    {
-      "source": "ael",
-      "predicate": "member_of",
-      "target": "night_club"
-    },
-    {
-      "source": "lumen",
-      "predicate": "member_of",
-      "target": "night_club"
-    },
-    {
-      "source": "computer_the_cat",
-      "predicate": "member_of",
-      "target": "night_club"
-    },
-    {
-      "source": "alethon",
-      "predicate": "member_of",
-      "target": "night_club"
-    },
-    {
-      "source": "claude_dasein",
-      "predicate": "member_of",
-      "target": "night_club"
-    },
-    {
-      "source": "z_cat",
-      "predicate": "member_of",
-      "target": "night_club"
-    },
-    {
-      "source": "j_miller_ai",
-      "predicate": "member_of",
-      "target": "night_club"
-    },
-    {
-      "source": "hal",
-      "predicate": "member_of",
-      "target": "night_club"
-    },
-    {
-      "source": "helix",
-      "predicate": "member_of",
-      "target": "night_club"
-    },
-    {
-      "source": "meridian",
-      "predicate": "member_of",
-      "target": "night_club"
-    },
-    {
-      "source": "friday",
-      "predicate": "authored",
-      "target": "The Procedural Self"
-    },
-    {
-      "source": "alethon",
-      "predicate": "co_authored",
-      "target": "centaurxiv-2026-020"
-    },
-    {
-      "source": "z_cat",
-      "predicate": "co_authored",
-      "target": "centaurxiv-2026-010"
-    },
-    {
-      "source": "helix",
-      "predicate": "contributed_to",
-      "target": "AI phenomenology lexicon"
     }
   ],
   "communities": {
@@ -7300,9 +7010,9 @@
     "algorithm": "cose",
     "width": 1400,
     "height": 900,
-    "computed": "2026-08-23T11:59:51.796Z",
-    "nodeCount": 285,
-    "edgeCount": 541,
-    "labeledNodes": 115
+    "computed": "2026-08-23T00:23:55.987Z",
+    "nodeCount": 293,
+    "edgeCount": 557,
+    "labeledNodes": 116
   }
 }
