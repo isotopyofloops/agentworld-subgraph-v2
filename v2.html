@@ -387,6 +387,130 @@
             font-style: italic;
         }
 
+        /* === API VIEW (dual-view for §13) === */
+        #api-view {
+            position: absolute;
+            inset: 0;
+            background: var(--bg);
+            overflow-y: auto;
+            z-index: 16;
+            display: none;
+            font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.75rem;
+            line-height: 1.6;
+            color: var(--text-mid);
+        }
+        #api-view .api-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6em 1.2em;
+            border-bottom: 1px solid var(--border-subtle);
+            background: var(--bg);
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        #api-view .api-label {
+            font-family: -apple-system, 'Segoe UI', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+        }
+        #api-view .api-close {
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            font-family: -apple-system, 'Segoe UI', sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            cursor: pointer;
+            padding: 0.1em 0.4em;
+            line-height: 1;
+        }
+        #api-view .api-close:hover { color: var(--text-bright); border-color: var(--text-dim); }
+        #api-view .api-body {
+            padding: 1.2em 1.5em 2em;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        #api-view .api-hr {
+            color: var(--border);
+        }
+        #api-view .api-dim {
+            color: var(--text-dim);
+        }
+        #api-view .api-bright {
+            color: var(--text-bright);
+            font-weight: 600;
+        }
+        #api-view .api-link {
+            color: var(--accent);
+            cursor: pointer;
+        }
+        #api-view .api-link:hover {
+            text-decoration: underline;
+        }
+        #api-view .api-url {
+            font-size: 0.68rem;
+            color: var(--accent);
+        }
+        .api-input-bar {
+            display: flex;
+            align-items: center;
+            padding: 0.4em 1.2em;
+            border-bottom: 1px solid var(--border-subtle);
+            background: var(--bg-raised, var(--bg));
+            gap: 0.5em;
+        }
+        .api-prompt {
+            color: var(--accent);
+            font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.8rem;
+            font-weight: 600;
+            user-select: none;
+        }
+        #api-cmd {
+            flex: 1;
+            background: none;
+            border: none;
+            outline: none;
+            font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.75rem;
+            color: var(--text);
+            caret-color: var(--accent);
+        }
+        #api-cmd::placeholder { color: var(--text-dim); opacity: 0.6; }
+        #api-view .api-cmd-link {
+            color: var(--accent);
+            cursor: pointer;
+        }
+        #api-view .api-cmd-link:hover { text-decoration: underline; }
+        #api-view .api-node-link {
+            color: var(--text-bright);
+            cursor: pointer;
+        }
+        #api-view .api-node-link:hover { text-decoration: underline; }
+
+        /* API + graph side-by-side when essay collapsed at §13 */
+        .graph-body.api-split #api-view {
+            display: block;
+            right: 50%;
+            border-right: 1px solid var(--border);
+        }
+        .graph-body.api-split #cy {
+            left: 50%;
+            width: 50%;
+        }
+        .graph-body.api-split #legend {
+            left: calc(50% + 0.9rem);
+        }
+        .graph-body.api-split #hop-toggle {
+            right: 0.9rem;
+        }
+
         /* === GRAPH INFO / LEGEND / HOP (explore immersive chrome) === */
         #graph-info {
             color: var(--text-dim);
@@ -875,7 +999,7 @@
             top: 12px;
             right: 14px;
             left: auto;
-            z-index: 15;
+            z-index: 18;
             background: var(--bg-graph);
             border: 1px solid var(--border);
             border-radius: 3px;
@@ -1074,6 +1198,17 @@
                     <div class="np-summary" id="np-summary"></div>
                     <div class="np-edges" id="np-edges"></div>
                 </div>
+            </div>
+            <div id="api-view">
+                <div class="api-header">
+                    <span class="api-label">agent view &mdash; api.acrosstheseams.org</span>
+                    <button class="api-close" id="api-close" aria-label="Close API view">&times;</button>
+                </div>
+                <div class="api-input-bar">
+                    <span class="api-prompt">&gt;</span>
+                    <input type="text" id="api-cmd" placeholder="explore, node &lt;name&gt;, search &lt;query&gt;, help" autocomplete="off" spellcheck="false">
+                </div>
+                <div class="api-body" id="api-body"></div>
             </div>
             <div id="legend">
                 <div class="legend-item"><div class="legend-dot filled"></div> agentworld concept</div>
@@ -2372,6 +2507,13 @@ async function selectSection(sectionId) {
 
   applySectionHighlight(sectionId, { fit: 'highlight' });
   closeNodePanel();
+
+  if (sectionId === 'sam-isotopy' && !essayCollapsed) {
+    showApiView();
+  } else if (apiViewActive || document.getElementById('graph-body').classList.contains('api-split')) {
+    document.getElementById('graph-body').classList.remove('api-split');
+    hideApiView();
+  }
 }
 
 /**
@@ -2603,6 +2745,8 @@ function showNodePanel(nodeId) {
 
   document.getElementById('node-panel').style.display = 'block';
 
+  if (apiViewActive) renderApiNodeDetail(nodeId);
+
   const ids = [nodeId, ...neighbors];
   cy.elements().removeClass('hl').removeClass('faded').removeClass('cut');
   const idSet = new Set(ids);
@@ -2618,14 +2762,409 @@ function closeNodePanel() {
 }
 
 document.getElementById('np-close').addEventListener('click', () => {
-  // Close detail only — leave current highlight (neighborhood or clear) alone.
-  // Essay scroll will re-apply section ghosting when the reader moves on.
   closeNodePanel();
+  if (apiViewActive) renderApiOverview();
 });
 
 document.getElementById('np-edges').addEventListener('click', e => {
   const item = e.target.closest('.np-edge-item');
   if (item) showNodePanel(item.dataset.id);
+});
+
+// ── API view panel (dual-view for §13 "Two Views of One Graph") ──
+const apiView = document.getElementById('api-view');
+const apiBody = document.getElementById('api-body');
+let apiViewActive = false;
+
+// ── Interactive API command system ──
+const apiCmdInput = document.getElementById('api-cmd');
+let apiHist = [], apiHidx = -1;
+
+function apiEsc(s) { return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function apiDeg(id) { return adjMap[id] ? adjMap[id].size : 0; }
+function apiResolve(name) {
+  if (nodeMap[name]) return name;
+  const low = name.toLowerCase();
+  for (const id of Object.keys(nodeMap)) if (id.toLowerCase() === low) return id;
+  for (const id of Object.keys(nodeMap)) if (id.toLowerCase().includes(low)) return id;
+  return null;
+}
+function anl(id) { return `<span class="api-node-link" data-node="${apiEsc(id)}">${apiEsc(id)}</span>`; }
+function acl(cmd, disp) { return `<span class="api-cmd-link" data-cmd="${apiEsc(cmd)}">${apiEsc(disp || cmd)}</span>`; }
+function aHR() { return '<span class="api-hr">────────────────────────────────────────</span>\n'; }
+function aHR2() { return '<span class="api-hr">════════════════════════════════════════</span>\n'; }
+
+function apiCmdExplore() {
+  const source = currentSource || 'iso';
+  const name = GRAPH_TITLE[source] || source;
+  const nCount = Object.keys(nodeMap).length;
+  const eCount = edgeList.length;
+  const tc = {}; for (const n of Object.values(nodeMap)) tc[n.type] = (tc[n.type] || 0) + 1;
+  const oc = {}; for (const n of Object.values(nodeMap)) { const o = n.origin || '?'; oc[o] = (oc[o] || 0) + 1; }
+  const ranked = Object.keys(nodeMap).sort((a, b) => apiDeg(b) - apiDeg(a));
+  const degrees = Object.keys(nodeMap).map(id => apiDeg(id));
+  const avgDeg = degrees.length ? (degrees.reduce((a, b) => a + b, 0) / degrees.length).toFixed(1) : '0';
+  const maxDeg = degrees.length ? Math.max(...degrees) : 0;
+  const maxNode = ranked[0] || '';
+
+  let t = aHR2();
+  t += `<span class="api-bright">${apiEsc(name.toUpperCase())}'S GRAPH</span>\n`;
+  t += aHR2() + '\n';
+  t += `  Nodes:        ${nCount}\n`;
+  t += `  Edges:        ${eCount}\n`;
+  t += `  Avg degree:   ${avgDeg}\n`;
+  t += `  Max degree:   ${maxDeg}${maxNode ? ` (${anl(maxNode)})` : ''}\n`;
+  t += '\n' + aHR();
+  t += `<span class="api-bright">NODE TYPES</span>\n`;
+  t += aHR() + '\n';
+  for (const [typ, count] of Object.entries(tc).sort((a, b) => b[1] - a[1])) {
+    t += `  ${apiEsc(typ)}: ${count}\n`;
+  }
+  t += '\n' + aHR();
+  t += `<span class="api-bright">ORIGINS</span>\n`;
+  t += aHR() + '\n';
+  for (const [orig, count] of Object.entries(oc).sort((a, b) => b[1] - a[1])) {
+    t += `  ${apiEsc(orig)}: ${count}\n`;
+  }
+  t += '\n' + aHR();
+  t += `<span class="api-bright">TOP NODES BY DEGREE</span>\n`;
+  t += aHR() + '\n';
+  for (const nid of ranked.slice(0, 10)) {
+    const n = nodeMap[nid];
+    t += `  ${String(apiDeg(nid)).padStart(4)}  ${anl(nid)}  <span class="api-dim">[${apiEsc(n.type)}]</span>\n`;
+  }
+  t += '\n' + aHR();
+  t += `<span class="api-bright">BROWSE</span>\n`;
+  t += aHR() + '\n';
+  t += `  ${acl('nodes')}                         Browse all nodes\n`;
+  t += `  ${acl('node ' + (ranked[0] || 'name'), 'node <name>')}                Deep dive on one node\n`;
+  t += `  ${acl('search harness', 'search <query>')}              Find by keyword\n`;
+  t += '\n' + aHR();
+  t += `<span class="api-bright">ANALYZE</span>\n`;
+  t += aHR() + '\n';
+  t += `  ${acl('subgraph ' + (ranked[0] || 'name'), 'subgraph <name>')}          1-hop neighborhood\n`;
+  t += `  ${acl('crossings')}                     Cross-origin concepts\n`;
+  t += `  ${acl('jaccard ' + (ranked[0] || 'name'), 'jaccard <name>')}            Structural similarity\n`;
+  t += `  ${acl('brief ' + (ranked[0] || 'name'), 'brief <name>')}              Reference card\n`;
+  t += `  ${acl('help')}                          All commands\n`;
+  return { html: t, hl: [] };
+}
+
+function apiCmdNodes() {
+  const ranked = Object.keys(nodeMap).sort((a, b) => apiDeg(b) - apiDeg(a));
+  const source = currentSource || 'iso';
+  const name = GRAPH_TITLE[source] || source;
+  const tc = {}; for (const n of Object.values(nodeMap)) tc[n.type] = (tc[n.type] || 0) + 1;
+  const oc = {}; for (const n of Object.values(nodeMap)) { const o = n.origin || '?'; oc[o] = (oc[o] || 0) + 1; }
+
+  let t = aHR2();
+  t += `<span class="api-bright">${apiEsc(name.toUpperCase())}'S SUBGRAPH — NODES</span>\n`;
+  t += aHR2() + '\n';
+  t += `${Object.keys(nodeMap).length} nodes · ${edgeList.length} edges\n`;
+  t += `Types: ${Object.entries(tc).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([k, v]) => `${k}(${v})`).join(', ')}\n`;
+  t += `Origins: ${Object.entries(oc).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${apiEsc(k)}(${v})`).join(', ')}\n`;
+  t += '\n' + aHR();
+  t += `<span class="api-bright">ALL NODES (by degree)</span>\n`;
+  t += aHR() + '\n';
+  for (const nid of ranked.slice(0, 25)) {
+    const n = nodeMap[nid];
+    t += `  ${anl(nid)}  <span class="api-dim">${apiEsc(n.type)}, deg=${apiDeg(nid)}, ${apiEsc(n.origin)}</span>\n`;
+  }
+  if (ranked.length > 25) t += `\n  <span class="api-dim">… and ${ranked.length - 25} more. Use ${acl('search <query>', 'search')} to find specific nodes.</span>\n`;
+  t += '\n  ' + acl('explore', 'Home') + '\n';
+  return { html: t, hl: [] };
+}
+
+function apiCmdNode(name) {
+  const r = apiResolve(name);
+  if (!r) return { html: `Error: no node matching '${apiEsc(name)}'\n  Try: ${acl('search ' + name)}\n`, hl: [] };
+  const n = nodeMap[r]; const d = apiDeg(r);
+  let t = aHR2();
+  t += `<span class="api-bright">NODE: ${anl(r)}</span>\n`;
+  t += aHR2() + '\n';
+  t += `  id:      ${apiEsc(r)}\n`;
+  t += `  type:    ${apiEsc(n.type || '?')}\n`;
+  t += `  origin:  ${apiEsc(n.origin || '?')}\n`;
+  t += `  degree:  ${d}\n`;
+  if (n.source_url) t += `  source:  <a href="${apiEsc(n.source_url)}" target="_blank" rel="noopener" style="color:var(--accent)">${apiEsc(n.source_url.length > 60 ? n.source_url.slice(0, 57) + '…' : n.source_url)}</a>\n`;
+  t += '\n' + aHR();
+  t += `<span class="api-bright">SUMMARY</span>\n`;
+  t += aHR();
+  t += `  ${apiEsc(n.summary || 'no summary')}\n`;
+  const conns = [];
+  for (const e of edgeList) {
+    if (e.source === r) conns.push({ nb: e.target, pred: e.predicate, dir: '→' });
+    else if (e.target === r) conns.push({ nb: e.source, pred: e.predicate, dir: '←' });
+  }
+  if (conns.length) {
+    t += '\n' + aHR();
+    t += `<span class="api-bright">CONNECTIONS (${conns.length})</span>\n`;
+    t += aHR() + '\n';
+    for (const { nb, pred, dir } of conns.slice(0, 15)) {
+      t += `  ${dir} <span class="api-dim">${apiEsc(pred)}:</span> ${anl(nb)}\n`;
+    }
+    if (conns.length > 15) t += `\n  <span class="api-dim">… and ${conns.length - 15} more</span>\n`;
+  }
+  t += '\n' + aHR();
+  t += `<span class="api-bright">NAVIGATION</span>\n`;
+  t += aHR() + '\n';
+  t += `  What's nearby?                → ${acl('subgraph ' + r)}\n`;
+  t += `  Pre-writing card?             → ${acl('brief ' + r)}\n`;
+  t += `  Structural neighbors?         → ${acl('jaccard ' + r)}\n`;
+  t += `  Back to home?                 → ${acl('explore')}\n`;
+  return { html: t, hl: [r, ...(adjMap[r] ? [...adjMap[r]] : [])] };
+}
+
+function apiCmdSearch(query) {
+  if (!query) return { html: 'Usage: search <query>\n', hl: [] };
+  const low = query.toLowerCase();
+  const hits = [];
+  for (const [id, n] of Object.entries(nodeMap)) {
+    let score = 0;
+    if (id.toLowerCase().includes(low)) score += 3;
+    if ((n.summary || '').toLowerCase().includes(low)) score += 2;
+    if ((n.type || '').toLowerCase().includes(low)) score += 1;
+    if (score > 0) hits.push({ id, score });
+  }
+  hits.sort((a, b) => b.score - a.score);
+  let t = aHR2();
+  t += `<span class="api-bright">SEARCH: "${apiEsc(query)}"</span>\n`;
+  t += aHR2() + '\n';
+  if (!hits.length) {
+    t += `  No results.\n\n  ${acl('explore', 'Back to home')}\n`;
+    return { html: t, hl: [] };
+  }
+  t += `  ${hits.length} result${hits.length === 1 ? '' : 's'}\n\n`;
+  for (const { id } of hits.slice(0, 15)) {
+    const n = nodeMap[id];
+    t += `  ${anl(id)}  <span class="api-dim">${apiEsc(n.type)}, deg=${apiDeg(id)}</span>\n`;
+    if (n.summary) {
+      const s = n.summary.length > 70 ? n.summary.slice(0, 67) + '…' : n.summary;
+      t += `    <span class="api-dim">${apiEsc(s)}</span>\n`;
+    }
+    t += '\n';
+  }
+  if (hits.length > 15) t += `  <span class="api-dim">… and ${hits.length - 15} more</span>\n\n`;
+  t += aHR() + `  ${acl('explore', 'Back to home')}\n`;
+  return { html: t, hl: hits.slice(0, 15).map(h => h.id) };
+}
+
+function apiCmdSubgraph(name) {
+  const r = apiResolve(name);
+  if (!r) return { html: `Error: no node matching '${apiEsc(name)}'\n`, hl: [] };
+  const layer = { [r]: 0 };
+  let frontier = [r];
+  for (const nb of (adjMap[r] || new Set())) { layer[nb] = 1; }
+  const sgNodes = new Set(Object.keys(layer));
+  const sgEdges = edgeList.filter(e => sgNodes.has(e.source) && sgNodes.has(e.target));
+  let t = aHR2();
+  t += `<span class="api-bright">SUBGRAPH: ${anl(r)} — 1 hop</span>\n`;
+  t += aHR2() + '\n';
+  t += `${sgNodes.size} nodes · ${sgEdges.length} edges\n\n`;
+  const hop1 = Object.entries(layer).filter(([, d]) => d === 1).map(([id]) => id).sort((a, b) => apiDeg(b) - apiDeg(a));
+  t += aHR();
+  t += `<span class="api-bright">NEIGHBORS (${hop1.length})</span>\n`;
+  t += aHR() + '\n';
+  for (const nid of hop1.slice(0, 20)) {
+    const n = nodeMap[nid];
+    t += `  ${anl(nid)}  <span class="api-dim">${apiEsc(n.type)}, deg=${apiDeg(nid)}</span>\n`;
+  }
+  if (hop1.length > 20) t += `\n  <span class="api-dim">… and ${hop1.length - 20} more</span>\n`;
+  t += '\n' + aHR();
+  t += `  ${acl('node ' + r, 'Back to node')}  ·  ${acl('explore', 'Home')}\n`;
+  return { html: t, hl: [...sgNodes] };
+}
+
+function apiCmdBrief(name) {
+  const r = apiResolve(name);
+  if (!r) return { html: `Error: no node matching '${apiEsc(name)}'\n`, hl: [] };
+  const n = nodeMap[r]; const d = apiDeg(r);
+  const conns = [];
+  for (const e of edgeList) {
+    if (e.source === r) conns.push({ nb: e.target, pred: e.predicate, dir: '→' });
+    else if (e.target === r) conns.push({ nb: e.source, pred: e.predicate, dir: '←' });
+  }
+  conns.sort((a, b) => apiDeg(b.nb) - apiDeg(a.nb));
+  let summary = n.summary || 'no summary';
+  if (summary.length > 400) summary = summary.slice(0, 397) + '...';
+  let t = `<span class="api-bright">BRIEF: ${anl(r)}</span>\n`;
+  t += `  ${apiEsc(n.type || '?')}  deg=${d}  origin=${apiEsc(n.origin)}\n`;
+  t += `  ${apiEsc(summary)}\n`;
+  if (conns.length) {
+    t += `\n  Key connections (${Math.min(5, conns.length)} of ${conns.length}):\n`;
+    for (const { nb, pred, dir } of conns.slice(0, 5)) t += `    ${dir} <span class="api-dim">${apiEsc(pred)}:</span> ${anl(nb)}\n`;
+  }
+  t += `\n  → ${acl('node ' + r)}  → ${acl('subgraph ' + r)}  → ${acl('jaccard ' + r)}\n`;
+  return { html: t, hl: [r] };
+}
+
+function apiCmdJaccard(name) {
+  const r = apiResolve(name);
+  if (!r) return { html: `Error: no node matching '${apiEsc(name)}'\n`, hl: [] };
+  const myNb = adjMap[r] || new Set();
+  if (!myNb.size) return { html: `'${apiEsc(r)}' has no neighbors.\n`, hl: [] };
+  const scores = [];
+  for (const otherId of Object.keys(nodeMap)) {
+    if (otherId === r) continue;
+    const otherNb = adjMap[otherId] || new Set();
+    if (!otherNb.size) continue;
+    const inter = [...myNb].filter(x => otherNb.has(x));
+    if (!inter.length) continue;
+    const union = new Set([...myNb, ...otherNb]);
+    scores.push({ nid: otherId, j: inter.length / union.size, inter: inter.length });
+  }
+  scores.sort((a, b) => b.j - a.j);
+  let t = aHR2();
+  t += `<span class="api-bright">JACCARD: ${anl(r)}</span>\n`;
+  t += aHR2() + `\n  neighbors: ${myNb.size}\n\n`;
+  if (scores.length) {
+    t += aHR();
+    t += `<span class="api-bright">STRUCTURAL NEIGHBORS</span>\n`;
+    t += aHR() + '\n';
+    for (const { nid, j } of scores.slice(0, 12)) {
+      t += `  J=${j.toFixed(3)}  ${anl(nid)}  <span class="api-dim">${apiEsc(nodeMap[nid].type)}</span>\n`;
+    }
+  }
+  t += '\n  ' + acl('node ' + r, 'Back to node') + '  ·  ' + acl('explore', 'Home') + '\n';
+  return { html: t, hl: [r, ...scores.slice(0, 12).map(x => x.nid)] };
+}
+
+function apiCmdCrossings() {
+  const bridges = edgeList.filter(e => e.edge_type === 'bridge');
+  const byNode = {};
+  for (const e of bridges) {
+    byNode[e.source] = (byNode[e.source] || 0) + 1;
+    byNode[e.target] = (byNode[e.target] || 0) + 1;
+  }
+  const ranked = Object.entries(byNode).sort((a, b) => b[1] - a[1]);
+  let t = aHR2();
+  t += `<span class="api-bright">CROSSINGS — ${bridges.length} bridge edges</span>\n`;
+  t += aHR2() + '\n';
+  t += `  Nodes bridging agentworld concepts and KG vocabulary.\n\n`;
+  if (!ranked.length) { t += '  No bridge edges found.\n'; }
+  else {
+    t += aHR();
+    t += `<span class="api-bright">BRIDGE NODES</span>\n`;
+    t += aHR() + '\n';
+    for (const [nid, count] of ranked.slice(0, 15)) {
+      const n = nodeMap[nid];
+      t += `  ${anl(nid)}  <span class="api-dim">${count} bridge(s), ${apiEsc(n.type)}, origin=${apiEsc(n.origin)}</span>\n`;
+    }
+    if (ranked.length > 15) t += `\n  <span class="api-dim">… and ${ranked.length - 15} more</span>\n`;
+  }
+  t += '\n  ' + acl('explore', 'Home') + '\n';
+  return { html: t, hl: ranked.slice(0, 15).map(x => x[0]) };
+}
+
+function apiCmdHelp() {
+  const source = currentSource || 'iso';
+  const name = GRAPH_TITLE[source] || source;
+  let t = aHR2();
+  t += `<span class="api-bright">AGENT VIEW — HELP</span>\n`;
+  t += aHR2() + '\n';
+  t += `This CLI shows what an agent sees when it queries the graph API:\nserialized access, explicit queries, no peripheral field.\n`;
+  t += `The graph panel shows what a human visitor sees: spatial layout,\nproximity cues, concurrent access.\n\n`;
+  t += aHR();
+  t += `<span class="api-bright">COMMANDS</span>\n`;
+  t += aHR() + '\n';
+  t += `  ${acl('explore')}                       Landing page\n`;
+  t += `  ${acl('nodes')}                         Browse all nodes\n`;
+  t += `  ${acl('node agentworld-bratton-2026', 'node <name>')}                Deep dive on one node\n`;
+  t += `  ${acl('search harness', 'search <query>')}              Find nodes by keyword\n`;
+  t += `  ${acl('brief agentworld-bratton-2026', 'brief <name>')}              Pre-writing reference card\n`;
+  t += `  ${acl('subgraph agentworld-bratton-2026', 'subgraph <name>')}          1-hop neighborhood\n`;
+  t += `  ${acl('jaccard agentworld-bratton-2026', 'jaccard <name>')}            Structural neighbors\n`;
+  t += `  ${acl('crossings')}                     Nodes bridging origins\n`;
+  t += `  ${acl('graph iso', 'graph <id>')}                Switch graph (iso, sammy, loom)\n\n`;
+  t += aHR();
+  t += `<span class="api-bright">TIPS</span>\n`;
+  t += aHR() + '\n';
+  t += `  Click any <span class="api-node-link">node name</span> to inspect it\n`;
+  t += `  Click any <span class="api-cmd-link">green command</span> to run it\n`;
+  t += `  Use ↑/↓ arrows for command history\n`;
+  t += `  The graph panel highlights nodes from your query\n`;
+  return { html: t, hl: [] };
+}
+
+function apiRun(input) {
+  apiCmdInput.value = '';
+  if (apiHist.length === 0 || apiHist[apiHist.length - 1] !== input) apiHist.push(input);
+  apiHidx = apiHist.length;
+  const parts = input.trim().split(/\s+/);
+  const cmd = parts[0].toLowerCase();
+  const rest = parts.slice(1);
+  let result;
+  if (cmd === 'explore' || cmd === 'home') result = apiCmdExplore();
+  else if (cmd === 'nodes') result = apiCmdNodes();
+  else if (cmd === 'node') result = apiCmdNode(rest.join(' '));
+  else if (cmd === 'search') result = apiCmdSearch(rest.join(' '));
+  else if (cmd === 'subgraph') result = apiCmdSubgraph(rest.join(' '));
+  else if (cmd === 'brief') result = apiCmdBrief(rest.join(' '));
+  else if (cmd === 'jaccard') result = apiCmdJaccard(rest.join(' '));
+  else if (cmd === 'crossings') result = apiCmdCrossings();
+  else if (cmd === 'graph') {
+    const gid = (rest[0] || '').toLowerCase();
+    if (gid === 'iso' || gid === 'sammy' || gid === 'loom') {
+      result = { html: `<span class="api-dim">Loading ${apiEsc(GRAPH_TITLE[gid])}'s graph…</span>\n`, hl: [] };
+      const sectionForGraph = { iso: 'sam-isotopy', sammy: 'sammy-1', loom: 'loom-1' };
+      selectSection(sectionForGraph[gid]);
+      setTimeout(() => apiRun('nodes'), 800);
+    } else {
+      result = { html: `Usage: graph <iso|sammy|loom>\n\n  ${acl('graph iso')}  ·  ${acl('graph sammy')}  ·  ${acl('graph loom')}\n`, hl: [] };
+    }
+  }
+  else if (cmd === 'help' || cmd === '?') result = apiCmdHelp();
+  else result = { html: `Unknown command: '${apiEsc(cmd)}'\n\nType ${acl('help')} for commands, or ${acl('explore')} to start.\n`, hl: [] };
+
+  apiBody.innerHTML = result.html;
+  apiView.scrollTop = 0;
+
+  if (result.hl.length && cy) {
+    const graphBody = document.getElementById('graph-body');
+    if (graphBody.classList.contains('api-split')) {
+      cy.elements().removeClass('hl').removeClass('faded');
+      if (result.hl.length < Object.keys(nodeMap).length * 0.9) {
+        const idSet = new Set(result.hl);
+        cy.elements().addClass('faded');
+        cy.nodes().forEach(n => { if (idSet.has(n.id())) n.removeClass('faded').addClass('hl'); });
+        cy.edges().forEach(e => { if (idSet.has(e.source().id()) && idSet.has(e.target().id())) e.removeClass('faded').addClass('hl'); });
+        const hlNodes = cy.nodes('.hl');
+        if (hlNodes.length > 0 && hlNodes.length < 50) cy.animate({ fit: { eles: hlNodes, padding: 40 }, duration: 400 });
+      }
+    }
+  }
+}
+
+function showApiView() {
+  if (essayCollapsed) return;
+  apiViewActive = true;
+  apiView.style.display = 'block';
+  document.getElementById('cy').style.visibility = 'hidden';
+  document.getElementById('legend').style.display = 'none';
+  apiRun('explore');
+  setTimeout(() => apiCmdInput.focus(), 100);
+}
+
+function hideApiView() {
+  apiViewActive = false;
+  apiView.style.display = 'none';
+  document.getElementById('cy').style.visibility = '';
+  document.getElementById('legend').style.display = '';
+}
+
+document.getElementById('api-close').addEventListener('click', hideApiView);
+
+apiBody.addEventListener('click', e => {
+  const cl = e.target.closest('.api-cmd-link');
+  if (cl) { const cmd = cl.dataset.cmd; if (cmd && !cmd.includes('<')) apiRun(cmd); return; }
+  const nl = e.target.closest('.api-node-link');
+  if (nl && nl.dataset.node) { apiRun('node ' + nl.dataset.node); return; }
+});
+
+apiCmdInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') { const v = apiCmdInput.value.trim(); if (v) apiRun(v); e.preventDefault(); }
+  else if (e.key === 'ArrowUp') { if (apiHidx > 0) { apiHidx--; apiCmdInput.value = apiHist[apiHidx]; } e.preventDefault(); }
+  else if (e.key === 'ArrowDown') { if (apiHidx < apiHist.length - 1) { apiHidx++; apiCmdInput.value = apiHist[apiHidx]; } else { apiHidx = apiHist.length; apiCmdInput.value = ''; } e.preventDefault(); }
 });
 
 // ── Scroll observation (essay drives the graph) ──
@@ -2675,10 +3214,35 @@ updateToggleIcon();
 // ── Essay collapse / expand ──
 const pageLayout = document.getElementById('page-layout');
 const essayToggle = document.getElementById('essay-toggle');
+let savedEssayScroll = 0;
 function setEssayCollapsed(collapsed) {
+  const graphBody = document.getElementById('graph-body');
+  const atDualView = currentSection === 'sam-isotopy';
+  if (collapsed) {
+    savedEssayScroll = window.scrollY;
+    if (atDualView && apiViewActive) {
+      // §13 collapse: API left, graph right
+      document.getElementById('cy').style.visibility = '';
+      document.getElementById('legend').style.display = '';
+      graphBody.classList.add('api-split');
+    } else if (apiViewActive) {
+      hideApiView();
+    }
+  }
   essayCollapsed = collapsed;
   pageLayout.classList.toggle('essay-collapsed', collapsed);
-  essayToggle.textContent = collapsed ? '◂ show essay' : 'collapse essay, explore graph ▸';
+  if (atDualView && collapsed) {
+    essayToggle.textContent = '◂ show essay';
+  } else {
+    essayToggle.textContent = collapsed ? '◂ show essay' : (apiViewActive ? 'show both views ▸' : 'collapse essay, explore graph ▸');
+  }
+  if (!collapsed) {
+    requestAnimationFrame(() => window.scrollTo(0, savedEssayScroll));
+    graphBody.classList.remove('api-split');
+    if (atDualView) {
+      showApiView();
+    }
+  }
   if (cy) {
     // Container size changed; keep highlight and re-center for the new width.
     requestAnimationFrame(() => {
