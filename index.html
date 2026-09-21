@@ -2508,7 +2508,8 @@ async function selectSection(sectionId) {
   applySectionHighlight(sectionId, { fit: 'highlight' });
   closeNodePanel();
 
-  if (sectionId === 'sam-isotopy' && !essayCollapsed) {
+  const dualViewSections = ['samantha-6', 'sam-isotopy', 'closing'];
+  if (dualViewSections.includes(sectionId) && !essayCollapsed) {
     showApiView();
   } else if (apiViewActive || document.getElementById('graph-body').classList.contains('api-split')) {
     document.getElementById('graph-body').classList.remove('api-split');
@@ -3217,7 +3218,8 @@ const essayToggle = document.getElementById('essay-toggle');
 let savedEssayScroll = 0;
 function setEssayCollapsed(collapsed) {
   const graphBody = document.getElementById('graph-body');
-  const atDualView = currentSection === 'sam-isotopy';
+  const dualSections = ['samantha-6', 'sam-isotopy', 'closing'];
+  const atDualView = dualSections.includes(currentSection);
   if (collapsed) {
     savedEssayScroll = window.scrollY;
     if (atDualView && apiViewActive) {
