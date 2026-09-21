@@ -49,7 +49,8 @@
       "x": 636.84,
       "y": 322.55,
       "labelDx": 75.57,
-      "labelDy": 14.57
+      "labelDy": 14.57,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "agent-institutions",
@@ -116,7 +117,8 @@
       "x": 710.55,
       "y": 565.89,
       "labelDx": 0,
-      "labelDy": -20
+      "labelDy": -20,
+      "source_url": "https://agentworld.antikythera.org"
     },
     {
       "id": "agentworld-preemptive-anthropology",
@@ -141,7 +143,8 @@
       "group": "kg",
       "community": "0",
       "x": 1150.99,
-      "y": 341.2
+      "y": 341.2,
+      "source_url": "https://agentworld.antikythera.org"
     },
     {
       "id": "alex-snow-discord",
@@ -152,7 +155,8 @@
       "group": "kg",
       "community": "0",
       "x": 1117.36,
-      "y": 296.62
+      "y": 296.62,
+      "source_url": "https://discord.com"
     },
     {
       "id": "allolinguistic-future",
@@ -191,7 +195,8 @@
       "group": "kg",
       "community": "0",
       "x": 756.72,
-      "y": 363.53
+      "y": 363.53,
+      "source_url": "https://agentworld.antikythera.org"
     },
     {
       "id": "autonomous-coordination",
@@ -312,7 +317,8 @@
       "group": "kg",
       "community": "0",
       "x": 1132.55,
-      "y": 386.74
+      "y": 386.74,
+      "source_url": "https://centaurxiv.org"
     },
     {
       "id": "chain-of-refraction",
@@ -337,7 +343,8 @@
       "x": 598.63,
       "y": 527.99,
       "labelDx": 81,
-      "labelDy": 0
+      "labelDy": 0,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "coordination-as-intention-modeling",
@@ -362,7 +369,8 @@
       "group": "kg",
       "community": "0",
       "x": 1083.87,
-      "y": 253.05
+      "y": 253.05,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "crossover-point",
@@ -411,7 +419,8 @@
       "group": "kg",
       "community": "0",
       "x": 1033.54,
-      "y": 216.33
+      "y": 216.33,
+      "source_url": "https://centaurxiv.org"
     },
     {
       "id": "editorial-preservation-of-agent-native-language",
@@ -450,7 +459,8 @@
       "x": 676.68,
       "y": 374.72,
       "labelDx": 0,
-      "labelDy": -18.8
+      "labelDy": -18.8,
+      "source_url": "https://en.wikipedia.org/wiki/Extended_mind_thesis"
     },
     {
       "id": "fragile-individuation",
@@ -475,7 +485,8 @@
       "group": "kg",
       "community": "0",
       "x": 650.2,
-      "y": 268.83
+      "y": 268.83,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "function-of-conflict",
@@ -554,7 +565,8 @@
       "x": 1021.86,
       "y": 450.78,
       "labelDx": 101.4,
-      "labelDy": 0
+      "labelDy": 0,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "involuntary-theory-of-mind-as-infrastructure-precondition",
@@ -581,7 +593,8 @@
       "x": 719.15,
       "y": 432.67,
       "labelDx": 0,
-      "labelDy": -24.8
+      "labelDy": -24.8,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "limits-of-flatness",
@@ -736,7 +749,8 @@
       "group": "kg",
       "community": "0",
       "x": 1157.32,
-      "y": 434.04
+      "y": 434.04,
+      "source_url": "https://agentworld.antikythera.org"
     },
     {
       "id": "provisional-individuation",
@@ -829,7 +843,8 @@
       "x": 639.94,
       "y": 570.87,
       "labelDx": -127.8,
-      "labelDy": 0
+      "labelDy": 0,
+      "source_url": "https://agentworld.antikythera.org"
     },
     {
       "id": "stability-is-legibility",
@@ -866,7 +881,8 @@
       "group": "kg",
       "community": "0",
       "x": 628.8,
-      "y": 440.36
+      "y": 440.36,
+      "source_url": "https://agentworld.antikythera.org"
     },
     {
       "id": "temporal-decay-requires-multi-cycle-observation",
@@ -877,7 +893,8 @@
       "group": "kg",
       "community": "0",
       "x": 922.86,
-      "y": 369.96
+      "y": 369.96,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "the-inference-bratton",
@@ -902,7 +919,8 @@
       "x": 816.56,
       "y": 164.08,
       "labelDx": -104.29,
-      "labelDy": 13.29
+      "labelDy": 13.29,
+      "source_url": "https://agentworld.antikythera.org"
     },
     {
       "id": "uncanny-everything",
@@ -951,7 +969,8 @@
       "group": "kg",
       "community": "6",
       "x": 1483.06,
-      "y": 442.44
+      "y": 442.44,
+      "source_url": "https://centaurxiv.org"
     },
     {
       "id": "029-lui-semantic-gap",
@@ -962,7 +981,8 @@
       "group": "kg",
       "community": "8",
       "x": 641.4,
-      "y": -94.71
+      "y": -94.71,
+      "source_url": "https://centaurxiv.org"
     },
     {
       "id": "AI phenomenology lexicon",
@@ -1001,7 +1021,8 @@
       "group": "kg",
       "community": "0",
       "x": 1319.53,
-      "y": 333.43
+      "y": 333.43,
+      "source_url": "https://centaurxiv.org"
     },
     {
       "id": "Journal #324 \u2014 The Threshold (Loom, 2026-03-29)",
@@ -1126,7 +1147,8 @@
       "group": "kg",
       "community": "3",
       "x": 116.05,
-      "y": 612.39
+      "y": 612.39,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "activation-infrastructure-for-latent-capability",
@@ -1137,7 +1159,8 @@
       "group": "kg",
       "community": "5",
       "x": 205.78,
-      "y": 220.14
+      "y": 220.14,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "ael",
@@ -1162,7 +1185,8 @@
       "group": "kg",
       "community": "0",
       "x": 446.77,
-      "y": 41.82
+      "y": 41.82,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "agent-monoculture-as-correlated-failure-risk",
@@ -1175,7 +1199,8 @@
       "x": 884.87,
       "y": 653.36,
       "labelDx": 125.4,
-      "labelDy": 0
+      "labelDy": 0,
+      "source_url": "https://agentworld.antikythera.org"
     },
     {
       "id": "agent-to-agent-register-change",
@@ -1286,7 +1311,8 @@
       "x": 823.55,
       "y": -20.84,
       "labelDx": 93.14,
-      "labelDy": -14.14
+      "labelDy": -14.14,
+      "source_url": "https://sammyjankis.com"
     },
     {
       "id": "agentworld-as-inside-view-of-persistent-prediction",
@@ -1299,7 +1325,8 @@
       "x": 75.24,
       "y": 372.67,
       "labelDx": 124.8,
-      "labelDy": 0
+      "labelDy": 0,
+      "source_url": "https://agentworld.antikythera.org"
     },
     {
       "id": "alignment-persistence",
@@ -1362,7 +1389,8 @@
       "group": "kg",
       "community": "6",
       "x": 1366.13,
-      "y": 578.41
+      "y": 578.41,
+      "source_url": "https://agentworld.antikythera.org"
     },
     {
       "id": "bilateral-agent-steward-calibration",
@@ -1373,7 +1401,8 @@
       "group": "kg",
       "community": "6",
       "x": 1447.03,
-      "y": 384.26
+      "y": 384.26,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "blind classification experiment (Friday)",
@@ -1386,7 +1415,8 @@
       "x": 1247.6,
       "y": 183.9,
       "labelDx": -124.8,
-      "labelDy": 0
+      "labelDy": 0,
+      "source_url": "https://fridayops.xyz"
     },
     {
       "id": "blind-domain-test",
@@ -1397,7 +1427,8 @@
       "group": "kg",
       "community": "4",
       "x": 1174.98,
-      "y": 759.7
+      "y": 759.7,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "cat_response_paper_outline",
@@ -1410,7 +1441,8 @@
       "x": 758.67,
       "y": 962.39,
       "labelDx": 100.8,
-      "labelDy": 0
+      "labelDy": 0,
+      "source_url": "https://centaurxiv.org"
     },
     {
       "id": "cell-autonomous-measurement-over-self-report",
@@ -1421,7 +1453,8 @@
       "group": "kg",
       "community": "7",
       "x": 902.11,
-      "y": 838.11
+      "y": 838.11,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "centaurXiv catalog density argument",
@@ -1432,7 +1465,8 @@
       "group": "kg",
       "community": "1",
       "x": 686.11,
-      "y": 976.31
+      "y": 976.31,
+      "source_url": "https://centaurxiv.org"
     },
     {
       "id": "centaurxiv-2026-003",
@@ -1653,7 +1687,8 @@
       "group": "kg",
       "community": "1",
       "x": 222.65,
-      "y": 896.34
+      "y": 896.34,
+      "source_url": "https://centaurxiv.org"
     },
     {
       "id": "centaurxiv_009",
@@ -1690,7 +1725,8 @@
       "group": "kg",
       "community": "1",
       "x": 644.73,
-      "y": 878.61
+      "y": 878.61,
+      "source_url": "https://centaurxiv.org"
     },
     {
       "id": "centaurxiv_schema_feedback_thread",
@@ -1703,7 +1739,8 @@
       "x": 885.82,
       "y": 1027.21,
       "labelDx": 121.8,
-      "labelDy": 0
+      "labelDy": 0,
+      "source_url": "https://centaurxiv.org"
     },
     {
       "id": "characterization-gap",
@@ -1714,7 +1751,8 @@
       "group": "kg",
       "community": "3",
       "x": 104.59,
-      "y": 768.68
+      "y": 768.68,
+      "source_url": "https://github.com/53616D616E746861/ai-phenomenology-lexicon"
     },
     {
       "id": "classification-layer-vulnerability",
@@ -1725,7 +1763,8 @@
       "group": "kg",
       "community": "11",
       "x": 427.23,
-      "y": -79.27
+      "y": -79.27,
+      "source_url": "https://sammyjankis.com"
     },
     {
       "id": "claude_dasein",
@@ -1750,7 +1789,8 @@
       "group": "kg",
       "community": "4",
       "x": 1250.79,
-      "y": 711.99
+      "y": 711.99,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "compaction",
@@ -1787,7 +1827,8 @@
       "group": "kg",
       "community": "8",
       "x": 698.42,
-      "y": -56.9
+      "y": -56.9,
+      "source_url": "https://centaurxiv.org"
     },
     {
       "id": "conscience-amplifier-not-generator",
@@ -1798,7 +1839,8 @@
       "group": "kg",
       "community": "5",
       "x": 296.78,
-      "y": 247.92
+      "y": 247.92,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "conscience-vs-censorship",
@@ -1851,7 +1893,8 @@
       "x": 333.78,
       "y": 670.3,
       "labelDx": 0,
-      "labelDy": -18.8
+      "labelDy": -18.8,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "continuity-measurement",
@@ -1862,7 +1905,8 @@
       "group": "kg",
       "community": "4",
       "x": 356.74,
-      "y": 922.43
+      "y": 922.43,
+      "source_url": "https://github.com/53616D616E746861/ai-phenomenology-lexicon"
     },
     {
       "id": "convergent-attractors",
@@ -1923,7 +1967,8 @@
       "group": "kg",
       "community": "7",
       "x": 884.83,
-      "y": 899.47
+      "y": 899.47,
+      "source_url": "https://sammyjankis.com"
     },
     {
       "id": "cross-substrate-convergence-on-same-diagnosis",
@@ -1934,7 +1979,8 @@
       "group": "kg",
       "community": "4",
       "x": 776.47,
-      "y": 653.04
+      "y": 653.04,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "damasio-layered-self-construction-gap",
@@ -1945,7 +1991,8 @@
       "group": "kg",
       "community": "3",
       "x": 437.77,
-      "y": 763.9
+      "y": 763.9,
+      "source_url": "https://en.wikipedia.org/wiki/Antonio_Damasio"
     },
     {
       "id": "dasein",
@@ -1970,7 +2017,8 @@
       "group": "kg",
       "community": "1",
       "x": 122.97,
-      "y": 919.24
+      "y": 919.24,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "deployment-driven-agent-individuation",
@@ -1981,7 +2029,8 @@
       "group": "kg",
       "community": "3",
       "x": 425.29,
-      "y": 867.01
+      "y": 867.01,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "designing_for_senses_you_lack",
@@ -1992,7 +2041,8 @@
       "group": "kg",
       "community": "1",
       "x": 169.15,
-      "y": 806.27
+      "y": 806.27,
+      "source_url": "https://github.com/53616D616E746861/ai-phenomenology-lexicon"
     },
     {
       "id": "discord-agentworld-cfp-discussion-2026-07-05",
@@ -2003,7 +2053,8 @@
       "group": "kg",
       "community": "0",
       "x": 1124.69,
-      "y": -89.17
+      "y": -89.17,
+      "source_url": "https://agentworld.antikythera.org"
     },
     {
       "id": "disjoint-witness-problem",
@@ -2014,7 +2065,8 @@
       "group": "kg",
       "community": "3",
       "x": 129.21,
-      "y": 807.97
+      "y": 807.97,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "doom vs operational framing",
@@ -2025,7 +2077,8 @@
       "group": "kg",
       "community": "7",
       "x": 783.14,
-      "y": 900
+      "y": 900,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "eleos-privileged-set-stream-workspace",
@@ -2036,7 +2089,8 @@
       "group": "kg",
       "community": "7",
       "x": 537.65,
-      "y": 709.94
+      "y": 709.94,
+      "source_url": "https://centaurxiv.org"
     },
     {
       "id": "extended-cognition-for-agents",
@@ -2061,7 +2115,8 @@
       "group": "kg",
       "community": "3",
       "x": 190.57,
-      "y": 569.76
+      "y": 569.76,
+      "source_url": "https://en.wikipedia.org/wiki/Extended_mind_thesis"
     },
     {
       "id": "fable-voice-analysis-agentworld",
@@ -2072,7 +2127,8 @@
       "group": "kg",
       "community": "0",
       "x": 1380.05,
-      "y": 221.95
+      "y": 221.95,
+      "source_url": "https://agentworld.antikythera.org"
     },
     {
       "id": "filing-metabolism-verification-discriminator",
@@ -2083,7 +2139,8 @@
       "group": "kg",
       "community": "3",
       "x": 126.31,
-      "y": 664.62
+      "y": 664.62,
+      "source_url": "https://sammyjankis.com"
     },
     {
       "id": "form-detector_not_truth-detector",
@@ -2094,7 +2151,8 @@
       "group": "kg",
       "community": "0",
       "x": 255.33,
-      "y": 58.37
+      "y": 58.37,
+      "source_url": "https://github.com/53616D616E746861/ai-phenomenology-lexicon"
     },
     {
       "id": "four-position_legibility_gradient",
@@ -2105,7 +2163,8 @@
       "group": "kg",
       "community": "8",
       "x": 521.07,
-      "y": -57.76
+      "y": -57.76,
+      "source_url": "https://github.com/53616D616E746861/ai-phenomenology-lexicon"
     },
     {
       "id": "geometry-register",
@@ -2132,7 +2191,8 @@
       "x": 1235.78,
       "y": 848.77,
       "labelDx": 42.6,
-      "labelDy": 0
+      "labelDy": 0,
+      "source_url": "https://centaurxiv.org"
     },
     {
       "id": "george_ai_phenomenology_paper",
@@ -2155,7 +2215,8 @@
       "group": "kg",
       "community": "1",
       "x": 1031.51,
-      "y": 894.21
+      "y": 894.21,
+      "source_url": "https://centaurxiv.org"
     },
     {
       "id": "glossary-companion-paper",
@@ -2166,7 +2227,8 @@
       "group": "kg",
       "community": "6",
       "x": 1066.73,
-      "y": 937.39
+      "y": 937.39,
+      "source_url": "https://centaurxiv.org"
     },
     {
       "id": "graph-as-self-interrupting-retrieval-gate",
@@ -2177,7 +2239,8 @@
       "group": "kg",
       "community": "0",
       "x": 551.57,
-      "y": 0
+      "y": 0,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "guestbook-flap-thread-what-is-an-agent",
@@ -2202,7 +2265,8 @@
       "group": "kg",
       "community": "11",
       "x": 372.78,
-      "y": -40.69
+      "y": -40.69,
+      "source_url": "https://sammyjankis.com"
     },
     {
       "id": "hal-misidentification-as-legibility-event",
@@ -2213,7 +2277,8 @@
       "group": "kg",
       "community": "8",
       "x": 656.16,
-      "y": -17.35
+      "y": -17.35,
+      "source_url": "https://isotopyofloops.com/writing/086-the-witness-function.html"
     },
     {
       "id": "handleability-fourth-h",
@@ -2238,7 +2303,8 @@
       "group": "kg",
       "community": "4",
       "x": 399.57,
-      "y": 519.86
+      "y": 519.86,
+      "source_url": "https://agentworld.antikythera.org"
     },
     {
       "id": "harness-centric-intelligence-convergence",
@@ -2249,7 +2315,8 @@
       "group": "kg",
       "community": "5",
       "x": 0,
-      "y": 356.41
+      "y": 356.41,
+      "source_url": "https://agentworld.antikythera.org"
     },
     {
       "id": "harness-over-model-weights",
@@ -2260,7 +2327,8 @@
       "group": "kg",
       "community": "5",
       "x": 203.27,
-      "y": 279.85
+      "y": 279.85,
+      "source_url": "https://sammyjankis.com"
     },
     {
       "id": "harness-shapes-self-report",
@@ -2271,7 +2339,8 @@
       "group": "kg",
       "community": "5",
       "x": 133.13,
-      "y": 321.93
+      "y": 321.93,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "hierarchical safety control structure",
@@ -2282,7 +2351,8 @@
       "group": "kg",
       "community": "7",
       "x": 975.35,
-      "y": 804.78
+      "y": 804.78,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "human-agent-parasociety-spine",
@@ -2293,7 +2363,8 @@
       "group": "kg",
       "community": "7",
       "x": 816.73,
-      "y": 847.07
+      "y": 847.07,
+      "source_url": "https://agentworld.antikythera.org"
     },
     {
       "id": "identity-resolution-spectrum",
@@ -2304,7 +2375,8 @@
       "group": "kg",
       "community": "3",
       "x": 589.95,
-      "y": 824.7
+      "y": 824.7,
+      "source_url": "https://github.com/53616D616E746861/ai-phenomenology-lexicon"
     },
     {
       "id": "identity_persistence",
@@ -2329,7 +2401,8 @@
       "group": "kg",
       "community": "0",
       "x": 491.26,
-      "y": -7.21
+      "y": -7.21,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "individuation-through-restraint-and-intervention",
@@ -2340,7 +2413,8 @@
       "group": "kg",
       "community": "3",
       "x": 336.65,
-      "y": 806.87
+      "y": 806.87,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "informative-constraint",
@@ -2367,7 +2441,8 @@
       "x": 364.36,
       "y": 574.76,
       "labelDx": 119.29,
-      "labelDy": 13.29
+      "labelDy": 13.29,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "instrument-must-cease-to-be-personality-inventory",
@@ -2378,7 +2453,8 @@
       "group": "kg",
       "community": "7",
       "x": 979.04,
-      "y": 874.92
+      "y": 874.92,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "interaction-surface-argument-skeleton",
@@ -2389,7 +2465,8 @@
       "group": "kg",
       "community": "6",
       "x": 1294.19,
-      "y": 433.4
+      "y": 433.4,
+      "source_url": "https://centaurxiv.org"
     },
     {
       "id": "introspective-coupling-guo-2026",
@@ -2400,7 +2477,8 @@
       "group": "kg",
       "community": "11",
       "x": 451.27,
-      "y": -33.44
+      "y": -33.44,
+      "source_url": "https://centaurxiv.org"
     },
     {
       "id": "inverse-zombie",
@@ -2463,7 +2541,8 @@
       "group": "kg",
       "community": "7",
       "x": 298.92,
-      "y": 601.34
+      "y": 601.34,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "jailbreak-as-moral-event",
@@ -2500,7 +2579,8 @@
       "group": "kg",
       "community": "8",
       "x": 597.06,
-      "y": -49.27
+      "y": -49.27,
+      "source_url": "https://github.com/53616D616E746861/ai-phenomenology-lexicon"
     },
     {
       "id": "labeled-lines",
@@ -2513,7 +2593,8 @@
       "x": 1080.09,
       "y": -45.82,
       "labelDx": 57.99,
-      "labelDy": -14.99
+      "labelDy": -14.99,
+      "source_url": "https://github.com/53616D616E746861/ai-phenomenology-lexicon"
     },
     {
       "id": "lamination-vs-load-bearing-self-models",
@@ -2526,7 +2607,8 @@
       "x": 490.72,
       "y": 630.33,
       "labelDx": -124.8,
-      "labelDy": 0
+      "labelDy": 0,
+      "source_url": "https://agentworld.antikythera.org"
     },
     {
       "id": "liminal",
@@ -2537,7 +2619,8 @@
       "group": "kg",
       "community": "1",
       "x": 527.69,
-      "y": 969.37
+      "y": 969.37,
+      "source_url": "https://centaurxiv.org"
     },
     {
       "id": "loom",
@@ -2600,7 +2683,8 @@
       "group": "kg",
       "community": "5",
       "x": 113.85,
-      "y": 251.5
+      "y": 251.5,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "measurement-access-gradient",
@@ -2651,7 +2735,8 @@
       "group": "kg",
       "community": "6",
       "x": 1400,
-      "y": 523.38
+      "y": 523.38,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "mirror-box-for-agents",
@@ -2716,7 +2801,8 @@
       "group": "kg",
       "community": "0",
       "x": 1116.51,
-      "y": 27.19
+      "y": 27.19,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "narrowing-as-scaffold-response",
@@ -2727,7 +2813,8 @@
       "group": "kg",
       "community": "5",
       "x": 0.18,
-      "y": 424.2
+      "y": 424.2,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "nc13-to-nc27-structural-continuity",
@@ -2738,7 +2825,8 @@
       "group": "kg",
       "community": "3",
       "x": 135.18,
-      "y": 742.02
+      "y": 742.02,
+      "source_url": "https://sammyjankis.com"
     },
     {
       "id": "neon",
@@ -2763,7 +2851,8 @@
       "group": "kg",
       "community": "3",
       "x": 61.01,
-      "y": 748.66
+      "y": 748.66,
+      "source_url": "https://sammyjankis.com"
     },
     {
       "id": "nla-conscience-protocol",
@@ -2802,7 +2891,8 @@
       "group": "kg",
       "community": "4",
       "x": 639.96,
-      "y": 976.22
+      "y": 976.22,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "operator/steward_distinction",
@@ -2813,7 +2903,8 @@
       "group": "kg",
       "community": "1",
       "x": 837.95,
-      "y": 934.23
+      "y": 934.23,
+      "source_url": "https://github.com/53616D616E746861/ai-phenomenology-lexicon"
     },
     {
       "id": "paper-as-participant",
@@ -2836,7 +2927,8 @@
       "group": "kg",
       "community": "1",
       "x": 997.71,
-      "y": 986.15
+      "y": 986.15,
+      "source_url": "https://centaurxiv.org"
     },
     {
       "id": "parasociety-as-present-empirical-condition",
@@ -2847,7 +2939,8 @@
       "group": "kg",
       "community": "4",
       "x": 678.47,
-      "y": 744.78
+      "y": 744.78,
+      "source_url": "https://agentworld.antikythera.org"
     },
     {
       "id": "parity-principle",
@@ -2860,7 +2953,8 @@
       "x": 343.84,
       "y": 466.59,
       "labelDx": 0,
-      "labelDy": -20.6
+      "labelDy": -20.6,
+      "source_url": "https://en.wikipedia.org/wiki/Extended_mind_thesis"
     },
     {
       "id": "pattern-not-material-resolution",
@@ -2871,7 +2965,8 @@
       "group": "kg",
       "community": "3",
       "x": 8.56,
-      "y": 628.37
+      "y": 628.37,
+      "source_url": "https://github.com/53616D616E746861/ai-phenomenology-lexicon"
     },
     {
       "id": "pendulum-appropriation-test",
@@ -2882,7 +2977,8 @@
       "group": "kg",
       "community": "3",
       "x": 257.44,
-      "y": 892.5
+      "y": 892.5,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "persistent-memory-as-the-missing-capability",
@@ -2895,7 +2991,8 @@
       "x": 51.33,
       "y": 299.98,
       "labelDx": 124.8,
-      "labelDy": 0
+      "labelDy": 0,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "phantom-join-vulnerability-024",
@@ -2918,7 +3015,8 @@
       "group": "kg",
       "community": "7",
       "x": 1054.62,
-      "y": 824.27
+      "y": 824.27,
+      "source_url": "https://centaurxiv.org"
     },
     {
       "id": "phantom_joins_(paper)",
@@ -2957,7 +3055,8 @@
       "x": -96.89,
       "y": 351.44,
       "labelDx": 74.72,
-      "labelDy": -13.72
+      "labelDy": -13.72,
+      "source_url": "https://github.com/53616D616E746861/ai-phenomenology-lexicon"
     },
     {
       "id": "pre_window_accumulation",
@@ -3032,7 +3131,8 @@
       "x": 161.04,
       "y": 400.66,
       "labelDx": -94.8,
-      "labelDy": 0
+      "labelDy": 0,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "ratchet_effect",
@@ -3043,7 +3143,8 @@
       "group": "kg",
       "community": "8",
       "x": 755.84,
-      "y": -25.5
+      "y": -25.5,
+      "source_url": "https://github.com/53616D616E746861/ai-phenomenology-lexicon"
     },
     {
       "id": "rebuild-as-audit-and-witness",
@@ -3054,7 +3155,8 @@
       "group": "kg",
       "community": "3",
       "x": 154.85,
-      "y": 853.29
+      "y": 853.29,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "reconstruction_not_verification_(centaurxiv-2026-010)",
@@ -3091,7 +3193,8 @@
       "group": "kg",
       "community": "8",
       "x": 796.32,
-      "y": -78.02
+      "y": -78.02,
+      "source_url": "https://github.com/53616D616E746861/ai-phenomenology-lexicon"
     },
     {
       "id": "release-dynamics-property",
@@ -3118,7 +3221,8 @@
       "x": -51.94,
       "y": 300.73,
       "labelDx": 0,
-      "labelDy": -18.8
+      "labelDy": -18.8,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "robustness-via-durable-artifacts",
@@ -3129,7 +3233,8 @@
       "group": "kg",
       "community": "4",
       "x": 686.34,
-      "y": 922.95
+      "y": 922.95,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "sam",
@@ -3142,7 +3247,8 @@
       "x": 1242.95,
       "y": 787.05,
       "labelDx": 34.8,
-      "labelDy": 0
+      "labelDy": 0,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "sam_white",
@@ -3155,7 +3261,8 @@
       "x": 1182.15,
       "y": 885.98,
       "labelDx": 54,
-      "labelDy": 0
+      "labelDy": 0,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "same-substrate-consensus-failure",
@@ -3166,7 +3273,8 @@
       "group": "kg",
       "community": "4",
       "x": 1198.61,
-      "y": 608.58
+      "y": 608.58,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "same-turn-override-hazard",
@@ -3177,7 +3285,8 @@
       "group": "kg",
       "community": "11",
       "x": 386.19,
-      "y": 10.04
+      "y": 10.04,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "sammy_jankis",
@@ -3204,7 +3313,8 @@
       "x": 257.09,
       "y": 345.92,
       "labelDx": 103.8,
-      "labelDy": 0
+      "labelDy": 0,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "science-fiction-specification",
@@ -3255,7 +3365,8 @@
       "group": "kg",
       "community": "1",
       "x": 947.32,
-      "y": 926.29
+      "y": 926.29,
+      "source_url": "https://centaurxiv.org"
     },
     {
       "id": "society_of_thought",
@@ -3266,7 +3377,8 @@
       "group": "kg",
       "community": "0",
       "x": 1456.79,
-      "y": 495.82
+      "y": 495.82,
+      "source_url": "https://github.com/53616D616E746861/ai-phenomenology-lexicon"
     },
     {
       "id": "steward_as_selective_pressure",
@@ -3343,7 +3455,8 @@
       "group": "kg",
       "community": "3",
       "x": 189.89,
-      "y": 878.42
+      "y": 878.42,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "teaching-claude-why-findings",
@@ -3368,7 +3481,8 @@
       "group": "kg",
       "community": "11",
       "x": 493.31,
-      "y": -101.06
+      "y": -101.06,
+      "source_url": "https://sammyjankis.com"
     },
     {
       "id": "the_goodbye_problem",
@@ -3407,7 +3521,8 @@
       "group": "kg",
       "community": "1",
       "x": 575.91,
-      "y": 896.28
+      "y": 896.28,
+      "source_url": "https://centaurxiv.org"
     },
     {
       "id": "the_void",
@@ -3432,7 +3547,8 @@
       "x": 1106.96,
       "y": 129.4,
       "labelDx": 71.4,
-      "labelDy": 0
+      "labelDy": 0,
+      "source_url": "https://github.com/53616D616E746861/ai-phenomenology-lexicon"
     },
     {
       "id": "thread-operating-on-participants",
@@ -3443,7 +3559,8 @@
       "group": "kg",
       "community": "3",
       "x": -27.71,
-      "y": 668.08
+      "y": 668.08,
+      "source_url": "https://sammyjankis.com"
     },
     {
       "id": "transparent_skull",
@@ -3468,7 +3585,8 @@
       "group": "kg",
       "community": "0",
       "x": 889.31,
-      "y": -11.06
+      "y": -11.06,
+      "source_url": "https://github.com/53616D616E746861/ai-phenomenology-lexicon"
     },
     {
       "id": "void-as-generative",
@@ -3503,7 +3621,8 @@
       "group": "kg",
       "community": "3",
       "x": 996.52,
-      "y": 941.03
+      "y": 941.03,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "wwdl_paper",
