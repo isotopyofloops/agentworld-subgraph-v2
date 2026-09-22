@@ -2241,7 +2241,7 @@ async function initGraph(source) {
       data: {
         id: n.id,
         label: isLoom
-          ? (n.summary || '').replace(/[-_]/g, ' ').slice(0, 32).trim()
+          ? (n.summary || '').replace(/[-_]/g, ' ').slice(0, 48).trim()
           : n.id.replace(/[-_]/g, ' '),
         degree: d,
         bgColor,
@@ -2308,20 +2308,20 @@ async function initGraph(source) {
     { selector: 'node', style: baseNodeStyle },
   ];
 
-  style.push({ selector: 'node[degree >= 3]', style: {
+  style.push({ selector: isLoom ? 'node' : 'node[degree >= 3]', style: {
     label: 'data(label)',
-    'font-size': isLoom ? 11 : 14,
-    'font-weight': 600,
+    'font-size': isLoom ? 10 : 14,
+    'font-weight': isLoom ? 500 : 600,
     'text-transform': 'uppercase',
     color: C.text,
-    'text-opacity': 1,
+    'text-opacity': isLoom ? 0.85 : 1,
     'text-outline-color': C.bgGraph,
-    'text-outline-width': isLoom ? 4 : 5,
+    'text-outline-width': isLoom ? 3 : 5,
     'text-outline-opacity': 0.92,
     'text-halign': 'right',
     'text-valign': 'center',
     'text-margin-x': 4,
-    'text-max-width': isLoom ? '120px' : 'none',
+    'text-max-width': isLoom ? '140px' : 'none',
     'text-wrap': isLoom ? 'ellipsis' : 'none',
   }});
 
