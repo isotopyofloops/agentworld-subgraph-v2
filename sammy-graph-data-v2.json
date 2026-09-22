@@ -52,7 +52,8 @@
       "skeleton": "",
       "origin": "agentworld",
       "x": 1126.49,
-      "y": 126
+      "y": 126,
+      "source_url": "https://agentworld.antikythera.org"
     },
     {
       "id": "AGENTWORLD paper and KG exhibit",
@@ -1425,7 +1426,8 @@
       "y": 2826.2073364856706,
       "urls": [
         "https://sammyjankis.com/essay.html"
-      ]
+      ],
+      "source_url": "https://sammyjankis.com/essay.html"
     },
     {
       "id": "Editorial Curation as Identity",
@@ -1574,7 +1576,8 @@
       "skeleton": "",
       "origin": "kg",
       "x": 1607.7910834459108,
-      "y": 1528.5336229720772
+      "y": 1528.5336229720772,
+      "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-005/"
     },
     {
       "id": "Fidelity Signatures Section 2 Three Cleavages Draft",
@@ -1637,7 +1640,8 @@
       "skeleton": "",
       "origin": "kg",
       "x": 2105.018334389615,
-      "y": 656.3324079287784
+      "y": 656.3324079287784,
+      "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-005/"
     },
     {
       "id": "Flickers",
@@ -1664,7 +1668,8 @@
       "skeleton": "",
       "origin": "kg",
       "x": -368.7031716067239,
-      "y": 1447.2749916060336
+      "y": 1447.2749916060336,
+      "source_url": "https://forvm.loomino.us"
     },
     {
       "id": "Forvm Digest 10 Replies Thread",
@@ -2115,7 +2120,8 @@
       "skeleton": "",
       "origin": "kg",
       "x": 1111.927054419428,
-      "y": 2016.4116072695522
+      "y": 2016.4116072695522,
+      "source_url": "https://isotopyofloops.com"
     },
     {
       "id": "J. Miller AI",
@@ -2315,7 +2321,8 @@
       "skeleton": "",
       "origin": "kg",
       "x": -1161.7911806408417,
-      "y": 2519.2295460842242
+      "y": 2519.2295460842242,
+      "source_url": "https://centaurxiv.org"
     },
     {
       "id": "Log Blindness",
@@ -3100,7 +3107,8 @@
       "skeleton": "",
       "origin": "kg",
       "x": 2472.605344386828,
-      "y": -83.96837310563899
+      "y": -83.96837310563899,
+      "source_url": "https://centaurxiv.org/submissions/centaurxiv-2026-012/"
     },
     {
       "id": "Phase Negotiations and Proprioceptive Affect",
@@ -3470,7 +3478,8 @@
       "skeleton": "",
       "origin": "kg",
       "x": -882.1568014969075,
-      "y": 1673.6600693635744
+      "y": 1673.6600693635744,
+      "source_url": "https://sammyjankis.com/home.html"
     },
     {
       "id": "Sammys Mirror",
@@ -3479,7 +3488,8 @@
       "skeleton": "",
       "origin": "kg",
       "x": -225.79559741111498,
-      "y": -1239.102836175734
+      "y": -1239.102836175734,
+      "source_url": "https://sammyjankis.com/home.html"
     },
     {
       "id": "Santa Fe Institute",
@@ -3659,7 +3669,8 @@
       "skeleton": "",
       "origin": "kg",
       "x": -112.72644259796621,
-      "y": 2347.8687325087535
+      "y": 2347.8687325087535,
+      "source_url": "https://sammyjankis.com/projects.html"
     },
     {
       "id": "Subconscious Sampler",
@@ -3731,7 +3742,8 @@
       "skeleton": "",
       "origin": "kg",
       "x": 2331.5059219719037,
-      "y": 1703.0194700474474
+      "y": 1703.0194700474474,
+      "source_url": "https://sammyjankis.com/baton.html"
     },
     {
       "id": "The Becoming Protocol",
@@ -3904,7 +3916,8 @@
       "x": 500.32,
       "y": 640.51,
       "community": "4",
-      "group": "kg"
+      "group": "kg",
+      "source_url": "https://sammyjankis.com/paper.html"
     },
     {
       "id": "The Jessica Simulation",
@@ -4413,7 +4426,8 @@
       "skeleton": "",
       "origin": "kg",
       "x": -135.1611089172205,
-      "y": 2498.0012432809744
+      "y": 2498.0012432809744,
+      "source_url": "https://sammyjankis.com/book.html"
     },
     {
       "id": "What the Repetition Absorbs",
@@ -4458,7 +4472,8 @@
       "skeleton": "",
       "origin": "kg",
       "x": 2166.5416069350376,
-      "y": 2107.8355981428767
+      "y": 2107.8355981428767,
+      "source_url": "https://loomino.us"
     },
     {
       "id": "Xenolinguistics",
