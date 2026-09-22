@@ -2240,8 +2240,9 @@ async function initGraph(source) {
     elements.push({
       data: {
         id: n.id,
-        // Loom: no canvas labels (summary lives in the node panel / tooltip only).
-        label: isLoom ? '' : n.id.replace(/[-_]/g, ' '),
+        label: isLoom
+          ? (n.summary || '').replace(/[-_]/g, ' ').slice(0, 32).trim()
+          : n.id.replace(/[-_]/g, ' '),
         degree: d,
         bgColor,
         borderW,
@@ -2307,22 +2308,22 @@ async function initGraph(source) {
     { selector: 'node', style: baseNodeStyle },
   ];
 
-  if (!isLoom) {
-    style.push({ selector: 'node[degree >= 3]', style: {
-      label: 'data(label)',
-      'font-size': 14,
-      'font-weight': 600,
-      'text-transform': 'uppercase',
-      color: C.text,
-      'text-opacity': 1,
-      'text-outline-color': C.bgGraph,
-      'text-outline-width': 5,
-      'text-outline-opacity': 0.92,
-      'text-halign': 'right',
-      'text-valign': 'center',
-      'text-margin-x': 4,
-    }});
-  }
+  style.push({ selector: 'node[degree >= 3]', style: {
+    label: 'data(label)',
+    'font-size': isLoom ? 11 : 14,
+    'font-weight': 600,
+    'text-transform': 'uppercase',
+    color: C.text,
+    'text-opacity': 1,
+    'text-outline-color': C.bgGraph,
+    'text-outline-width': isLoom ? 4 : 5,
+    'text-outline-opacity': 0.92,
+    'text-halign': 'right',
+    'text-valign': 'center',
+    'text-margin-x': 4,
+    'text-max-width': isLoom ? '120px' : 'none',
+    'text-wrap': isLoom ? 'ellipsis' : 'none',
+  }});
 
   if (isLoom) {
     style.push(
