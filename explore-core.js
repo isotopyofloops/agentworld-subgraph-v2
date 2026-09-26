@@ -2,7 +2,7 @@
 // Required keys:
 //   agent           — display name ("Isotopy", "Sammy")
 //   agentPossessive — "Isotopy's", "Sammy's"
-//   dataFile        — "graph-data.json", "sammy-graph-data.json"
+//   dataFile        — "graph-data.json", "sammy-graph-data-v2.json"
 //   selfPronoun     — "I" or agent name for CLI descriptions ("I see" vs "Sammy sees")
 //   defaultNode     — fallback node for examples ("agentworld-bratton-2026")
 //   exampleSearch   — search term for examples ("harness-centric intelligence")
@@ -11,8 +11,8 @@
 //   exampleSurprise — surprise example ("agentworld-bratton-2026")
 //   examplePath     — [from, to] for path example
 //   exampleJaccard  — jaccard example node
-//   nodeUrls        — {nodeId: url} for external links in node panel
 // Optional:
+//   nodeUrls        — {nodeId: url} overrides for the node panel link (default: node.source_url)
 //   shortLabel      — function(id) => string, for label truncation
 
 const CFG = window.GRAPH_CONFIG;
@@ -970,7 +970,7 @@ function showNodePanel(nodeId){
   let h='<div class="np-resize"></div><button class="np-close" title="Close">&times;</button>';
   h+=`<div class="np-name">${esc(nodeId)}</div>`;
   if(n.summary)h+=`<div class="np-summary">${esc(n.summary)}</div>`;
-  const nodeUrl = NODE_URLS[nodeId];
+  const nodeUrl = NODE_URLS[nodeId] || n.source_url;
   if(nodeUrl){
     const urls = Array.isArray(nodeUrl) ? nodeUrl : [nodeUrl];
     h+='<div class="np-link-section">';

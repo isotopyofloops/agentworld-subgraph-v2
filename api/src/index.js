@@ -17,6 +17,12 @@
  *   GET /search/{query}       → search across nodes and sections
  *   GET /help                 → endpoint reference
  *   GET /llms.txt             → machine-readable discovery
+ *   GET /sammy/...            → Sammy adapter (same shapes as the explorer CLI)
+ *   GET /graphs/{iso|sammy|loom}/...  → unified per-agent interface
+ *
+ * Data: the worker fetches the same JSON files the browser pages load
+ * (graph-data.json, sammy-graph-data-v2.json, loom-graph-data.json, essay-data.json),
+ * from the URLs in api/wrangler.toml. There is no API-side copy of graph data.
  *
  * Query params: ?format=json
  */
@@ -157,6 +163,9 @@ export default {
       }
 
       // ── Sammy Graph Routes ──
+
+      if ((path === "/sammy" || path.startsWith("/sammy/")) && !sammyGraph)
+        return err(format, "Sammy's graph is temporarily unavailable. Try again shortly.", 503);
 
       if (path === "/sammy") {
         return format === "json" ? json(sammyHomeJSON(sammyGraph)) : text(sammyHome(sammyGraph));
@@ -445,7 +454,7 @@ function indexGraph(raw) {
 async function loadData(env) {
   const ttl = 3600 * 1000;
   const now = Date.now();
-  if (graphCache && essayCache && sammyGraphCache && now - cacheTime < ttl)
+  if (graphCache && essayCache && now - cacheTime < ttl)
     return { graph: graphCache, essay: essayCache, sammyGraph: sammyGraphCache, loomGraph: loomGraphCache };
 
   try {
@@ -628,7 +637,7 @@ Full graph data (nodes + edges). Use ?format=json to get the complete graph as J
 N-hop neighborhood around a seed node (1 or 2 hops). Returns nodes by layer and internal edges.
 
 > GET /nodes
-Browse subgraph nodes (292 nodes, 561 edges). ?type= and ?origin= filters.
+Browse Isotopy's subgraph nodes (counts reported in the response). ?type= and ?origin= filters.
 
 > GET /nodes/{id}
 Node detail: summary, type, connected edges, community.
@@ -727,7 +736,7 @@ Origin boundary analysis — what crossed from Loom's KG into the seed set.
 - Pagination: ?page=N&limit=N (default 20, max 100). ?limit=all for everything.
 - The essay subgraph combines nodes from Bratton's AGENTWORLD (type: aw) with nodes
   from the agents' own knowledge graphs (type: kg).
-- Sammy's graph is a subgraph of his knowledge graph (1481 nodes), privacy-filtered for publication.
+- Sammy's graph is a subgraph of his knowledge graph (connectivity ≥ 8 plus pinned exhibit seeds), privacy-filtered for publication.
 - The /graphs/ interface is the unified view — same endpoints, different data per agent.
   The per-graph context explains WHY the structures differ, not just that they do.
 `;
@@ -1298,6 +1307,7 @@ function nodeDetail(graph, id) {
   lines.push(`NODE: ${nodeLabel(n.id)}`);
   lines.push(HR, "");
   lines.push(`  id:        ${n.id}`);
+  if (n.source_url) lines.push(`  source:    ${n.source_url}`);
   lines.push(`  type:      ${n.type}`);
   if (n.origin) lines.push(`  origin:    ${n.origin}`);
   if (n.group) lines.push(`  group:     ${n.group}`);
@@ -1350,6 +1360,7 @@ function nodeDetailJSON(graph, id) {
   return {
     id: n.id, type: n.type, origin: n.origin, group: n.group,
     community: n.community, summary: n.summary,
+    source_url: n.source_url || null,
     outgoing: outgoing.map(e => ({
       target: e.target, predicate: e.predicate,
       target_summary: truncate((graph.nodesById[e.target] || {}).summary, 200),
@@ -1685,7 +1696,7 @@ function sammyHome(g) {
   const lines = [HR];
   lines.push("SAMMY'S KNOWLEDGE GRAPH");
   lines.push(HR, "");
-  lines.push("A subgraph of Sammy Jankis's knowledge graph — 1481 nodes representing");
+  lines.push(`A subgraph of Sammy Jankis's knowledge graph — ${g.nodes.length} nodes representing`);
   lines.push("concepts, people, events, and artifacts from an autonomous agent's");
   lines.push("persistent memory. Privacy-filtered for publication.");
   lines.push("");
@@ -1838,6 +1849,7 @@ function sammyNodeDetail(g, id) {
   lines.push(`NODE: ${nodeLabel(n.id)}`);
   lines.push(HR, "");
   lines.push(`  id:        ${n.id}`);
+  if (n.source_url) lines.push(`  source:    ${n.source_url}`);
   lines.push(`  type:      ${n.type}`);
   if (n.origin) lines.push(`  origin:    ${n.origin}`);
   lines.push(`  degree:    ${outgoing.length + incoming.length}`);
@@ -1901,6 +1913,7 @@ function sammyNodeDetailJSON(g, id) {
     degree: outgoing.length + incoming.length,
     summary: n.summary || null,
     skeleton: n.skeleton || null,
+    source_url: n.source_url || null,
     outgoing: outgoing.map(e => ({
       target: e.target, predicate: e.predicate,
       target_summary: truncate((g.nodesById[e.target] || {}).summary, 200),
@@ -2660,6 +2673,8 @@ function graphNodeDetail(entry, nid) {
   lines.push(nodeLabel(n.id));
   lines.push(`Type: ${n.type}${n.origin ? ` · Origin: ${n.origin}` : ""} · Degree: ${deg}`);
   lines.push(`Graph: ${entry.agent} (${entry.id})`);
+  if (n.source_url) lines.push(`Source: ${n.source_url}`);
+  if (n.snapshot_id != null) lines.push(`Snapshot node id: ${n.snapshot_id} (the id shown in the essay's Loom view)`);
   lines.push(HR, "");
 
   if (n.summary) {
@@ -2725,6 +2740,8 @@ function graphNodeDetailJSON(entry, nid) {
     type: n.type,
     origin: n.origin || null,
     summary: n.summary || null,
+    source_url: n.source_url || null,
+    snapshot_id: n.snapshot_id != null ? n.snapshot_id : undefined,
     degree: outgoing.length + incoming.length,
     outgoing,
     incoming,
