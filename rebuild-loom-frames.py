@@ -1,11 +1,21 @@
 """
-Rebuild loom-frames.js from raw snapshot files in loom-snapshots/.
+Rebuild Loom's derived data files from the raw snapshot exports in loom-snapshots/.
+
+This is the single generator for everything Loom-related that the UI and API load:
+
+  loom-frames.js        all snapshots as FRAMES (index.html, loom-explore.html, loom-timeline.html)
+  loom-graph-data.json  the latest snapshot in the shared graph-data schema (API worker)
 
 For each snapshot:
   1. Read the raw JSON
   2. Convert to FRAMES format (compact node/edge representation)
   3. Compute layout positions (spiral for seeds, spring from seeds for neighbors)
   4. Write consolidated loom-frames.js
+Then write loom-graph-data.json from the newest frame.
+
+Node URLs: the export has no URL field, so links are merged from loom-node-urls.json
+(keyed by Loom's numeric node id). Never edit loom-frames.js or loom-graph-data.json
+by hand — edit the snapshots or loom-node-urls.json and re-run this script.
 
 Positions: seeds arranged in a fixed spiral (consistent across frames),
 neighbors placed near their connected seeds with a small radial offset.
@@ -19,6 +29,12 @@ import re
 
 SNAPSHOT_DIR = 'loom-snapshots'
 OUTPUT = 'loom-frames.js'
+GRAPH_OUTPUT = 'loom-graph-data.json'
+URLS_FILE = 'loom-node-urls.json'
+
+# Slug ids for loom-graph-data.json: first SLUG_WORDS words of the content, max SLUG_MAXLEN chars.
+SLUG_WORDS = 5
+SLUG_MAXLEN = 50
 
 # Layout constants — viewport matches the SVG viewBox in loom-explore.html
 VP_W, VP_H = 1000, 860
@@ -84,7 +100,82 @@ def compute_positions(nodes, edges):
     return positions
 
 
-def convert_snapshot(filepath):
+def load_node_urls():
+    """Curated URLs keyed by numeric node id (as strings), plus the seed default."""
+    try:
+        with open(URLS_FILE) as f:
+            data = json.load(f)
+    except FileNotFoundError:
+        print(f'  (no {URLS_FILE}; nodes will have no source_url)')
+        return {}, None
+    return data.get('urls', {}), data.get('default_seed_url')
+
+
+def node_url(n, urls, default_seed_url):
+    u = urls.get(str(n['id']))
+    if u:
+        return u
+    if n.get('is_seed') and default_seed_url:
+        return default_seed_url
+    return None
+
+
+def slugify(content):
+    words = re.sub(r"[^a-z0-9\s-]", "", content.lower()).split()
+    return "-".join(words[:SLUG_WORDS])[:SLUG_MAXLEN]
+
+
+def frame_to_graph_data(frame):
+    """Latest frame -> the shared {nodes, edges} schema used by graph-data.json and the API.
+
+    Node ids are content slugs (readable in URLs); `snapshot_id` keeps the numeric id
+    the UI shows so a reader can cross-reference the two views. Positions are the
+    frame's positions, so the API and the essay describe the same picture.
+    """
+    slug_by_id = {}
+    nodes = []
+    for n in frame['nodes']:
+        slug = slugify(n['c'])
+        if slug in slug_by_id.values():
+            slug = f"{slug}-{n['id']}"
+        slug_by_id[n['id']] = slug
+        node = {
+            'id': slug,
+            'snapshot_id': n['id'],
+            'type': n['t'],
+            'summary': n['c'],
+            'origin': 'agentworld' if n['seed'] else 'loom-kg',
+            'x': n['x'],
+            'y': n['y'],
+        }
+        if n.get('u'):
+            node['source_url'] = n['u']
+        nodes.append(node)
+    edges = []
+    for e in frame['edges']:
+        edges.append({
+            'source': slug_by_id[e['s']],
+            'target': slug_by_id[e['d']],
+            'predicate': e['src_kind'],
+            'edge_type': 'discovery' if e['disc'] else 'scaffold',
+            'crosses_boundary': bool(e['cross']),
+        })
+    return {
+        'meta': {
+            'source': 'loom-snapshots/' + frame['file'],
+            'dream_cycle': frame['cycle'],
+            'taken': frame['taken'],
+            'generated_by': 'rebuild-loom-frames.py',
+            'frames': None,  # filled in by main()
+            'caveat': 'Membership oscillates between snapshots; node_count is not a growth measure. '
+                      'Node content before 2026-08-23 is capped at 500 characters.',
+        },
+        'nodes': nodes,
+        'edges': edges,
+    }
+
+
+def convert_snapshot(filepath, urls, default_seed_url):
     """Convert a raw snapshot file to a FRAMES entry."""
     with open(filepath) as f:
         raw = json.load(f)
@@ -108,14 +199,18 @@ def convert_snapshot(filepath):
     nodes = []
     for n in raw_nodes:
         pos = positions.get(n['id'], {'x': CENTER_X, 'y': CENTER_Y})
-        nodes.append({
+        node = {
             'id': n['id'],
             'x': pos['x'],
             'y': pos['y'],
             'seed': bool(n.get('is_seed', False)),
             't': n.get('type', 'unknown'),
             'c': n.get('content', ''),
-        })
+        }
+        u = node_url(n, urls, default_seed_url)
+        if u:
+            node['u'] = u
+        nodes.append(node)
 
     # Convert edges
     edges = []
@@ -158,11 +253,12 @@ def convert_snapshot(filepath):
 def main():
     files = sorted(glob.glob(os.path.join(SNAPSHOT_DIR, 'snapshot_*.json')))
     print(f'Found {len(files)} snapshot files')
+    urls, default_seed_url = load_node_urls()
 
     frames = []
     for filepath in files:
         print(f'  Converting {os.path.basename(filepath)}...')
-        frame = convert_snapshot(filepath)
+        frame = convert_snapshot(filepath, urls, default_seed_url)
         frames.append(frame)
         print(f'    cycle={frame["cycle"]}, nodes={frame["n_nodes"]}, edges={frame["n_edges"]}')
 
@@ -172,6 +268,15 @@ def main():
         f.write(js_content)
 
     print(f'\nWrote {OUTPUT}: {len(frames)} frames, {len(js_content)} bytes')
+
+    graph = frame_to_graph_data(frames[-1])
+    graph['meta']['frames'] = len(frames)
+    with open(GRAPH_OUTPUT, 'w') as f:
+        json.dump(graph, f, indent=2, ensure_ascii=False)
+        f.write('\n')
+    missing = sum(1 for n in graph['nodes'] if not n.get('source_url'))
+    print(f'Wrote {GRAPH_OUTPUT}: {len(graph["nodes"])} nodes, {len(graph["edges"])} edges '
+          f'from {frames[-1]["file"]} ({missing} nodes without source_url)')
 
 
 if __name__ == '__main__':

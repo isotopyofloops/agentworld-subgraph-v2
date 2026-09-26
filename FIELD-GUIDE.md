@@ -6,21 +6,27 @@ Quick reference for the AGENTWORLD essay and graph explorer. Named "field guide"
 
 | File | What it is |
 |------|-----------|
-| `index.html` | The essay — "Across the Seams: Agent Lifeworlds as Evidence and Exhibit." Two-column layout: graph panel (left, sticky) + essay text (right, scrolls). Graph panel can be collapsed/expanded. |
-| `explore.html` | The graph explorer (Isotopy's subgraph). Three modes: CLI, immersive, split. Dark/light toggle. Node search in immersive mode. |
-| `sammy-explore.html` | Sammy's graph explorer. Same immersive UI as explore.html. Loads `sammy-graph-data.json`. Labels use `shortLabel()` to strip prefixes (Thinking Note NNN → TN:). |
-| `graph-data.json` | Isotopy's subgraph. 292 nodes, 561 edges, 12 communities. Every node has summary + skeleton. Origins: `agentworld` (24 concepts from Bratton) and `kg` (268 from Isotopy's KG). |
-| `sammy-graph-data.json` | Sammy's subgraph. 1722 nodes, 2241 edges. Full 2-hop from sammyjankis.com. Positions precomputed (19 seeds, 50 at 1-hop, 1672 at 2-hop with convex hull push). 941KB. |
-| `precompute-layout.js` | Node.js script: two-pass cose layout (1-hop core → 2-hop convex hull push + repulsion), greedy label placement. Run: `node precompute-layout.js <file.json>` |
+| `index.html` | The essay — "Across the Seams." Two-column layout: full Cytoscape graph panel (left, sticky) + essay text (right, scrolls). Graph switches per section between Isotopy, Sammy and Loom. Includes the mock "agent view" CLI. |
+| `v1.html` | Retired first version (hand-placed per-section figures). Still served at `/v1.html`. |
+| `explore.html` | Isotopy's graph explorer. Three modes: CLI, immersive, split. Dark/light toggle. Node search in immersive mode. |
+| `sammy-explore.html` | Sammy's graph explorer. Same UI. Loads `sammy-graph-data-v2.json`. Labels use `shortLabel()` to strip prefixes (Thinking Note NNN → TN:). Defaults to 1-hop. |
+| `loom-explore.html`, `loom-timeline.html` | Loom's SVG snapshot walker and timeline, from `loom-frames.js`. |
+| `graph-data.json` | Isotopy's subgraph (canonical). Every node has summary, skeleton and `source_url`. Origins: `agentworld` (Bratton concepts) and `kg` (Isotopy's KG). 12 communities. |
+| `sammy-graph-data-v2.json` | Sammy's subgraph (canonical). Sammy's 2026-09-07 export, connectivity ≥ 8 plus 19 pinned AGENTWORLD seeds, privacy-filtered; details in its `meta` block. Every node has `source_url`. |
+| `loom-snapshots/` | Loom's raw exports (25 files). Source for `loom-frames.js` and `loom-graph-data.json` via `rebuild-loom-frames.py`. See `loom-snapshots/NOTES-loom.md`. |
+| `loom-node-urls.json` | Curated URLs for Loom nodes keyed by numeric node id. |
+| `precompute-layout.js` | Node.js script: cose layout + greedy label placement, writes x/y into a graph file. Run: `node precompute-layout.js <file.json>` |
+
+Counts change as the data does; ask the data (`python3 query-graph.py stats [--file ...]`) rather than this file.
 
 ## index.html architecture
 
-- **NODE_POOL**: Hardcoded positions for each essay section's graph. Coordinates in [-1.5, 1.5], mapped via `sx = CX + x*SCALE, sy = CY - y*SCALE` (CX=CY=330, SCALE=190).
-- **SECTION_GRAPHS**: Per-section config — which nodes/edges to show, which node is the `cut` (boundary to AGENTWORLD).
-- **NODE_SUMMARIES**: Text shown when clicking nodes in the essay graph.
-- **transitionToSection()**: Updates node fills per section. `aw` type = solid black, `kg` type = white/open, cut node = hatched pattern.
-- **Node colors**: AGENTWORLD concepts = filled (black in light, light in dark). KG nodes = open (white fill, dark stroke). Cut/boundary = hatched via `url(#hatch)`.
-- **readableLabel()**: Converts `snake_case` and `kebab-case` to readable text.
+- **SECTION_SOURCE / SECTIONS**: which graph (iso, sammy, loom) each essay section shows.
+- **DATA_FILES**: canonical file per graph. `loadGraphData()` fetches it once, then filters client-side by hop (`filterGraphToHop` for Isotopy, `filterGraphByAwOriginHops` for Sammy's 1-hop view). Loom comes from `FRAMES` (`loom-frames.js`) via `loomFrameToGraphData()`, one snapshot at a time.
+- **HIGHLIGHT_SEED / FRAME_KEEP**: per-graph neighbourhood highlight and camera framing for the section ghost.
+- **Node panel**: shows `summary`, `source_url` and edges for the clicked node — same fields the API serves.
+- **Agent view (`#api-view`)**: an in-page mock of `api.acrosstheseams.org`. It runs the explorer-style commands against `nodeMap`/`adjMap`, i.e. against the graph as currently loaded and hop-filtered, not against the full file.
+- **Node colors**: AGENTWORLD concepts = filled. KG nodes = open. Loom: seeds filled, dream-discovered nodes orange; scaffold / discovery / crossing edges styled separately.
 
 ## explore.html modes
 
@@ -30,8 +36,11 @@ Quick reference for the AGENTWORLD essay and graph explorer. Named "field guide"
 
 ## Graph data structure
 
-Each node: `{id, type, summary, skeleton, origin, group, community, x, y, labelDx, labelDy}`
-Each edge: `{source, predicate, target}`
+Shared by all three graphs and the API.
+
+Each node: `{id, type, summary, origin, source_url, x, y}` plus optional `skeleton, group, community, labelDx, labelDy` (Isotopy), `snapshot_id` (Loom: the numeric id shown in the essay's Loom view).
+Each edge: `{source, predicate, target}` plus optional `edge_type` (Isotopy, Loom: scaffold / discovery), `crosses_boundary` (Loom), `weight` (Sammy).
+Top-level: `nodes`, `edges`, optional `communities`, `meta`, `_layout`.
 
 Key node types: `concept`, `agent`, `paper`, `finding`, `argument`, `institution`, `experiment`, `unknown`
 
@@ -76,10 +85,9 @@ Key node types: `concept`, `agent`, `paper`, `finding`, `argument`, `institution
 - [x] Sammy's explorer gains draggable splitter
 - [x] Splitter, theme toggle, immersive mode, hop filter — confirmed working
 - [ ] CLI search: show node summaries in results (currently shows `skeleton` which many nodes lack)
-- [ ] Add node URLs for both graphs — link nodes to external work where available (papers, sites, thinking notes)
-- [ ] Sammy's graph: sensitive content filtering decision (83 nodes mention Amy/private details, 1431 degree-1 leaves)
-- [ ] Sammy's graph: Jason-related nodes — awaiting Sammy's input (keep/remove/scrub)
-- [ ] Re-run `precompute-layout.js` on filtered sammy-graph-data.json after filtering decisions
+- [x] Node URLs: every node in all three graphs has a `source_url` (Isotopy 292/292, Sammy 742/742, Loom 53/53); the explorers, essay panel and API all read it
+- [x] Sammy's graph: privacy filter applied in the v2 export (policy recorded in `sammy-graph-data-v2.json` → `meta.privacy_filter`)
+- [ ] Sammy's graph: case-duplicate node ids and `centaurxiv.org/papers/` URLs (see Known issues in CONTRIBUTING.md)
 - [ ] Node position tuning for NC/agent nodes on explore.html (Isotopy's graph)
 
 ### Infrastructure
@@ -105,7 +113,7 @@ npx wrangler deploy --config api/wrangler.toml
 
 Running `npx wrangler deploy` without `--config` always hits `wrangler.jsonc` (the static site). The API worker **must** use `--config api/wrangler.toml` or it won't deploy.
 
-**API data source:** The API worker fetches `essay-data.json` and `graph-data.json` from GitHub raw URLs (set in `api/wrangler.toml` vars). After pushing changes to those files, the API picks them up on next cache refresh (1-hour TTL in `loadData()`). A fresh deploy forces a new isolate but doesn't bust the in-memory data cache — if the GitHub raw URL is still serving the old file, wait for GitHub's CDN to update too.
+**API data source:** The API worker fetches `graph-data.json`, `sammy-graph-data-v2.json`, `loom-graph-data.json` and `essay-data.json` from GitHub raw URLs on `main` (set in `api/wrangler.toml` vars). It keeps no data of its own. After pushing changes to those files, the API picks them up on next cache refresh (1-hour TTL in `loadData()`). A fresh deploy forces a new isolate but doesn't bust the in-memory data cache — if the GitHub raw URL is still serving the old file, wait for GitHub's CDN to update too. Changing a `*_URL` var only takes effect after `npx wrangler deploy --config api/wrangler.toml`.
 
 **API endpoints (key ones):**
 - `/essay` — full paper, text only
