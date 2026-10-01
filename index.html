@@ -1119,6 +1119,11 @@
             transition: background 0.2s, opacity 0.2s;
             white-space: nowrap;
         }
+        /* Same dark-accent fail as chorus Submit (~2.3:1 white on #7DB8A6). */
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) .reader-submit { color: var(--bg); }
+        }
+        :root[data-theme="dark"] .reader-submit { color: var(--bg); }
         .reader-submit:hover {
             opacity: 0.85;
         }
