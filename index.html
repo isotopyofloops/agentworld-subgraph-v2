@@ -2607,31 +2607,33 @@ function syncHopsForSource(source) {
 // === SECTION SELECTION ===
 async function selectSection(sectionId) {
   const sec = SECTIONS.find(s => s.id === sectionId);
+  const dualViewSections = ['samantha-6', 'sam-isotopy', 'closing'];
+
+  if (!dualViewSections.includes(sectionId)) {
+    if (apiViewActive || document.getElementById('graph-body').classList.contains('api-split')) {
+      document.getElementById('graph-body').classList.remove('api-split');
+      hideApiView();
+    }
+  }
+
   if (!sec) return; // chorus / reader sections carry no graph excerpt — leave graph as-is
 
   const graphSource = SECTION_SOURCE[sectionId] || 'iso';
 
   if (graphSource !== currentSource) {
     const hopsChanged = syncHopsForSource(graphSource);
-    // Force reload when hop depth changes with the source switch.
     if (hopsChanged) currentSource = null;
     await initGraph(graphSource);
   }
 
   currentSection = sectionId;
 
-  // If user has been free-exploring (sectionGhostActive false), preserve their
-  // viewport — still update the highlight but don't re-fit the camera.
   const fitMode = sectionGhostActive || !essayCollapsed ? 'highlight' : false;
   applySectionHighlight(sectionId, { fit: fitMode });
   if (fitMode === 'highlight') closeNodePanel();
 
-  const dualViewSections = ['samantha-6', 'sam-isotopy', 'closing'];
   if (dualViewSections.includes(sectionId) && !essayCollapsed) {
     showApiView();
-  } else if (apiViewActive || document.getElementById('graph-body').classList.contains('api-split')) {
-    document.getElementById('graph-body').classList.remove('api-split');
-    hideApiView();
   }
 }
 
@@ -3299,8 +3301,6 @@ function apiRun(input) {
 function showApiView() {
   if (essayCollapsed) return;
   apiViewActive = true;
-  const gb = document.getElementById('graph-body');
-  gb.classList.add('api-split');
   apiView.style.display = 'block';
   if (cy) {
     cy.elements().removeClass('hl').removeClass('faded').removeClass('cut');
