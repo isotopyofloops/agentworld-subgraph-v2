@@ -66,11 +66,12 @@
                 --quote-text: #A8A098;
                 --rule: #3E372E;
                 --code-bg: #322C25;
-                --node-fill: #C9C0B4;
-                --node-stroke: #C9C0B4;
+                /* Soften sync with explore-core (PR #4): was #C9C0B4 / #9A9288. */
+                --node-fill: #B0A898;
+                --node-stroke: #B0A898;
                 --node-open-fill: #252019;
-                --edge-stroke: #9A9288;
-                --edge-bridge: #9A9288;
+                --edge-stroke: #7A7268;
+                --edge-bridge: #7A7268;
                 --leader-stroke: #A8A098;
                 --node-selected-ring: rgba(201, 192, 180, 0.25);
                 --detail-bg: #2E2822;
@@ -104,11 +105,12 @@
             --quote-text: #A8A098;
             --rule: #3E372E;
             --code-bg: #322C25;
-            --node-fill: #C9C0B4;
-            --node-stroke: #C9C0B4;
+            /* Soften sync with explore-core (PR #4): was #C9C0B4 / #9A9288. */
+            --node-fill: #B0A898;
+            --node-stroke: #B0A898;
             --node-open-fill: #252019;
-            --edge-stroke: #9A9288;
-            --edge-bridge: #9A9288;
+            --edge-stroke: #7A7268;
+            --edge-bridge: #7A7268;
             --leader-stroke: #A8A098;
             --node-selected-ring: rgba(201, 192, 180, 0.25);
             --detail-bg: #2E2822;
@@ -1959,8 +1961,9 @@ const THEME_COLORS = {
   },
   dark: {
     bgGraph: '#252019', text: '#D4CCC0', textDim: '#A09890',
-    nodeFill: '#C9C0B4', nodeStroke: '#C9C0B4', nodeOpen: '#252019',
-    edgeStroke: '#9A9288', hlBorder: 'rgba(232, 224, 212, 0.15)',
+    // Soften sync with explore-core (PR #4): was #C9C0B4 / #9A9288.
+    nodeFill: '#B0A898', nodeStroke: '#B0A898', nodeOpen: '#252019',
+    edgeStroke: '#7A7268', hlBorder: 'rgba(232, 224, 212, 0.15)',
     faded: 0.12,
   },
 };
