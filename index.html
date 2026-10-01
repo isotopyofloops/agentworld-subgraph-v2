@@ -474,18 +474,6 @@
             letter-spacing: 0.08em;
             color: var(--text-dim);
         }
-        #api-view .api-close {
-            background: none;
-            border: 1px solid var(--border);
-            border-radius: 2px;
-            font-family: -apple-system, 'Segoe UI', sans-serif;
-            font-size: 0.85rem;
-            color: var(--text-dim);
-            cursor: pointer;
-            padding: 0.1em 0.4em;
-            line-height: 1;
-        }
-        #api-view .api-close:hover { color: var(--text-bright); border-color: var(--text-dim); }
         #api-view .api-body {
             padding: 1.2em 1.5em 2em;
             white-space: pre-wrap;
@@ -1302,7 +1290,7 @@
             <div id="api-view">
                 <div class="api-header">
                     <span class="api-label">agent view &mdash; api.acrosstheseams.org</span>
-                    <button class="api-close" id="api-close" aria-label="Close API view">&times;</button>
+                    <!-- close button removed: dual view stays active for its sections -->
                 </div>
                 <div class="api-input-bar">
                     <span class="api-prompt">&gt;</span>
@@ -3311,21 +3299,21 @@ function apiRun(input) {
 function showApiView() {
   if (essayCollapsed) return;
   apiViewActive = true;
+  const gb = document.getElementById('graph-body');
+  gb.classList.add('api-split');
   apiView.style.display = 'block';
-  document.getElementById('cy').style.visibility = 'hidden';
-  document.getElementById('legend').style.display = 'none';
+  if (cy) {
+    cy.elements().removeClass('hl').removeClass('faded').removeClass('cut');
+    cy.animate({ fit: { eles: cy.elements(), padding: 40 }, duration: 400 });
+  }
   apiRun('explore');
-  setTimeout(() => apiCmdInput.focus(), 100);
 }
 
 function hideApiView() {
   apiViewActive = false;
   apiView.style.display = 'none';
-  document.getElementById('cy').style.visibility = '';
-  document.getElementById('legend').style.display = '';
+  document.getElementById('graph-body').classList.remove('api-split');
 }
-
-document.getElementById('api-close').addEventListener('click', hideApiView);
 
 apiBody.addEventListener('click', e => {
   const cl = e.target.closest('.api-cmd-link');
