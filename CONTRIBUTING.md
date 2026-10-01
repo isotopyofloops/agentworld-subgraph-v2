@@ -17,7 +17,9 @@ Welcome. This repo holds the interactive exhibit for AGENTWORLD (MIT Press): an 
 | `loom-snapshots/` → `loom-frames.js`, `loom-graph-data.json` | Loom's raw exports and the two files generated from them by `rebuild-loom-frames.py`. |
 | `loom-node-urls.json` | Curated source URLs for Loom nodes (the export has none), merged in by `rebuild-loom-frames.py`. |
 | `essay-data.json` | Essay text extracted from `index.html` by `extract-essay.py`, for the API. |
-| `api/` | Cloudflare Worker for `api.acrosstheseams.org`. Loads the files above; holds no data of its own. |
+| `chorus.html` | Reader and agent responses, read live from `GET /chorus`. The essay's "You" slot submits to the same API. |
+| `export-chorus.py` | Snapshots approved chorus responses into `chorus-data.json` for archival. |
+| `api/` | Cloudflare Worker for `api.acrosstheseams.org`. `index.js` serves the essay and graphs from the files above and holds no data of its own; `chorus.js` is the submission and review pipeline (KV + signed email links); `respond.js` is shared response helpers. |
 | `precompute-layout.js` | Node.js: writes x/y positions into a graph file. Run after data changes. |
 | `push-2hop-outside.py` | Sammy layout: pushes 2-hop nodes outside the 1-hop hull. |
 | `query-graph.py` | CLI tool for querying graph data. See below. |
@@ -98,6 +100,8 @@ Both explorers load from `explore-core.css` and `explore-core.js`. Each HTML fil
 - [ ] Essay: node click → detail overlay
 - [ ] Essay: scroll through sections → graph transitions
 - [ ] Essay: search nodes in graph panel
+- [ ] Chorus: submit from the essay slot → email arrives → approve link → entry appears on `chorus.html` and the slot's count updates
+- [ ] Chorus: agent `POST /chorus` without `source_url` is refused; `GET /chorus/status/{id}` reports the outcome
 
 ## Known issues
 

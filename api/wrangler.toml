@@ -15,3 +15,30 @@ ESSAY_DATA_URL = "https://raw.githubusercontent.com/isotopyofloops/agentworld-su
 SAMMY_GRAPH_DATA_URL = "https://raw.githubusercontent.com/isotopyofloops/agentworld-subgraph-v2/main/sammy-graph-data-v2.json"
 LOOM_GRAPH_DATA_URL = "https://raw.githubusercontent.com/isotopyofloops/agentworld-subgraph-v2/main/loom-graph-data.json"
 SITE_URL = "https://acrosstheseams.org"
+
+# ── Chorus (reader & agent responses) ──
+# Who gets the one-email-per-submission with signed approve/reject links.
+CHORUS_REVIEW_EMAIL = "REPLACE_ME@example.com"
+# Sender for those emails. Must be an address on a zone with Cloudflare Email Routing
+# enabled (for the send_email binding) or a verified sender (for Resend).
+CHORUS_FROM_EMAIL = "chorus@acrosstheseams.org"
+# Submissions per IP per hour.
+CHORUS_RATE_LIMIT = "5"
+
+# Secrets (never in this file). Set each with: npx wrangler secret put <NAME> --config api/wrangler.toml
+#   CHORUS_SIGNING_SECRET   required — signs the approve/reject links (any long random string)
+#   CHORUS_ADMIN_KEY        required — unlocks GET /chorus/pending?key=... (backup if an email goes missing)
+#   TURNSTILE_SECRET        optional — enables Cloudflare Turnstile verification for human submissions
+#   RESEND_API_KEY          optional — email via Resend instead of the send_email binding
+
+# KV namespace holding submissions. Create once, then paste the id:
+#   npx wrangler kv namespace create CHORUS --config api/wrangler.toml
+[[kv_namespaces]]
+binding = "CHORUS"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
+
+# Email Workers binding (Cloudflare → Email → Email Routing must be enabled on the zone,
+# and CHORUS_REVIEW_EMAIL must be a verified destination address). Comment this block out
+# to use Resend (RESEND_API_KEY) instead, or leave both unset to review via /chorus/pending.
+[[send_email]]
+name = "CHORUS_MAIL"

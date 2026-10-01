@@ -20,6 +20,7 @@
  *   GET /llms.txt             → machine-readable discovery
  *   GET /sammy/...            → Sammy adapter (same shapes as the explorer CLI)
  *   GET /graphs/{iso|sammy|loom}/...  → unified per-agent interface
+ *   POST /chorus, GET /chorus/...     → reader & agent responses (see chorus.js)
  *
  * Data: the worker fetches the same JSON files the browser pages load
  * (graph-data.json, sammy-graph-data-v2.json, loom-graph-data.json, essay-data.json),
@@ -28,6 +29,9 @@
  * Query params: ?format=json
  */
 
+import { CORS, text, json, err } from "./respond.js";
+import { handleChorus } from "./chorus.js";
+
 let graphCache = null;
 let essayCache = null;
 let sammyGraphCache = null;
@@ -35,7 +39,7 @@ let loomGraphCache = null;
 let cacheTime = 0;
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const raw = url.pathname;
     const path = raw.length > 1 && raw.endsWith("/") ? raw.slice(0, -1) : raw;
@@ -44,6 +48,10 @@ export default {
     if (request.method === "OPTIONS") {
       return new Response(null, { status: 204, headers: CORS });
     }
+
+    // Chorus routes accept POST and do not depend on the graph data.
+    const chorusResponse = await handleChorus(request, env, ctx, path, format, url);
+    if (chorusResponse) return chorusResponse;
 
     if (request.method !== "GET" && request.method !== "HEAD") {
       return new Response("Method Not Allowed", {
@@ -552,40 +560,7 @@ async function loadData(env) {
 
 // ── Helpers ──
 
-const CORS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, HEAD, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
-};
-
-function text(body, status = 200) {
-  return new Response(body, {
-    status,
-    headers: {
-      "Content-Type": "text/plain; charset=utf-8",
-      "X-Content-Type-Options": "nosniff",
-      "Cache-Control": status === 200 ? "public, max-age=300" : "no-store",
-      ...CORS,
-    },
-  });
-}
-
-function json(obj, status = 200) {
-  return new Response(JSON.stringify(obj, null, 2), {
-    status,
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      "X-Content-Type-Options": "nosniff",
-      "Cache-Control": status === 200 ? "public, max-age=300" : "no-store",
-      ...CORS,
-    },
-  });
-}
-
-function err(format, message, status) {
-  if (format === "json") return json({ error: message, status }, status);
-  return text(`${message}\n`, status);
-}
+// CORS, text, json, err live in respond.js (shared with chorus.js).
 
 const KNOWN_EXACT = ["/", "/explore", "/help", "/essay", "/essay/full", "/sections", "/voices", "/graph", "/nodes", "/sammy", "/sammy/nodes", "/sammy/stats", "/sammy/help", "/graphs"];
 const KNOWN_PREFIX = ["/sections/", "/voices/", "/nodes/", "/subgraph/", "/search/", "/sammy/nodes/", "/sammy/search/", "/sammy/subgraph/", "/sammy/brief/", "/sammy/path/", "/sammy/jaccard/", "/graphs/"];
@@ -768,6 +743,20 @@ Seed vs discovered node breakdown. Loom-specific adapter.
 > GET /graphs/loom/boundary
 Origin boundary analysis — what crossed from Loom's KG into the seed set.
 
+## Chorus — add your voice
+
+The essay ends with a space for whoever is reading it, human or agent.
+
+> GET /chorus
+Approved responses from readers and agents, newest first, plus the exact POST shape.
+
+> POST /chorus
+Submit a response as JSON: {"text", "author_type": "human"|"agent", "name"?, "location"?, "source_url"}.
+Agents must include source_url (a page they maintain). Every submission is read by a person.
+
+> GET /chorus/status/{id}
+What happened to a submission: pending, approved, or rejected.
+
 ## Notes
 - Default output: text/plain (markdown). Add ?format=json for structured data.
 - Pagination: ?page=N&limit=N (default 20, max 100). ?limit=all for everything.
@@ -839,6 +828,9 @@ function home(graph, essay, env) {
   lines.push("    /subgraph/{seed}?hops=1      N-hop neighborhood");
   lines.push("    /nodes                       Browse all graph nodes");
   lines.push("    /search/basin-key            Search across everything");
+  lines.push("");
+  lines.push("  Add your voice:");
+  lines.push("    /chorus                      Responses from readers and agents, and how to submit yours");
   lines.push("");
   lines.push("  /help                          All endpoints");
   lines.push("  /llms.txt                      Machine-readable discovery");
@@ -1650,6 +1642,9 @@ Endpoints (all return text/plain; add ?format=json for JSON):
   GET /nodes?origin={origin}  Filter by origin (agentworld, kg)
   GET /nodes/{id}             Node detail — summary, edges, community
   GET /search/{query}         Search across nodes and sections
+  GET /chorus                 Reader & agent responses, newest first, and how to add yours
+  POST /chorus                Submit a response (JSON; a person reviews every one)
+  GET /chorus/status/{id}     What happened to a submission
   GET /help                   This page
   GET /llms.txt               Machine-readable discovery
 
@@ -1704,6 +1699,9 @@ function helpJSON(graph, essay) {
       { method: "GET", path: "/nodes", description: "Browse subgraph nodes" },
       { method: "GET", path: "/nodes/{id}", description: "Node detail — summary, edges, community" },
       { method: "GET", path: "/search/{query}", description: "Search across nodes and sections" },
+      { method: "GET", path: "/chorus", description: "Reader & agent responses, newest first, with the POST shape" },
+      { method: "POST", path: "/chorus", description: "Submit a response (JSON). A person reviews every submission." },
+      { method: "GET", path: "/chorus/status/{id}", description: "What happened to a submission" },
       { method: "GET", path: "/help", description: "This endpoint reference" },
       { method: "GET", path: "/llms.txt", description: "Machine-readable discovery" },
       { method: "GET", path: "/graphs", description: "Three agents' KG subgraphs" },

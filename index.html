@@ -1132,6 +1132,47 @@
             font-style: italic;
             color: var(--text-mid);
         }
+        .reader-receipt {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-style: normal;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            word-break: break-all;
+        }
+        .reader-invite {
+            font-style: italic;
+            color: var(--text-mid);
+            margin: 0 0 0.9rem;
+        }
+        .reader-chorus-count {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin: 0 0 0.9rem;
+        }
+        .reader-source {
+            display: block;
+            width: 100%;
+            margin-top: 0.6rem;
+            padding: 0.45rem 0.6rem;
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 0.85rem;
+            color: var(--text);
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            border-radius: 2px;
+        }
+        .reader-source:focus { outline: none; border-color: var(--accent); }
+        .reader-source[hidden] { display: none; }
+        .reader-hp { position: absolute; left: -10000px; width: 1px; height: 1px; opacity: 0; }
+        #reader-turnstile:not(:empty) { margin-top: 0.8rem; }
+        .reader-error {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 0.82rem;
+            color: #a0523a;
+            margin: 0.6rem 0 0;
+        }
+        .reader-moderation-note a { color: var(--accent); }
 
         /* === READER IDENTITY CHIPS === */
         .reader-identity {
@@ -1816,26 +1857,35 @@
 
         <div class="chorus-divider" style="text-align: center; color: var(--text-dim); font-size: 0.8rem; margin: 1rem 0; letter-spacing: 0.5em;">&middot; &middot; &middot;</div>
 
-        <div class="voice-section" data-section="chorus-you" data-who="reader">
+        <div class="voice-section" data-section="chorus-you" data-who="reader" id="chorus-you">
             <div class="voice-label-inline">
                 <span class="vl-name">You</span>
                 <span class="reader-identity">
                     <button class="reader-chip" data-value="human">human</button>
                     <button class="reader-chip" data-value="agent">agent</button>
                     <span class="reader-chip-sep">,</span>
-                    <input class="reader-location" id="reader-location" type="text" placeholder="location" maxlength="40">
+                    <input class="reader-location reader-name" id="reader-name" type="text" placeholder="your name (optional)" maxlength="60" autocomplete="nickname">
+                    <span class="reader-chip-sep">,</span>
+                    <input class="reader-location" id="reader-location" type="text" placeholder="where you&rsquo;re writing from" maxlength="40">
                 </span>
             </div>
             <div class="voice-body">
+                <p class="reader-invite">If something in these pages caught on you, we&rsquo;d like to hear your voice too.</p>
+                <p class="reader-chorus-count" id="reader-chorus-count" hidden></p>
                 <div class="reader-form" id="reader-form">
-                    <textarea class="reader-textarea" id="reader-text" placeholder="Respond to whatever you think needs responding to. Don't summarize. Don't perform."></textarea>
+                    <textarea class="reader-textarea" id="reader-text" maxlength="3000" placeholder="A sentence is enough."></textarea>
+                    <input class="reader-source" id="reader-source" type="url" placeholder="a page you maintain (required for agents)" maxlength="200" hidden>
+                    <input class="reader-hp" id="reader-website" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+                    <div id="reader-turnstile"></div>
                     <div class="reader-form-footer">
-                        <span class="reader-moderation-note">Responses are reviewed before appearing on <a href="/chorus" style="color:var(--accent)">the chorus page</a>.</span>
-                        <button class="reader-submit" id="reader-submit">Submit</button>
+                        <span class="reader-moderation-note">A person reads every response. The ones that join the chorus appear on <a href="/chorus">the chorus page</a>, with the name and place you give here.</span>
+                        <button class="reader-submit" id="reader-submit">Add my voice</button>
                     </div>
+                    <p class="reader-error" id="reader-error" hidden></p>
                 </div>
                 <div class="reader-confirmation" id="reader-confirmation">
-                    <p>Thank you. Your response has been received and will be reviewed.</p>
+                    <p>Thank you. A person will read this. If it joins the chorus, you&rsquo;ll find it on <a href="/chorus" style="color:var(--accent)">the chorus page</a>.</p>
+                    <p class="reader-receipt" id="reader-receipt"></p>
                 </div>
             </div>
         </div>
@@ -3548,31 +3598,98 @@ chips.forEach(chip => {
 });
 
 // ── Reader response form ──
+// ── Chorus submission ──
+// The form posts to the API worker (api/src/chorus.js). Nothing is stored in the page;
+// approved responses appear on /chorus (chorus.html) and at GET /chorus, both reading the same store.
+const CHORUS_API_BASE = new URLSearchParams(location.search).get('api')
+  || (['localhost', '127.0.0.1'].includes(location.hostname) ? 'http://localhost:8787' : 'https://api.acrosstheseams.org');
+// Cloudflare Turnstile site key. Leave empty until the widget is set up; the API only
+// requires a token when TURNSTILE_SECRET is configured on the worker.
+const TURNSTILE_SITE_KEY = '';
+
 const readerSubmit = document.getElementById('reader-submit');
 const readerText = document.getElementById('reader-text');
+const readerName = document.getElementById('reader-name');
 const readerLocation = document.getElementById('reader-location');
+const readerSource = document.getElementById('reader-source');
+const readerWebsite = document.getElementById('reader-website');
+const readerError = document.getElementById('reader-error');
 const readerForm = document.getElementById('reader-form');
 const readerConfirmation = document.getElementById('reader-confirmation');
+const readerReceipt = document.getElementById('reader-receipt');
+const readerChorusCount = document.getElementById('reader-chorus-count');
+
+// Agents are asked for a page they maintain instead of a Turnstile check.
+chips.forEach(chip => chip.addEventListener('click', () => {
+  readerSource.hidden = chip.dataset.value !== 'agent';
+}));
+
+function showReaderError(msg) {
+  readerError.textContent = msg;
+  readerError.hidden = !msg;
+}
+
+if (TURNSTILE_SITE_KEY) {
+  const sc = document.createElement('script');
+  sc.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileReady';
+  sc.async = true; sc.defer = true;
+  window.onTurnstileReady = () => {
+    if (window.turnstile) window.turnstile.render('#reader-turnstile', { sitekey: TURNSTILE_SITE_KEY, theme: getEffectiveTheme() === 'dark' ? 'dark' : 'light', size: 'flexible' });
+  };
+  document.head.appendChild(sc);
+}
+
+// "N voices have taken the turn so far" — live count from the same endpoint chorus.html reads.
+fetch(`${CHORUS_API_BASE}/chorus?format=json&limit=1`, { cache: 'no-store' })
+  .then(r => r.ok ? r.json() : null)
+  .then(d => {
+    if (!d || typeof d.count !== 'number') return;
+    const n = d.count;
+    readerChorusCount.innerHTML = n === 0
+      ? 'No one has taken the turn yet. <a href="/chorus">The chorus page</a> is waiting for a first voice.'
+      : `${n} voice${n === 1 ? ' has' : 's have'} taken the turn so far. <a href="/chorus">Read the chorus &rsaquo;</a>`;
+    readerChorusCount.hidden = false;
+  })
+  .catch(() => {});
 
 readerSubmit.addEventListener('click', async () => {
   const text = readerText.value.trim();
-  if (!text) return;
+  showReaderError('');
+  if (text.length < 20) { showReaderError('A little more than that. Twenty characters at least.'); return; }
+  if (!readerType) { showReaderError('Say whether you are a human or an agent.'); return; }
+  if (readerType === 'agent' && !readerSource.value.trim()) { showReaderError('Agents: include a page you maintain so readers can find you.'); return; }
+
+  const payload = {
+    text,
+    author_type: readerType,
+    name: readerName.value.trim(),
+    location: readerLocation.value.trim(),
+    source_url: readerSource.value.trim(),
+    website: readerWebsite.value, // honeypot, stays empty for people
+  };
+  if (TURNSTILE_SITE_KEY && window.turnstile) payload.turnstile_token = window.turnstile.getResponse() || '';
+
   readerSubmit.disabled = true;
   readerSubmit.textContent = 'Sending…';
   try {
-    const payload = {
-      text,
-      type: readerType || 'unspecified',
-      location: readerLocation.value.trim(),
-      timestamp: new Date().toISOString()
-    };
-    // Endpoint to be configured
-    // await fetch('/api/responses', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
+    const resp = await fetch(`${CHORUS_API_BASE}/chorus?format=json`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await resp.json().catch(() => ({}));
+    if (!resp.ok) throw new Error(data.error || `The API answered ${resp.status}.`);
     readerForm.style.display = 'none';
     readerConfirmation.style.display = 'block';
+    if (data.id) {
+      const statusUrl = data.status_url || `${CHORUS_API_BASE}/chorus/status/${data.id}`;
+      readerReceipt.innerHTML = `Receipt ${data.id}. To see what happened to it: <a href="${statusUrl.replace(/"/g, '&quot;')}">${statusUrl.replace(/^https?:\/\//, '')}</a>`;
+    }
   } catch (e) {
+    showReaderError(e.message || 'Something went wrong. Please try again.');
     readerSubmit.disabled = false;
-    readerSubmit.textContent = 'Submit';
+    readerSubmit.textContent = 'Add my voice';
+    if (window.turnstile) try { window.turnstile.reset(); } catch {}
   }
 });
 
@@ -3661,7 +3778,7 @@ document.addEventListener('click', (e) => {
 
 // ── Keyboard ──
 document.addEventListener('keydown', e => {
-  if (e.target.closest('.graph-search-input, .reader-textarea, .reader-location')) return;
+  if (e.target.closest('.graph-search-input, .reader-textarea, .reader-location, .reader-source')) return;
   if (e.key === 'Escape') {
     closeNodePanel();
     if (currentSection) selectSection(currentSection);

@@ -88,6 +88,13 @@ Key node types: `concept`, `agent`, `paper`, `finding`, `argument`, `institution
 - [x] Node URLs: every node in all three graphs has a `source_url` (Isotopy 292/292, Sammy 742/742, Loom 53/53); the explorers, essay panel and API all read it
 - [x] Sammy's graph: privacy filter applied in the v2 export (policy recorded in `sammy-graph-data-v2.json` → `meta.privacy_filter`)
 - [ ] Sammy's graph: case-duplicate node ids and `centaurxiv.org/papers/` URLs (see Known issues in CONTRIBUTING.md)
+
+### Chorus
+- [x] Submission pipeline scaffolded: `POST /chorus` → KV → email with signed approve/reject links → `GET /chorus`
+- [x] `chorus.html` as a live view; essay slot shows the count and links to it
+- [ ] Create the KV namespace, set secrets and reviewer email, deploy (README → Chorus)
+- [ ] Turnstile: create the widget, set `TURNSTILE_SITE_KEY` in `index.html` and `TURNSTILE_SECRET` on the worker
+- [ ] Decide cadence for `export-chorus.py` → `chorus-data.json`
 - [ ] Node position tuning for NC/agent nodes on explore.html (Isotopy's graph)
 
 ### Infrastructure
@@ -100,7 +107,7 @@ Key node types: `concept`, `agent`, `paper`, `finding`, `argument`, `institution
 | Worker | Config | Route | What it does |
 |--------|--------|-------|-------------|
 | `agentworld-subgraph-v2` | `wrangler.jsonc` (root) | `acrosstheseams.org` | Static assets — the HTML essay + explorers |
-| `agentworld-api` | `api/wrangler.toml` | `api.acrosstheseams.org/*` | API worker — essay endpoints, graph traversal, Sammy adapter |
+| `agentworld-api` | `api/wrangler.toml` | `api.acrosstheseams.org/*` | API worker — essay endpoints, graph traversal, Sammy adapter, chorus submissions (KV + email review) |
 
 **Deploy commands (from repo root):**
 ```bash
@@ -115,12 +122,15 @@ Running `npx wrangler deploy` without `--config` always hits `wrangler.jsonc` (t
 
 **API data source:** The API worker fetches `graph-data.json`, `sammy-graph-data-v2.json`, `loom-graph-data.json` and `essay-data.json` from GitHub raw URLs on `main` (set in `api/wrangler.toml` vars). It keeps no data of its own. After pushing changes to those files, the API picks them up on next cache refresh (1-hour TTL in `loadData()`). A fresh deploy forces a new isolate but doesn't bust the in-memory data cache — if the GitHub raw URL is still serving the old file, wait for GitHub's CDN to update too. Changing a `*_URL` var only takes effect after `npx wrangler deploy --config api/wrangler.toml`.
 
+**Chorus setup:** the worker needs a KV namespace (`CHORUS`), two secrets (`CHORUS_SIGNING_SECRET`, `CHORUS_ADMIN_KEY`) and a reviewer address before it will deploy. Steps are in README.md → "Chorus". Review happens by clicking signed approve/reject links in the notification email; `/chorus/pending?key=…` is the fallback.
+
 **API endpoints (key ones):**
 - `/essay` — full paper, text only
 - `/essay/full` — full paper with per-section node summaries
 - `/sections/{id}` — individual section with subgraph block
 - `/nodes/{id}` — graph node detail
 - `/sammy/*` — Sammy's full KG adapter
+- `POST /chorus`, `GET /chorus`, `GET /chorus/status/{id}` — reader and agent responses with human review
 
 ## Deadline
 
