@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Chorus — Across the Seams</title>
+    <script>
+    /* Apply essay theme before paint so / → /chorus keeps light/dark. Same key as index.html. */
+    (function () {
+        try {
+            var t = localStorage.getItem('theme');
+            if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+    })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
     <style>
@@ -65,8 +74,9 @@
             background: var(--bg);
             color: var(--text);
             font-family: 'Source Serif 4', Georgia, serif;
-            font-size: 1.05rem;
-            line-height: 1.75;
+            /* Match essay body (index.html): 18px / 1.85. */
+            font-size: 18px;
+            line-height: 1.85;
             -webkit-font-smoothing: antialiased;
         }
 
@@ -74,6 +84,13 @@
             max-width: 42rem;
             margin: 0 auto;
             padding: 3rem 1.5rem 4rem;
+        }
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
         }
 
         .back-link {
@@ -84,6 +101,39 @@
             letter-spacing: 0.03em;
         }
         .back-link:hover { color: var(--accent); }
+
+        .theme-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .theme-toggle {
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            width: 1.6rem;
+            height: 1.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-dim);
+            font-size: 0.75rem;
+            line-height: 1;
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
+        }
+        .theme-toggle:hover {
+            color: var(--text);
+            border-color: var(--text-dim);
+        }
+        .theme-toggle-label {
+            font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            color: var(--text-mid);
+            text-transform: lowercase;
+        }
 
         .page-header {
             margin: 2.5rem 0 2rem;
@@ -232,7 +282,7 @@
 
         .form-note {
             font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
-            font-size: 0.72rem;
+            font-size: 0.8rem;
             color: var(--text-dim);
             flex: 1;
             line-height: 1.5;
@@ -252,6 +302,11 @@
             transition: opacity 0.2s;
             white-space: nowrap;
         }
+        /* Dark accent #7DB8A6 + white fails WCAG (~2.3:1). Use page bg as ink. */
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) .form-submit { color: var(--bg); }
+        }
+        :root[data-theme="dark"] .form-submit { color: var(--bg); }
         .form-submit:hover { opacity: 0.85; }
         .form-submit:disabled { opacity: 0.5; cursor: default; }
 
@@ -374,7 +429,13 @@
 </head>
 <body>
     <div class="page">
-        <a href="/" class="back-link">&larr; Back to the essay</a>
+        <div class="top-bar">
+            <a href="/" class="back-link">&larr; Back to the essay</a>
+            <div class="theme-controls">
+                <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">&#x263E;</button>
+                <span class="theme-toggle-label" id="theme-toggle-label">dark</span>
+            </div>
+        </div>
 
         <div class="page-header">
             <h1 class="page-title">The Chorus</h1>
@@ -443,6 +504,28 @@
         // Cloudflare Turnstile site key; leave empty until the widget exists. Keep in sync with index.html.
         const TURNSTILE_SITE_KEY = '';
         document.getElementById('api-link').href = API_BASE + '/chorus';
+
+        // Theme: share localStorage key with index.html so / → /chorus keeps the choice.
+        function getEffectiveTheme() {
+            const explicit = document.documentElement.getAttribute('data-theme');
+            if (explicit) return explicit;
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        const toggleBtn = document.getElementById('theme-toggle');
+        const toggleLabel = document.getElementById('theme-toggle-label');
+        function updateToggleIcon() {
+            const isDark = getEffectiveTheme() === 'dark';
+            toggleBtn.innerHTML = isDark ? '&#x2600;' : '&#x263E;';
+            toggleLabel.textContent = isDark ? 'light' : 'dark';
+        }
+        function doThemeToggle() {
+            const next = getEffectiveTheme() === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            try { localStorage.setItem('theme', next); } catch (e) {}
+            updateToggleIcon();
+        }
+        toggleBtn.addEventListener('click', doThemeToggle);
+        updateToggleIcon();
 
         let selectedType = null;
         const sourceRow = document.getElementById('submit-source-row');
