@@ -918,6 +918,12 @@ document.getElementById('hop-1').addEventListener('click',()=>setHops(1));
 document.getElementById('hop-2').addEventListener('click',()=>setHops(2));
 
 // === THEME TOGGLE ===
+// Same localStorage key as the essay (`theme`) so / ↔ /explore keeps the choice.
+function getEffectiveTheme(){
+  const explicit = document.documentElement.getAttribute('data-theme');
+  if(explicit === 'dark' || explicit === 'light') return explicit;
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
 function applyGraphTheme(){
   if(!cy)return;
   const nodeFill = getComputedToken('--node-fill');
@@ -936,26 +942,129 @@ function applyGraphTheme(){
   cy.style().selector('node[degree >= 3]').style({color: nodeFill, 'text-outline-color': bgColor}).update();
   cy.style().selector('node.hl').style({'border-color': hlBorder, color: nodeFill, 'text-outline-color': bgColor}).update();
 }
-
-const btnDark = document.getElementById('btn-dark');
-btnDark.addEventListener('click',()=>{
-  const root = document.documentElement;
-  const current = root.getAttribute('data-theme');
-  if(current === 'dark'){
-    root.removeAttribute('data-theme');
-    btnDark.textContent = 'Dark';
-    btnDark.title = 'Dark mode';
-  } else {
-    root.setAttribute('data-theme','dark');
-    btnDark.textContent = 'Light';
-    btnDark.title = 'Light mode';
-  }
-  setTimeout(applyGraphTheme, 50);
-});
-if(document.documentElement.getAttribute('data-theme') === 'dark'){
-  btnDark.textContent = 'Light';
-  btnDark.title = 'Light mode';
+function syncThemeButtons(){
+  const isDark = getEffectiveTheme() === 'dark';
+  const label = isDark ? 'Light' : 'Dark';
+  const title = isDark ? 'Light mode' : 'Dark mode';
+  document.querySelectorAll('.theme-btn').forEach(btn => {
+    btn.textContent = label;
+    btn.title = title;
+  });
 }
+function doThemeToggle(){
+  const next = getEffectiveTheme() === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  try { localStorage.setItem('theme', next); } catch (e) {}
+  syncThemeButtons();
+  setTimeout(applyGraphTheme, 50);
+}
+document.querySelectorAll('.theme-btn').forEach(btn => {
+  btn.addEventListener('click', doThemeToggle);
+});
+syncThemeButtons();
+
+// === BOX-SELECT ZOOM (Ctrl/Meta + drag — same gesture as the essay) ===
+(function initBoxSelectZoom(){
+  const graphPanel = document.getElementById('graph-panel');
+  const rect = document.getElementById('box-select-rect');
+  if(!graphPanel || !rect) return;
+  let active = false;
+  let startX = 0, startY = 0;
+
+  function screenToModel(g, px, py){
+    const z = g.zoom();
+    const p = g.pan();
+    const cont = g.container().getBoundingClientRect();
+    return {
+      x: (px - cont.left - p.x) / z,
+      y: (py - cont.top - p.y) / z
+    };
+  }
+  function isZoomModifier(e){ return e.ctrlKey || e.metaKey; }
+  function getCy(){
+    if(cy) return cy;
+    const el = document.getElementById('cy');
+    return (el && el._cyreg && el._cyreg.cy) || null;
+  }
+  function endBoxSelect(){
+    active = false;
+    rect.hidden = true;
+    graphPanel.classList.remove('box-selecting');
+    const g = getCy();
+    if(g) g.userPanningEnabled(true);
+  }
+
+  graphPanel.addEventListener('mousedown', (e) => {
+    const g = getCy();
+    if(!g) return;
+    if(e.button !== 0) return;
+    if(!isZoomModifier(e)) return;
+    if(e.target.closest('#node-panel, #immersive-search, #theme-toggle-float, #hop-toggle, button, a, input, textarea')) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    active = true;
+    g.userPanningEnabled(false);
+    const bounds = graphPanel.getBoundingClientRect();
+    startX = e.clientX - bounds.left;
+    startY = e.clientY - bounds.top;
+    rect.style.left = startX + 'px';
+    rect.style.top = startY + 'px';
+    rect.style.width = '0px';
+    rect.style.height = '0px';
+    rect.hidden = false;
+    graphPanel.classList.add('box-selecting');
+  }, true);
+
+  document.addEventListener('mousemove', (e) => {
+    if(!active) return;
+    e.preventDefault();
+    const bounds = graphPanel.getBoundingClientRect();
+    const curX = e.clientX - bounds.left;
+    const curY = e.clientY - bounds.top;
+    const x = Math.min(startX, curX);
+    const y = Math.min(startY, curY);
+    rect.style.left = x + 'px';
+    rect.style.top = y + 'px';
+    rect.style.width = Math.abs(curX - startX) + 'px';
+    rect.style.height = Math.abs(curY - startY) + 'px';
+  }, true);
+
+  document.addEventListener('mouseup', (e) => {
+    if(!active) return;
+    const bounds = graphPanel.getBoundingClientRect();
+    const endX = e.clientX - bounds.left;
+    const endY = e.clientY - bounds.top;
+    const w = Math.abs(endX - startX);
+    const h = Math.abs(endY - startY);
+    endBoxSelect();
+
+    const g = getCy();
+    if(w < 20 || h < 20 || !g) return;
+
+    const sx1 = Math.min(startX, endX) + bounds.left;
+    const sy1 = Math.min(startY, endY) + bounds.top;
+    const tl = screenToModel(g, sx1, sy1);
+    const br = screenToModel(g, sx1 + w, sy1 + h);
+    const modelW = br.x - tl.x;
+    const modelH = br.y - tl.y;
+    if(modelW <= 0 || modelH <= 0) return;
+
+    const vpW = g.width();
+    const vpH = g.height();
+    const zoom = Math.min(vpW / modelW, vpH / modelH) * 0.9;
+    const clamped = Math.min(Math.max(zoom, g.minZoom()), g.maxZoom());
+    const pan = {
+      x: vpW / 2 - clamped * ((tl.x + br.x) / 2),
+      y: vpH / 2 - clamped * ((tl.y + br.y) / 2),
+    };
+    g.stop(true);
+    g.animate({ zoom: clamped, pan, duration: 400, easing: 'ease-out' });
+  }, true);
+
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape' && active) endBoxSelect();
+  });
+})();
 
 const NODE_URLS = CFG.nodeUrls || {};
 

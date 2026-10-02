@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Isotopy's Subgraph — AGENTWORLD Explorer</title>
+<script>
+/* Same localStorage key as the essay / chorus so theme survives / → /explore. */
+(function () {
+  try {
+    var t = localStorage.getItem('theme');
+    if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+})();
+</script>
 <link rel="stylesheet" href="explore-core.css">
 </head>
 <body>
@@ -12,10 +21,15 @@
     <h1>Isotopy's Subgraph</h1>
     <span class="sub">AGENTWORLD dual-view explorer</span>
   </div>
-  <div id="view-toggle">
-    <button class="active" id="vb-both">Graph + CLI</button>
-    <button id="vb-text">CLI Only</button>
-    <button id="vb-graph">Graph Only</button>
+  <div class="top-bar-right">
+    <div id="view-toggle">
+      <button class="active" id="vb-both">Graph + CLI</button>
+      <button id="vb-text">CLI Only</button>
+      <button id="vb-graph">Graph Only</button>
+    </div>
+    <div id="theme-toggle">
+      <button type="button" class="theme-btn" id="btn-dark" title="Toggle dark mode">Dark</button>
+    </div>
   </div>
 </div>
 <div id="command-bar">
@@ -27,12 +41,14 @@
   <div id="splitter"></div>
   <div id="graph-panel">
     <div id="cy"></div>
+    <div id="box-select-rect" hidden></div>
+    <div class="graph-hint" id="graph-hint"><kbd>Ctrl</kbd> + drag to zoom</div>
     <div id="graph-legend"></div>
     <div id="graph-info"></div>
     <button id="immersive-back" title="Back to explorer (Esc)">← Explorer</button>
     <div id="immersive-title">Isotopy<span class="title-sym">∩</span>AGENTWORLD</div>
-    <div id="theme-toggle">
-      <button id="btn-dark" title="Dark mode">Dark</button>
+    <div id="theme-toggle-float">
+      <button type="button" class="theme-btn" title="Toggle dark mode">Dark</button>
     </div>
     <div id="hop-toggle">
       <button id="hop-1">1-hop</button>

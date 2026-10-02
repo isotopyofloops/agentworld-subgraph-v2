@@ -154,6 +154,12 @@ body {
   text-transform: uppercase;
 }
 
+.top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 #view-toggle {
   display: flex;
   gap: 2px;
@@ -295,6 +301,53 @@ body {
 #graph-panel.hidden { display: none; }
 
 #cy { width: 100%; height: 100%; }
+
+/* === BOX-SELECT ZOOM (Ctrl/Meta + drag, same as essay) === */
+#box-select-rect {
+  position: absolute;
+  border: 1.5px dashed var(--accent);
+  background: rgba(74, 107, 138, 0.08);
+  pointer-events: none;
+  z-index: 20;
+}
+:root[data-theme="dark"] #box-select-rect {
+  background: rgba(125, 184, 166, 0.10);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) #box-select-rect {
+    background: rgba(125, 184, 166, 0.10);
+  }
+}
+#graph-panel.box-selecting {
+  cursor: crosshair;
+}
+#graph-panel.box-selecting #cy {
+  pointer-events: none;
+}
+
+.graph-hint {
+  position: absolute;
+  bottom: 2.8rem;
+  left: 0.9rem;
+  font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: var(--text-mid);
+  z-index: 11;
+  pointer-events: none;
+}
+.graph-hint kbd {
+  display: inline-block;
+  padding: 0.1em 0.4em;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--text-mid);
+  background: var(--legend-bg);
+  border: 1px solid var(--legend-border);
+  border-radius: 2px;
+}
 
 #graph-legend {
   position: absolute;
@@ -461,34 +514,48 @@ body.immersive #immersive-title { display: block; }
 }
 body.immersive #hop-toggle { display: flex; }
 
-#theme-toggle {
+/* Top-bar theme (always on in dual-view / CLI); float copy for Graph Only. */
+#theme-toggle,
+#theme-toggle-float {
+  display: flex;
+  background: var(--bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  padding: 2px;
+}
+#theme-toggle-float {
   display: none;
   position: absolute;
   bottom: 12px;
   right: 180px;
   z-index: 20;
   background: var(--legend-bg);
-  border: 1px solid var(--legend-border);
-  border-radius: 4px;
-  padding: 2px;
+  border-color: var(--legend-border);
 }
-#theme-toggle button {
+.theme-btn {
   background: transparent;
   border: none;
   color: var(--text);
   font-family: -apple-system, 'Segoe UI', sans-serif;
-  font-size: 14px;
-  padding: 6px 14px;
+  font-size: 13px;
+  padding: 5px 12px;
   cursor: pointer;
   border-radius: 3px;
   transition: all 0.15s ease;
   letter-spacing: 0.02em;
 }
-#theme-toggle button:hover {
+.theme-btn:hover {
   color: var(--text-bright);
   background: var(--hl-bg);
 }
-body.immersive #theme-toggle { display: flex; }
+.theme-btn:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 1px;
+}
+body.immersive #theme-toggle-float { display: flex; }
+@media (max-width: 900px) {
+  .graph-hint { display: none; }
+}
 
 #immersive-search {
   display: none;
