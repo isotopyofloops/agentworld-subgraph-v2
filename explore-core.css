@@ -18,11 +18,11 @@
   --node-fill: #1C1B19;
   --node-stroke: #1C1B19;
   --node-open-fill: #FFFFFF;
-  --edge-stroke: #C5C2BC;
+  /* Match essay --edge-stroke / --faded-opacity (iso+sammy graph standard). */
+  --edge-stroke: #6E6A65;
   --hl-border: rgba(28, 27, 25, 0.15);
   --hl-bg: rgba(28, 27, 25, 0.04);
-  /* Fade non-focus graph elements enough to de-emphasize, not enough to vanish (a11y). */
-  --faded-opacity: 0.16;
+  --faded-opacity: 0.14;
   --scrollbar-thumb: rgba(28, 27, 25, 0.12);
   --prompt-color: #4A6B8A;
   --cmd-bg: #EEECEA;
@@ -55,11 +55,10 @@
     --node-fill: #B0A898;
     --node-stroke: #B0A898;
     --node-open-fill: #252019;
-    /* Edges were ~1.5:1 — nearly invisible for low-vision readers. */
     --edge-stroke: #7A7268;
     --hl-border: rgba(232, 224, 212, 0.15);
     --hl-bg: rgba(232, 224, 212, 0.04);
-    --faded-opacity: 0.14;
+    --faded-opacity: 0.12;
     --scrollbar-thumb: rgba(232, 224, 212, 0.10);
     --prompt-color: #7DB8A6;
     --cmd-bg: #2A2520;
@@ -92,9 +91,9 @@
   --node-stroke: #B0A898;
   --node-open-fill: #252019;
   --edge-stroke: #7A7268;
-  --hl-border: rgba(201, 192, 180, 0.18);
-  --hl-bg: rgba(201, 192, 180, 0.04);
-  --faded-opacity: 0.14;
+  --hl-border: rgba(232, 224, 212, 0.15);
+  --hl-bg: rgba(232, 224, 212, 0.04);
+  --faded-opacity: 0.12;
   --scrollbar-thumb: rgba(232, 224, 212, 0.10);
   --prompt-color: #7DB8A6;
   --cmd-bg: #2A2520;

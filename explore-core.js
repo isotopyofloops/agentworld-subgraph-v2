@@ -643,13 +643,15 @@ function initGraph(){
     document.getElementById('graph-info').textContent='Graph library not loaded';return;
   }
 
+  // Graph chrome matches essay iso/sammy (index.html THEME_COLORS + cytoscape style).
   const nodeFill = getComputedToken('--node-fill');
   const nodeStroke = getComputedToken('--node-stroke');
   const nodeOpenFill = getComputedToken('--node-open-fill');
   const edgeStroke = getComputedToken('--edge-stroke');
-  const hlBorder = getComputedToken('--text-bright');
+  const hlBorder = getComputedToken('--hl-border') || 'rgba(28, 27, 25, 0.15)';
   const labelColor = getComputedToken('--text');
-  const bgColor = getComputedToken('--bg');
+  const bgGraph = getComputedToken('--bg-panel') || getComputedToken('--bg');
+  const fadedOpacity = parseFloat(getComputedToken('--faded-opacity') || '0.14');
 
   function hasPresetPositions(){
     const first=Object.values(NM)[0];
@@ -696,56 +698,48 @@ function initGraph(){
       }},
       {selector:'node[degree >= 3]',style:{
         label:'data(label)',
-        'font-size': 12,
-        color: nodeFill,
-        'text-opacity': 1,
-        'text-outline-color': bgColor,
-        'text-outline-width': 3,
-        'text-outline-opacity': 0.85,
-        'text-margin-x': 'data(labelDx)',
-        'text-margin-y': 'data(labelDy)',
-        'text-halign': 'center',
-        'text-valign': 'center',
-        'text-transform': 'uppercase',
+        'font-size': 14,
         'font-weight': 600,
-      }},
-      {selector:'node[degree >= 3][!labelDx]',style:{
-        'text-margin-x': 4,
-        'text-margin-y': 0,
+        'text-transform': 'uppercase',
+        color: labelColor,
+        'text-opacity': 1,
+        'text-outline-color': bgGraph,
+        'text-outline-width': 5,
+        'text-outline-opacity': 0.92,
         'text-halign': 'right',
+        'text-valign': 'center',
+        'text-margin-x': 4,
       }},
       {selector:'edge',style:{
-        'line-color': nodeStroke,
-        'width': 1.2,
-        'opacity': 0.3,
-        'curve-style': 'bezier',
+        'line-color': edgeStroke,
+        'width': 1.35,
+        'opacity': 0.25,
+        'curve-style': 'haystack',
       }},
-      {selector:'.faded',style:{opacity:0.06}},
+      {selector:'.faded',style:{opacity: fadedOpacity}},
       {selector:'node.hl',style:{
         opacity:1,
         'border-width':2,
         'border-color': hlBorder,
         label:'data(label)',
-        'font-size': 14,
-        color: nodeFill,
-        'text-opacity': 1,
-        'text-outline-color': bgColor,
-        'text-outline-width': 3,
-        'text-outline-opacity': 0.9,
-        'text-margin-x': 'data(labelDx)',
-        'text-margin-y': 'data(labelDy)',
-        'text-halign': 'center',
-        'text-valign': 'center',
+        'font-size': 13,
+        'font-weight': 600,
         'text-transform': 'uppercase',
-        'font-weight': 500,
+        color: labelColor,
+        'text-opacity': 1,
+        'text-outline-color': bgGraph,
+        'text-outline-width': 5,
+        'text-outline-opacity': 0.9,
+        'text-halign': 'right',
+        'text-valign': 'center',
+        'text-margin-x': 4,
         'font-family':'-apple-system, "Segoe UI", "Gill Sans", "Helvetica Neue", Arial, sans-serif',
       }},
-      {selector:'node.hl[!labelDx]',style:{
-        'text-margin-x': 4,
-        'text-margin-y': 0,
-        'text-halign': 'right',
+      {selector:'edge.hl',style:{
+        opacity: 0.85,
+        width: 2,
+        'line-color': nodeStroke,
       }},
-      {selector:'edge.hl',style:{opacity:0.8,width:2}},
     ],
     layout: hasPresetPositions() ?
       {name:'preset',fit:true,padding:20} :
@@ -930,17 +924,26 @@ function applyGraphTheme(){
   const nodeStroke = getComputedToken('--node-stroke');
   const nodeOpenFill = getComputedToken('--node-open-fill');
   const edgeStroke = getComputedToken('--edge-stroke');
-  const hlBorder = getComputedToken('--text-bright');
-  const bgColor = getComputedToken('--bg');
+  const hlBorder = getComputedToken('--hl-border') || 'rgba(28, 27, 25, 0.15)';
+  const labelColor = getComputedToken('--text');
+  const bgGraph = getComputedToken('--bg-panel') || getComputedToken('--bg');
+  const fadedOpacity = parseFloat(getComputedToken('--faded-opacity') || '0.14');
   cy.nodes().forEach(n => {
     const nd = NM[n.id()];
     const isAW = nd && nd.origin === 'agentworld';
     n.data('bgColor', isAW ? nodeFill : nodeOpenFill);
     n.data('borderColor', nodeStroke);
   });
-  cy.style().selector('edge').style({'line-color': edgeStroke}).update();
-  cy.style().selector('node[degree >= 3]').style({color: nodeFill, 'text-outline-color': bgColor}).update();
-  cy.style().selector('node.hl').style({'border-color': hlBorder, color: nodeFill, 'text-outline-color': bgColor}).update();
+  cy.style()
+    .selector('edge').style({'line-color': edgeStroke}).update();
+  cy.style()
+    .selector('node[degree >= 3]').style({color: labelColor, 'text-outline-color': bgGraph}).update();
+  cy.style()
+    .selector('node.hl').style({'border-color': hlBorder, color: labelColor, 'text-outline-color': bgGraph}).update();
+  cy.style()
+    .selector('.faded').style({opacity: fadedOpacity}).update();
+  cy.style()
+    .selector('edge.hl').style({'line-color': nodeStroke}).update();
 }
 function syncThemeButtons(){
   const isDark = getEffectiveTheme() === 'dark';

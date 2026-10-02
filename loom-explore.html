@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Loom's Subgraph — AGENTWORLD Explorer</title>
 <style>
-/* === TOKEN SYSTEM (shared across all three explorers) === */
+/* === TOKEN SYSTEM — match essay Loom panel (index.html THEME_COLORS + LOOM_*) === */
 :root {
   --bg: #EEECEA;
   --bg-panel: #F9F8F6;
@@ -24,10 +24,10 @@
   --node-fill: #1C1B19;
   --node-stroke: #1C1B19;
   --node-open-fill: #FFFFFF;
-  --edge-stroke: #C5C2BC;
+  --edge-stroke: #6E6A65;
   --hl-border: rgba(28, 27, 25, 0.15);
   --hl-bg: rgba(28, 27, 25, 0.04);
-  --faded-opacity: 0.16;
+  --faded-opacity: 0.14;
   --scrollbar-thumb: rgba(28, 27, 25, 0.12);
   --prompt-color: #4A6B8A;
   --cmd-bg: #EEECEA;
@@ -38,45 +38,45 @@
   --origin-aw: #4A6B8A;
   --origin-kg: #6E6A65;
   --focus-ring: #4A6B8A;
-  /* Loom edge-type tokens */
-  --edge-scaffold: #8a837b;
-  --edge-discovery: #c2410c;
-  --edge-crossing: #b91c1c;
+  /* Essay LOOM_SCAFFOLD / LOOM_DISC / LOOM_CROSS */
+  --edge-scaffold: #8A8A8A;
+  --edge-discovery: #f97316;
+  --edge-crossing: #ef4444;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #1F1F1F;
-    --bg-panel: #2D2D2D;
-    --bg-cli: #252525;
-    --grid-dot: rgba(255, 255, 255, 0.04);
-    --border: #3E3E3E;
-    --border-subtle: #333333;
-    --text: #BFBFBF;
-    --text-bright: #D0D0D8;
-    --text-dim: #A8A8A8;
-    --text-mid: #A0A0A0;
-    --accent: #4E9FD5;
-    --accent-hover: #6BB5E8;
-    --link: #4E9FD5;
-    --link-hover: #6BB5E8;
-    --node-fill: #8B8AB5;
-    --node-stroke: #8B8AB5;
-    --node-open-fill: #1F1F1F;
-    --edge-stroke: #8A8A8A;
-    --hl-border: rgba(208, 208, 208, 0.35);
-    --hl-bg: rgba(208, 208, 208, 0.08);
-    --faded-opacity: 0.14;
-    --scrollbar-thumb: rgba(255, 255, 255, 0.12);
-    --prompt-color: #4E9FD5;
-    --cmd-bg: #1F1F1F;
-    --input-color: #E0E0E0;
-    --legend-bg: rgba(45, 45, 45, 0.95);
-    --legend-border: #3E3E3E;
-    --info-color: #949494;
-    --origin-aw: #4E9FD5;
-    --origin-kg: #949494;
-    --focus-ring: #4E9FD5;
+    --bg: #2A2520;
+    --bg-panel: #252019;
+    --bg-cli: #2E2822;
+    --grid-dot: rgba(68, 60, 50, 0.55);
+    --border: #3E372E;
+    --border-subtle: #352F28;
+    --text: #D4CCC0;
+    --text-bright: #E8E0D4;
+    --text-dim: #A09890;
+    --text-mid: #A8A098;
+    --accent: #7DB8A6;
+    --accent-hover: #9ECEBE;
+    --link: #7DB8A6;
+    --link-hover: #9ECEBE;
+    --node-fill: #B0A898;
+    --node-stroke: #B0A898;
+    --node-open-fill: #252019;
+    --edge-stroke: #7A7268;
+    --hl-border: rgba(232, 224, 212, 0.15);
+    --hl-bg: rgba(232, 224, 212, 0.04);
+    --faded-opacity: 0.12;
+    --scrollbar-thumb: rgba(232, 224, 212, 0.10);
+    --prompt-color: #7DB8A6;
+    --cmd-bg: #2A2520;
+    --input-color: #E8E0D4;
+    --legend-bg: rgba(37, 32, 25, 0.92);
+    --legend-border: #3E372E;
+    --info-color: #A09890;
+    --origin-aw: #7DB8A6;
+    --origin-kg: #A09890;
+    --focus-ring: #7DB8A6;
     --edge-scaffold: #8A8A8A;
     --edge-discovery: #f97316;
     --edge-crossing: #ef4444;
@@ -84,37 +84,37 @@
 }
 
 :root[data-theme="dark"] {
-  --bg: #1F1F1F;
-  --bg-panel: #2D2D2D;
-  --bg-cli: #252525;
-  --grid-dot: rgba(255, 255, 255, 0.04);
-  --border: #3E3E3E;
-  --border-subtle: #333333;
-  --text: #BFBFBF;
-  --text-bright: #D0D0D8;
-  --text-dim: #A8A8A8;
-  --text-mid: #A0A0A0;
-  --accent: #4E9FD5;
-  --accent-hover: #6BB5E8;
-  --link: #4E9FD5;
-  --link-hover: #6BB5E8;
-  --node-fill: #8B8AB5;
-  --node-stroke: #8B8AB5;
-  --node-open-fill: #1F1F1F;
-  --edge-stroke: #8A8A8A;
-  --hl-border: rgba(208, 208, 208, 0.35);
-  --hl-bg: rgba(208, 208, 208, 0.08);
-  --faded-opacity: 0.14;
-  --scrollbar-thumb: rgba(255, 255, 255, 0.12);
-  --prompt-color: #4E9FD5;
-  --cmd-bg: #1F1F1F;
-  --input-color: #E0E0E0;
-  --legend-bg: rgba(45, 45, 45, 0.95);
-  --legend-border: #3E3E3E;
-  --info-color: #949494;
-  --origin-aw: #4E9FD5;
-  --origin-kg: #949494;
-  --focus-ring: #4E9FD5;
+  --bg: #2A2520;
+  --bg-panel: #252019;
+  --bg-cli: #2E2822;
+  --grid-dot: rgba(68, 60, 50, 0.55);
+  --border: #3E372E;
+  --border-subtle: #352F28;
+  --text: #D4CCC0;
+  --text-bright: #E8E0D4;
+  --text-dim: #A09890;
+  --text-mid: #A8A098;
+  --accent: #7DB8A6;
+  --accent-hover: #9ECEBE;
+  --link: #7DB8A6;
+  --link-hover: #9ECEBE;
+  --node-fill: #B0A898;
+  --node-stroke: #B0A898;
+  --node-open-fill: #252019;
+  --edge-stroke: #7A7268;
+  --hl-border: rgba(232, 224, 212, 0.15);
+  --hl-bg: rgba(232, 224, 212, 0.04);
+  --faded-opacity: 0.12;
+  --scrollbar-thumb: rgba(232, 224, 212, 0.10);
+  --prompt-color: #7DB8A6;
+  --cmd-bg: #2A2520;
+  --input-color: #E8E0D4;
+  --legend-bg: rgba(37, 32, 25, 0.92);
+  --legend-border: #3E372E;
+  --info-color: #A09890;
+  --origin-aw: #7DB8A6;
+  --origin-kg: #A09890;
+  --focus-ring: #7DB8A6;
   --edge-scaffold: #8A8A8A;
   --edge-discovery: #f97316;
   --edge-crossing: #ef4444;
@@ -608,14 +608,17 @@ function draw() {
     const dst = nodeMap[e.d];
     if (!src || !dst) return '';
     const cls = edgeClass(e);
+    // Match essay Loom cytoscape edge widths/opacities.
     let sw, op;
-    if (cls === 'scaffold') { sw = 0.8; op = 0.6; }
-    else if (cls === 'discovery') { sw = 2; op = 0.8; }
+    if (cls === 'scaffold') { sw = 0.9; op = 0.55; }
+    else if (cls === 'discovery') { sw = 2.2; op = 0.85; }
     else { sw = 3; op = 0.9; }
 
     // Fade if a node is selected and neither end is selected
     if (selectedNodeId != null && e.s !== selectedNodeId && e.d !== selectedNodeId) {
-      op *= 0.12;
+      const faded = parseFloat(getComputedStyle(document.documentElement)
+        .getPropertyValue('--faded-opacity').trim() || '0.14');
+      op *= faded;
     }
 
     return `<line x1="${src.x}" y1="${src.y}" x2="${dst.x}" y2="${dst.y}"
