@@ -1891,6 +1891,11 @@ const SECTION_HIGHLIGHT_SEED = {
   'samantha-2': 'fragile-individuation',
   'sammy-3': 'The Invisible Decision',
 };
+
+// Per-section Loom snapshot frame (t=…). Applied when the section is selected.
+const SECTION_LOOM_FRAME = {
+  'loom-seeds': 23, // §5 Seeds and Crystallization
+};
 const SECTION_FRAME_KEEP = {
   // Sammy §1: Sammy + Basin Key (Isotopy). "Basin Key as Insulation" sits far
   // left in the force layout and was pulling the camera out too wide.
@@ -2620,13 +2625,31 @@ async function selectSection(sectionId) {
   if (!sec) return; // chorus / reader sections carry no graph excerpt — leave graph as-is
 
   const graphSource = SECTION_SOURCE[sectionId] || 'iso';
+
+  // Loom sections may pin a default snapshot (e.g. Seeds → t=23).
+  let loomFrameDirty = false;
+  if (graphSource === 'loom' && SECTION_LOOM_FRAME[sectionId] != null) {
+    const frames = getLoomFrames();
+    const want = Math.max(0, Math.min(Math.max(frames.length - 1, 0), SECTION_LOOM_FRAME[sectionId]));
+    if (loomFrameIndex !== want) {
+      loomFrameInitialized = true; // don't snap to latest on first Loom load
+      loomFrameIndex = want;
+      Object.keys(graphCache).forEach(k => { if (k.startsWith('loom:')) delete graphCache[k]; });
+      loomFrameDirty = true;
+    }
+  }
+
   // Same section re-entry (observer/scroll after expand) must not yank the camera
   // — especially after collapse → explore → reopen.
-  const samePlace = sectionId === currentSection && graphSource === currentSource && !!cy;
+  const samePlace = sectionId === currentSection && graphSource === currentSource && !!cy && !loomFrameDirty;
 
-  if (graphSource !== currentSource) {
-    const hopsChanged = syncHopsForSource(graphSource);
-    if (hopsChanged) currentSource = null;
+  if (graphSource !== currentSource || loomFrameDirty) {
+    if (graphSource !== currentSource) {
+      const hopsChanged = syncHopsForSource(graphSource);
+      if (hopsChanged) currentSource = null;
+    } else if (loomFrameDirty) {
+      currentSource = null; // force initGraph to rebuild the pinned frame
+    }
     await initGraph(graphSource);
   }
 
