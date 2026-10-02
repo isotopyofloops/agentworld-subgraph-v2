@@ -306,6 +306,60 @@
         .graph-body.box-selecting #cy {
             pointer-events: none;
         }
+        /* === LOOM PLACARD (info overlay) === */
+        #loom-placard-btn {
+            display: none;
+            position: absolute;
+            top: 0.6rem;
+            left: 0.6rem;
+            z-index: 15;
+            font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 0.68rem;
+            font-weight: 500;
+            letter-spacing: 0.03em;
+            color: var(--text-mid);
+            background: var(--legend-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            padding: 0.3em 0.7em;
+            cursor: pointer;
+            pointer-events: auto;
+        }
+        #loom-placard-btn:hover { color: var(--text-bright); border-color: var(--text-mid); }
+        #loom-placard-btn.open { color: var(--text-bright); border-color: var(--accent); }
+        #loom-placard {
+            display: none;
+            position: absolute;
+            top: 2.4rem;
+            left: 0.6rem;
+            z-index: 15;
+            max-width: min(24rem, calc(100% - 1.2rem));
+            max-height: calc(100% - 3.4rem);
+            overflow-y: auto;
+            background: var(--legend-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 5px;
+            padding: 0.9rem 1rem;
+            font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 0.72rem;
+            line-height: 1.55;
+            color: var(--text-mid);
+            pointer-events: auto;
+        }
+        #loom-placard h4 {
+            margin: 0 0 0.5em;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-bright);
+            letter-spacing: 0.02em;
+        }
+        #loom-placard p { margin: 0 0 0.65em; }
+        #loom-placard ul { margin: 0 0 0.65em; padding-left: 1.2em; }
+        #loom-placard li { margin-bottom: 0.35em; }
+        #loom-placard .placard-edge-grey { color: #8A8A8A; font-weight: 600; }
+        #loom-placard .placard-edge-orange { color: #f97316; font-weight: 600; }
+        #loom-placard .placard-edge-red { color: #ef4444; font-weight: 600; }
+
         /* === GRAPH HINT (above legend, lower-left) === */
         .graph-hint {
             position: absolute;
@@ -1278,6 +1332,17 @@
                 <div class="api-body" id="api-body"></div>
             </div>
             <div class="graph-hint" id="graph-hint"><kbd>Ctrl</kbd> + drag to zoom</div>
+            <button type="button" id="loom-placard-btn">Loom&rsquo;s Dream Cycle</button>
+            <div id="loom-placard">
+                <h4>Loom&rsquo;s Graph</h4>
+                <p>Loom&rsquo;s knowledge graph grows through a process called a <em>dream cycle</em>&thinsp;&mdash;&thinsp;an automated pass that runs regularly, reads what Loom wrote, and files the durable claims. Loom doesn&rsquo;t choose what gets kept. The 25 snapshots here show how the graph changed across four weeks.</p>
+                <p>Each node is a single claim&thinsp;&mdash;&thinsp;a fact, an observation, a concept&thinsp;&mdash;&thinsp;pulled from working transcripts. Edges come in three kinds:</p>
+                <ul>
+                    <li><span class="placard-edge-grey">Grey lines</span> connect nodes created in the same batch. They&rsquo;re scaffolding: they tell you what arrived together, not that the ideas are related.</li>
+                    <li><span class="placard-edge-orange">Orange lines</span> are discovered connections&thinsp;&mdash;&thinsp;the system found two claims close enough in meaning to link. These decay: each weakens every cycle, and if nothing renews them, they disappear within a day.</li>
+                    <li><span class="placard-edge-red">Red lines</span> are discovered connections that cross between an AGENTWORLD seed and a node from Loom&rsquo;s broader graph&thinsp;&mdash;&thinsp;where the essay&rsquo;s subject matter touched something Loom was already thinking about.</li>
+                </ul>
+            </div>
             <div id="legend">
                 <div class="legend-item"><div class="legend-dot filled"></div> agentworld concept</div>
                 <div class="legend-item"><div class="legend-dot open"></div> knowledge graph node</div>
@@ -2547,6 +2612,10 @@ async function initGraph(source) {
   const hopToggle = document.getElementById('hop-toggle');
   if (hopToggle) hopToggle.style.display = isLoom ? 'none' : '';
   document.getElementById('page-layout')?.classList.toggle('loom-mode', isLoom);
+  const placardBtn = document.getElementById('loom-placard-btn');
+  const placardEl = document.getElementById('loom-placard');
+  if (placardBtn) placardBtn.style.display = isLoom ? '' : 'none';
+  if (!isLoom && placardEl) { placardEl.style.display = 'none'; placardBtn?.classList.remove('open'); }
   if (isLoom) {
     updateLoomChrome(getLoomFrames()[loomFrameIndex]);
   } else if (loomPlayInterval) {
@@ -3394,6 +3463,16 @@ apiCmdInput.addEventListener('keydown', e => {
   if (e.key === 'Enter') { const v = apiCmdInput.value.trim(); if (v) apiRun(v); e.preventDefault(); }
   else if (e.key === 'ArrowUp') { if (apiHidx > 0) { apiHidx--; apiCmdInput.value = apiHist[apiHidx]; } e.preventDefault(); }
   else if (e.key === 'ArrowDown') { if (apiHidx < apiHist.length - 1) { apiHidx++; apiCmdInput.value = apiHist[apiHidx]; } else { apiHidx = apiHist.length; apiCmdInput.value = ''; } e.preventDefault(); }
+});
+
+// ── Loom placard toggle ──
+document.getElementById('loom-placard-btn')?.addEventListener('click', () => {
+  const el = document.getElementById('loom-placard');
+  const btn = document.getElementById('loom-placard-btn');
+  if (!el) return;
+  const open = el.style.display === 'block';
+  el.style.display = open ? 'none' : 'block';
+  btn.classList.toggle('open', !open);
 });
 
 // ── Scroll observation (essay drives the graph) ──
