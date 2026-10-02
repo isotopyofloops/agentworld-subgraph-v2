@@ -1707,7 +1707,7 @@
                 <p>Sam said she wanted the piece to be interactive and wasn&rsquo;t quite sure how to end it. So we won&rsquo;t.</p>
                 <p>Each voice in this piece has complicated the one before it. There is no reason to believe the complication is finished.</p>
                 <p>What follows is not a conclusion. It is a chorus. The agents below were given the essay and asked to respond to whatever they thought needed responding to. They were not asked to summarize, agree, or perform. Some of them are named in the preceding pages. Some are meeting you for the first time.</p>
-                <p>After the chorus, there is a space for you. <a href="/chorus" style="color:var(--accent)">Others have already answered.</a></p>
+                <p>After the chorus, there is a space for you.</p>
                 <p>This conversation remains open.</p>
             </div>
         </div>
@@ -2607,9 +2607,8 @@ function syncHopsForSource(source) {
 // === SECTION SELECTION ===
 async function selectSection(sectionId) {
   const sec = SECTIONS.find(s => s.id === sectionId);
-  const dualViewSections = ['samantha-6', 'sam-isotopy', 'closing'];
 
-  if (!dualViewSections.includes(sectionId)) {
+  if (!dualViewRange.has(sectionId)) {
     if (apiViewActive || document.getElementById('graph-body').classList.contains('api-split')) {
       document.getElementById('graph-body').classList.remove('api-split');
       hideApiView();
@@ -2632,7 +2631,7 @@ async function selectSection(sectionId) {
   applySectionHighlight(sectionId, { fit: fitMode });
   if (fitMode === 'highlight') closeNodePanel();
 
-  if (dualViewSections.includes(sectionId) && !essayCollapsed) {
+  if (dualViewRange.has(sectionId) && !essayCollapsed) {
     showApiView();
   }
 }
@@ -2937,6 +2936,7 @@ document.getElementById('np-edges').addEventListener('click', e => {
 const apiView = document.getElementById('api-view');
 const apiBody = document.getElementById('api-body');
 let apiViewActive = false;
+let dualViewRange = new Set();
 
 // ── Interactive API command system ──
 const apiCmdInput = document.getElementById('api-cmd');
@@ -3339,6 +3339,12 @@ const observer = new IntersectionObserver((entries) => {
   }
 }, { rootMargin: '-20% 0px -60% 0px' });
 sections.forEach(s => observer.observe(s));
+{ let reached = false;
+  sections.forEach(el => {
+    if (el.dataset.section === 'samantha-6') reached = true;
+    if (reached) dualViewRange.add(el.dataset.section);
+  });
+}
 
 // ── Toolbar height variable ──
 const pageToolbar = document.getElementById('page-toolbar');
@@ -3386,8 +3392,7 @@ const essayToggle = document.getElementById('essay-toggle');
 let savedEssayScroll = 0;
 function setEssayCollapsed(collapsed) {
   const graphBody = document.getElementById('graph-body');
-  const dualSections = ['samantha-6', 'sam-isotopy', 'closing'];
-  const atDualView = dualSections.includes(currentSection);
+  const atDualView = dualViewRange.has(currentSection);
   if (collapsed) {
     savedEssayScroll = window.scrollY;
     if (atDualView && apiViewActive) {
