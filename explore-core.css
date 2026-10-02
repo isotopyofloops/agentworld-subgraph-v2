@@ -324,15 +324,25 @@ body {
   pointer-events: none;
 }
 
-.graph-hint {
+/* Bottom-left stack: zoom hint above legend (no overlap). */
+#graph-chrome-bl {
   position: absolute;
-  bottom: 2.8rem;
-  left: 0.9rem;
+  bottom: 10px;
+  left: 10px;
+  z-index: 11;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  max-width: min(280px, calc(100% - 20px));
+  pointer-events: none;
+}
+
+.graph-hint {
   font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
   font-size: 0.68rem;
   font-weight: 500;
   color: var(--text-mid);
-  z-index: 11;
   pointer-events: none;
 }
 .graph-hint kbd {
@@ -349,22 +359,18 @@ body {
 }
 
 #graph-legend {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
   background: var(--legend-bg);
   border: 1px solid var(--legend-border);
   border-radius: 4px;
   padding: 10px 16px;
   font-size: 14px;
-  z-index: 5;
-  max-height: 40%;
+  max-height: 40vh;
   overflow-y: auto;
-  color: var(--text);
   font-family: -apple-system, 'Segoe UI', 'Gill Sans', 'Helvetica Neue', Arial, sans-serif;
   color: var(--text-dim);
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  pointer-events: auto;
 }
 
 .legend-item {
