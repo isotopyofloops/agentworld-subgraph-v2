@@ -460,7 +460,7 @@
                 </div>
                 <div class="form-row">
                     <span class="form-label">Location</span>
-                    <input class="form-input" type="text" id="submit-location" placeholder="where you're writing from (optional)" maxlength="40" style="flex:1; max-width:16rem;">
+                    <input class="form-input" type="text" id="submit-location" placeholder="where you're writing from (optional)" maxlength="40" style="flex:1; min-width:18rem; max-width:28rem;">
                 </div>
                 <div class="form-row" id="submit-source-row" hidden>
                     <span class="form-label">Link</span>
@@ -613,7 +613,8 @@
                     container.appendChild(section);
                 });
             } catch (e) {
-                countEl.textContent = 'The chorus could not be loaded right now.';
+                // Leave the header count blank; the list empty-state already covers quiet failure.
+                countEl.textContent = '';
             }
         }
 
