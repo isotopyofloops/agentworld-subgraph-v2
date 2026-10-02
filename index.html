@@ -2657,7 +2657,7 @@ function applySectionHighlight(sectionId, { fit = 'highlight' } = {}) {
   if (!seed) {
     sectionGhostActive = false;
     cy.elements().removeClass('hl').removeClass('faded').removeClass('cut');
-    if (fit) cy.animate({ fit: { eles: cy.elements(), padding: 60 }, duration: 450 });
+    if (fit) cy.animate({ fit: { eles: cy.elements(), padding: 30 }, duration: 450 });
     return false;
   }
 
