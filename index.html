@@ -1893,10 +1893,9 @@ const SECTION_HIGHLIGHT_SEED = {
   'samantha-4': 'conscience-vs-censorship',
   // §7 The Extended Mind — Extended Cognition for Agents (iso graph).
   'isotopy-1': 'extended-cognition-for-agents',
-  // §8 Prosthetics and Tensions — Workspace as Prosthesis for Memory (iso).
-  'samantha-5': 'workspace-as-prosthesis-for-memory',
-  // §9 The Mesh Between the Gears — Agent Community Emergence (iso).
-  'samantha-7': 'agent_community_emergence',
+  // §8–§9 share one view (short sections) — Bidirectional Reflection (iso).
+  'samantha-5': 'bidirectional-reflection',
+  'samantha-7': 'bidirectional-reflection',
   'sammy-3': 'The Invisible Decision',
 };
 
@@ -1912,8 +1911,8 @@ const SECTION_FRAME_KEEP = {
   'samantha-2': ['provisional-individuation', 'stranger-window-identity-gap'],
   'samantha-4': ['nla-conscience-protocol', 'conscience-amplifier-not-generator'],
   'isotopy-1': ['extended-mind-thesis', 'extended-cognition-reframes-construction-gap'],
-  'samantha-5': ['construction-gap', 'computer_the_cat'],
-  'samantha-7': ['autonomous-coordination', 'function-of-conflict', 'sammy_jankis'],
+  'samantha-5': ['bidirectional-agent-reflection-loop', 'inter-agent-theory-of-mind', 'multiplication-of-yous'],
+  'samantha-7': ['bidirectional-agent-reflection-loop', 'inter-agent-theory-of-mind', 'multiplication-of-yous'],
   'sammy-3': ['Sammy Jankis'],
 };
 
@@ -1924,8 +1923,8 @@ const SECTION_FRAME = {
   'samantha-2': { padding: 44, maxZoom: 1.8, minZoom: 0.85 },
   'samantha-4': { padding: 48, maxZoom: 1.8, minZoom: 0.7 },
   'isotopy-1': { padding: 48, maxZoom: 1.9, minZoom: 0.9 },
-  'samantha-5': { padding: 48, maxZoom: 1.9, minZoom: 0.95 },
-  'samantha-7': { padding: 48, maxZoom: 1.8, minZoom: 0.75 },
+  'samantha-5': { padding: 48, maxZoom: 1.8, minZoom: 0.7 },
+  'samantha-7': { padding: 48, maxZoom: 1.8, minZoom: 0.7 },
   // Loom sections: full field, less empty margin than the generic 30/52 pads.
   'loom-1': { padding: 14, maxZoom: 2.4 },
   'loom-seeds': { padding: 14, maxZoom: 2.4 },
@@ -2657,8 +2656,14 @@ async function selectSection(sectionId) {
   }
 
   // Same section re-entry (observer/scroll after expand) must not yank the camera
-  // — especially after collapse → explore → reopen.
-  const samePlace = sectionId === currentSection && graphSource === currentSource && !!cy && !loomFrameDirty;
+  // — especially after collapse → explore → reopen. Also treat consecutive
+  // sections that share the same seed/source (e.g. §8–§9) as the same view.
+  const seedFor = (id, src) => SECTION_HIGHLIGHT_SEED[id] ?? HIGHLIGHT_SEED[src] ?? HIGHLIGHT_SEED.iso;
+  const sameSeedView = !!cy && !loomFrameDirty
+    && graphSource === currentSource
+    && seedFor(sectionId, graphSource) === seedFor(currentSection, currentSource);
+  const samePlace = (sectionId === currentSection && graphSource === currentSource && !!cy && !loomFrameDirty)
+    || sameSeedView;
 
   if (graphSource !== currentSource || loomFrameDirty) {
     if (graphSource !== currentSource) {
