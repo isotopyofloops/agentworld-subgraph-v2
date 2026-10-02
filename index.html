@@ -1298,7 +1298,7 @@
                 </div>
                 <div class="api-body" id="api-body"></div>
             </div>
-            <div class="graph-hint" id="graph-hint"><kbd>Shift</kbd> + drag to zoom</div>
+            <div class="graph-hint" id="graph-hint"><kbd>Ctrl</kbd> + drag to zoom</div>
             <div id="legend">
                 <div class="legend-item"><div class="legend-dot filled"></div> agentworld concept</div>
                 <div class="legend-item"><div class="legend-dot open"></div> knowledge graph node</div>
@@ -3802,7 +3802,7 @@ document.addEventListener('keydown', e => {
   graphBody.addEventListener('mousedown', (e) => {
     if (!cy) return;
     if (e.button !== 0) return;
-    if (!e.shiftKey) return;
+    if (!e.ctrlKey) return;
     if (e.target.closest('#node-panel, .graph-search-wrap, .np-close, button, a')) return;
     e.preventDefault();
     active = true;
