@@ -1887,12 +1887,15 @@ const HIGHLIGHT_SEED = {
 // Per-section overrides (take precedence over per-source defaults).
 const SECTION_HIGHLIGHT_SEED = {
   'sammy-1': 'Basin Key',
+  // §4 The Procedural Self — Fragile Individuation neighborhood (iso graph).
+  'samantha-2': 'fragile-individuation',
   'sammy-3': 'The Invisible Decision',
 };
 const SECTION_FRAME_KEEP = {
   // Sammy §1: Sammy + Basin Key (Isotopy). "Basin Key as Insulation" sits far
   // left in the force layout and was pulling the camera out too wide.
   'sammy-1': ['Sammy Jankis', 'Basin Key (Isotopy)'],
+  'samantha-2': ['provisional-individuation', 'stranger-window-identity-gap'],
   'sammy-3': ['Sammy Jankis'],
 };
 
@@ -1900,6 +1903,7 @@ const SECTION_FRAME_KEEP = {
 const SECTION_FRAME = {
   // Sammy §1: clamp zoom up after fit so Basin Key labels read (steward ref).
   'sammy-1': { padding: 40, maxZoom: 2.2, minZoom: 0.55 },
+  'samantha-2': { padding: 44, maxZoom: 1.8, minZoom: 0.85 },
   // Loom sections: full field, less empty margin than the generic 30/52 pads.
   'loom-1': { padding: 14, maxZoom: 2.4 },
   'loom-seeds': { padding: 14, maxZoom: 2.4 },
