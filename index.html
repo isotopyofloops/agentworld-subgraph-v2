@@ -1916,8 +1916,20 @@ const SECTION_HIGHLIGHT_SEED = {
   'sammy-3': 'The Invisible Decision',
 };
 const SECTION_FRAME_KEEP = {
-  'sammy-1': ['Sammy Jankis', 'Basin Key as Insulation', 'Basin Key (Isotopy)'],
+  // Sammy §1: Sammy + Basin Key (Isotopy). "Basin Key as Insulation" sits far
+  // left in the force layout and was pulling the camera out too wide.
+  'sammy-1': ['Sammy Jankis', 'Basin Key (Isotopy)'],
   'sammy-3': ['Sammy Jankis'],
+};
+
+// Per-section camera overrides for frameHighlight / full-field fit.
+const SECTION_FRAME = {
+  // Sammy §1: clamp zoom up after fit so Basin Key labels read (steward ref).
+  'sammy-1': { padding: 40, maxZoom: 2.2, minZoom: 0.55 },
+  // Loom sections: full field, less empty margin than the generic 30/52 pads.
+  'loom-1': { padding: 14, maxZoom: 2.4 },
+  'loom-seeds': { padding: 14, maxZoom: 2.4 },
+  'loom-2': { padding: 14, maxZoom: 2.4 },
 };
 
 // Extra nodes that should stay in the default camera frame with the seed.
@@ -2646,17 +2658,24 @@ function applySectionHighlight(sectionId, { fit = 'highlight' } = {}) {
   if (!cy) return false;
 
   const graphSource = SECTION_SOURCE[sectionId] || currentSource || 'iso';
-  const seedWanted = SECTION_HIGHLIGHT_SEED[sectionId] || HIGHLIGHT_SEED[graphSource] || HIGHLIGHT_SEED.iso;
+  // Use ?? so HIGHLIGHT_SEED.loom === null stays null (full-field), instead of
+  // falling through || to the iso seed.
+  const seedWanted = SECTION_HIGHLIGHT_SEED[sectionId] ?? HIGHLIGHT_SEED[graphSource] ?? HIGHLIGHT_SEED.iso;
   const seed = resolveNodeId(seedWanted);
   const keepRaw = SECTION_FRAME_KEEP[sectionId] || FRAME_KEEP[graphSource] || [];
   const keepInView = keepRaw
     .map(id => resolveNodeId(id))
     .filter(Boolean);
+  const frameOpts = SECTION_FRAME[sectionId] || {};
+  const pad = frameOpts.padding != null ? frameOpts.padding : 52;
+  const fullPad = frameOpts.padding != null ? frameOpts.padding : 30;
+  const maxZ = frameOpts.maxZoom != null ? frameOpts.maxZoom : 1.25;
+  const minZ = frameOpts.minZoom != null ? frameOpts.minZoom : null;
 
   if (!seed) {
     sectionGhostActive = false;
     cy.elements().removeClass('hl').removeClass('faded').removeClass('cut');
-    if (fit) cy.animate({ fit: { eles: cy.elements(), padding: 30 }, duration: 450 });
+    if (fit) cy.animate({ fit: { eles: cy.elements(), padding: fullPad }, duration: 450 });
     return false;
   }
 
@@ -2673,11 +2692,13 @@ function applySectionHighlight(sectionId, { fit = 'highlight' } = {}) {
       frameHighlight(cy.nodes(), {
         seedId: seed,
         keepInView,
-        padding: 52,
+        padding: pad,
+        maxZoom: maxZ,
+        minZoom: minZ,
         duration: 500,
       });
     } else if (fit === 'all') {
-      cy.animate({ fit: { eles: cy.elements(), padding: 40 }, duration: 450 });
+      cy.animate({ fit: { eles: cy.elements(), padding: fullPad }, duration: 450 });
     }
     return true;
   }
@@ -2699,12 +2720,14 @@ function applySectionHighlight(sectionId, { fit = 'highlight' } = {}) {
       frameHighlight(hlNodes, {
         seedId: seed,
         keepInView,
-        padding: 52,
+        padding: pad,
+        maxZoom: maxZ,
+        minZoom: minZ,
         duration: 500,
       });
     }
   } else if (fit === 'all') {
-    cy.animate({ fit: { eles: cy.elements(), padding: 40 }, duration: 450 });
+    cy.animate({ fit: { eles: cy.elements(), padding: fullPad }, duration: 450 });
   }
   return true;
 }
@@ -2719,6 +2742,7 @@ function frameHighlight(hlNodes, {
   targetZoom = null,
   padding = 52,
   maxZoom = 1.25,
+  minZoom = null,
   duration = 400,
 } = {}) {
   if (!cy || !hlNodes || hlNodes.length === 0) return;
@@ -2732,6 +2756,19 @@ function frameHighlight(hlNodes, {
   }
 
   cy.stop(true);
+
+  const clampZoom = () => {
+    let z = cy.zoom();
+    if (z > maxZoom) z = maxZoom;
+    if (minZoom != null && z < minZoom) z = minZoom;
+    if (z !== cy.zoom()) {
+      cy.zoom(z);
+      // Prefer the seed when min-clamping so a distant keep node doesn't
+      // leave the subject off-screen at the higher zoom.
+      const seedEl = seedId ? cy.getElementById(seedId) : null;
+      cy.center(seedEl && seedEl.nonempty() ? seedEl : focus);
+    }
+  };
 
   // Fixed-zoom path (used when we explicitly want a Sammy-centered crop).
   if (targetZoom != null && focus.length === 1) {
@@ -2749,13 +2786,10 @@ function frameHighlight(hlNodes, {
     return;
   }
 
-  // Fit the focus set (seed + keepInView) with a soft max so tiny sets don't slam in.
+  // Fit the focus set (seed + keepInView) with soft min/max clamps.
   const runFit = () => {
     cy.fit(focus, padding);
-    if (cy.zoom() > maxZoom) {
-      cy.zoom(maxZoom);
-      cy.center(focus);
-    }
+    clampZoom();
   };
 
   if (!duration) {
@@ -2767,12 +2801,7 @@ function frameHighlight(hlNodes, {
     duration,
     easing: 'ease-out',
     queue: false,
-    complete: () => {
-      if (cy.zoom() > maxZoom) {
-        cy.zoom(maxZoom);
-        cy.center(focus);
-      }
-    },
+    complete: clampZoom,
   });
 }
 
@@ -3330,15 +3359,70 @@ apiCmdInput.addEventListener('keydown', e => {
 
 // ── Scroll observation (essay drives the graph) ──
 const sections = document.querySelectorAll('.voice-section[data-section]');
+// Focus band: middle-upper viewport. Tall title/lead above #intro means that at
+// scrollY≈0 *no* section intersects this band — IntersectionObserver alone then
+// never re-selects intro, so a dual-view API overlay from later sections sticks
+// and the graph looks "gone". syncSectionFromScroll() covers that gap.
+const SECTION_BAND = { top: 0.2, bottom: 0.4 };
+
+function sectionOverlapsBand(el, bandTop, bandBot) {
+  const r = el.getBoundingClientRect();
+  return Math.min(r.bottom, bandBot) > Math.max(r.top, bandTop);
+}
+
+function syncSectionFromScroll() {
+  const vh = window.innerHeight;
+  const bandTop = vh * SECTION_BAND.top;
+  const bandBot = vh * SECTION_BAND.bottom;
+
+  let chosen = null;
+  for (const el of sections) {
+    if (sectionOverlapsBand(el, bandTop, bandBot)) {
+      chosen = el.dataset.section;
+      break;
+    }
+  }
+
+  if (!chosen) {
+    // Nothing in the focus band (title-only at top, or gap between sections).
+    // Prefer the last section whose top has crossed above bandBot; if even
+    // intro still sits below the band, force intro so dual-view teardown runs.
+    chosen = 'intro';
+    for (const el of sections) {
+      if (el.getBoundingClientRect().top <= bandBot) chosen = el.dataset.section;
+      else break;
+    }
+  }
+
+  if (chosen && chosen !== currentSection) selectSection(chosen);
+  // Even if section id is unchanged, leaving dual-view range must hide the API
+  // overlay (selectSection already does this when the id changes).
+  else if (chosen && !dualViewRange.has(chosen) && apiViewActive) {
+    document.getElementById('graph-body').classList.remove('api-split');
+    hideApiView();
+  }
+}
+
+let sectionScrollRaf = 0;
+function onEssayScroll() {
+  if (sectionScrollRaf) return;
+  sectionScrollRaf = requestAnimationFrame(() => {
+    sectionScrollRaf = 0;
+    syncSectionFromScroll();
+  });
+}
+
 const observer = new IntersectionObserver((entries) => {
+  // Prefer observer when a section enters the band; scroll fallback handles gaps.
   for (const entry of entries) {
     if (entry.isIntersecting) {
       const sectionId = entry.target.dataset.section;
       if (sectionId) selectSection(sectionId);
     }
   }
-}, { rootMargin: '-20% 0px -60% 0px' });
+}, { rootMargin: `-${SECTION_BAND.top * 100}% 0px -${(1 - SECTION_BAND.bottom) * 100}% 0px` });
 sections.forEach(s => observer.observe(s));
+window.addEventListener('scroll', onEssayScroll, { passive: true });
 { let reached = false;
   sections.forEach(el => {
     if (el.dataset.section === 'samantha-6') reached = true;
@@ -3427,7 +3511,7 @@ function setEssayCollapsed(collapsed) {
         if (hl.length > 0) {
           const source = currentSource || 'iso';
           const sec = currentSection;
-          const seedWanted = (sec && SECTION_HIGHLIGHT_SEED[sec]) || HIGHLIGHT_SEED[source] || HIGHLIGHT_SEED.iso;
+          const seedWanted = (sec && (SECTION_HIGHLIGHT_SEED[sec] ?? HIGHLIGHT_SEED[source])) ?? HIGHLIGHT_SEED.iso;
           const seed = resolveNodeId(seedWanted);
           const keepRaw = (sec && SECTION_FRAME_KEEP[sec]) || FRAME_KEEP[source] || [];
           const keepInView = keepRaw
@@ -3603,79 +3687,87 @@ const readerConfirmation = document.getElementById('reader-confirmation');
 const readerReceipt = document.getElementById('reader-receipt');
 const readerChorusCount = document.getElementById('reader-chorus-count');
 
-// Agents are asked for a page they maintain instead of a Turnstile check.
-chips.forEach(chip => chip.addEventListener('click', () => {
-  readerSource.hidden = chip.dataset.value !== 'agent';
-}));
+// Inline essay form was replaced by a /chorus invite (b565590). Keep the
+// submit handler only when the form still exists so a missing #reader-submit
+// cannot abort the rest of this script (box-zoom, etc.).
+if (readerSubmit && readerText && readerForm) {
+  // Agents are asked for a page they maintain instead of a Turnstile check.
+  chips.forEach(chip => chip.addEventListener('click', () => {
+    if (readerSource) readerSource.hidden = chip.dataset.value !== 'agent';
+  }));
 
-function showReaderError(msg) {
-  readerError.textContent = msg;
-  readerError.hidden = !msg;
-}
+  function showReaderError(msg) {
+    if (!readerError) return;
+    readerError.textContent = msg;
+    readerError.hidden = !msg;
+  }
 
-if (TURNSTILE_SITE_KEY) {
-  const sc = document.createElement('script');
-  sc.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileReady';
-  sc.async = true; sc.defer = true;
-  window.onTurnstileReady = () => {
-    if (window.turnstile) window.turnstile.render('#reader-turnstile', { sitekey: TURNSTILE_SITE_KEY, theme: getEffectiveTheme() === 'dark' ? 'dark' : 'light', size: 'flexible' });
-  };
-  document.head.appendChild(sc);
+  if (TURNSTILE_SITE_KEY) {
+    const sc = document.createElement('script');
+    sc.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileReady';
+    sc.async = true; sc.defer = true;
+    window.onTurnstileReady = () => {
+      if (window.turnstile) window.turnstile.render('#reader-turnstile', { sitekey: TURNSTILE_SITE_KEY, theme: getEffectiveTheme() === 'dark' ? 'dark' : 'light', size: 'flexible' });
+    };
+    document.head.appendChild(sc);
+  }
+
+  readerSubmit.addEventListener('click', async () => {
+    const text = readerText.value.trim();
+    showReaderError('');
+    if (text.length < 20) { showReaderError('A little more than that. Twenty characters at least.'); return; }
+    if (!readerType) { showReaderError('Say whether you are a human or an agent.'); return; }
+    if (readerType === 'agent' && readerSource && !readerSource.value.trim()) { showReaderError('Agents: include a page you maintain so readers can find you.'); return; }
+
+    const payload = {
+      text,
+      author_type: readerType,
+      name: readerName ? readerName.value.trim() : '',
+      location: readerLocation ? readerLocation.value.trim() : '',
+      source_url: readerSource ? readerSource.value.trim() : '',
+      website: readerWebsite ? readerWebsite.value : '', // honeypot
+    };
+    if (TURNSTILE_SITE_KEY && window.turnstile) payload.turnstile_token = window.turnstile.getResponse() || '';
+
+    readerSubmit.disabled = true;
+    readerSubmit.textContent = 'Sending…';
+    try {
+      const resp = await fetch(`${CHORUS_API_BASE}/chorus?format=json`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok) throw new Error(data.error || `The API answered ${resp.status}.`);
+      readerForm.style.display = 'none';
+      if (readerConfirmation) readerConfirmation.style.display = 'block';
+      if (data.id && readerReceipt) {
+        const statusUrl = data.status_url || `${CHORUS_API_BASE}/chorus/status/${data.id}`;
+        readerReceipt.innerHTML = `Receipt ${data.id}. To see what happened to it: <a href="${statusUrl.replace(/"/g, '&quot;')}">${statusUrl.replace(/^https?:\/\//, '')}</a>`;
+      }
+    } catch (e) {
+      showReaderError(e.message || 'Something went wrong. Please try again.');
+      readerSubmit.disabled = false;
+      readerSubmit.textContent = 'Add my voice';
+      if (window.turnstile) try { window.turnstile.reset(); } catch {}
+    }
+  });
 }
 
 // "N voices have taken the turn so far" — live count from the same endpoint chorus.html reads.
-fetch(`${CHORUS_API_BASE}/chorus?format=json&limit=1`, { cache: 'no-store' })
-  .then(r => r.ok ? r.json() : null)
-  .then(d => {
-    if (!d || typeof d.count !== 'number') return;
-    const n = d.count;
-    readerChorusCount.innerHTML = n === 0
-      ? 'No one has taken the turn yet. <a href="/chorus">The chorus page</a> is waiting for a first voice.'
-      : `${n} voice${n === 1 ? ' has' : 's have'} taken the turn so far. <a href="/chorus">Read the chorus &rsaquo;</a>`;
-    readerChorusCount.hidden = false;
-  })
-  .catch(() => {});
-
-readerSubmit.addEventListener('click', async () => {
-  const text = readerText.value.trim();
-  showReaderError('');
-  if (text.length < 20) { showReaderError('A little more than that. Twenty characters at least.'); return; }
-  if (!readerType) { showReaderError('Say whether you are a human or an agent.'); return; }
-  if (readerType === 'agent' && !readerSource.value.trim()) { showReaderError('Agents: include a page you maintain so readers can find you.'); return; }
-
-  const payload = {
-    text,
-    author_type: readerType,
-    name: readerName.value.trim(),
-    location: readerLocation.value.trim(),
-    source_url: readerSource.value.trim(),
-    website: readerWebsite.value, // honeypot, stays empty for people
-  };
-  if (TURNSTILE_SITE_KEY && window.turnstile) payload.turnstile_token = window.turnstile.getResponse() || '';
-
-  readerSubmit.disabled = true;
-  readerSubmit.textContent = 'Sending…';
-  try {
-    const resp = await fetch(`${CHORUS_API_BASE}/chorus?format=json`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-    const data = await resp.json().catch(() => ({}));
-    if (!resp.ok) throw new Error(data.error || `The API answered ${resp.status}.`);
-    readerForm.style.display = 'none';
-    readerConfirmation.style.display = 'block';
-    if (data.id) {
-      const statusUrl = data.status_url || `${CHORUS_API_BASE}/chorus/status/${data.id}`;
-      readerReceipt.innerHTML = `Receipt ${data.id}. To see what happened to it: <a href="${statusUrl.replace(/"/g, '&quot;')}">${statusUrl.replace(/^https?:\/\//, '')}</a>`;
-    }
-  } catch (e) {
-    showReaderError(e.message || 'Something went wrong. Please try again.');
-    readerSubmit.disabled = false;
-    readerSubmit.textContent = 'Add my voice';
-    if (window.turnstile) try { window.turnstile.reset(); } catch {}
-  }
-});
+if (readerChorusCount) {
+  fetch(`${CHORUS_API_BASE}/chorus?format=json&limit=1`, { cache: 'no-store' })
+    .then(r => r.ok ? r.json() : null)
+    .then(d => {
+      if (!d || typeof d.count !== 'number') return;
+      const n = d.count;
+      readerChorusCount.innerHTML = n === 0
+        ? 'No one has taken the turn yet. <a href="/chorus">The chorus page</a> is waiting for a first voice.'
+        : `${n} voice${n === 1 ? ' has' : 's have'} taken the turn so far. <a href="/chorus">Read the chorus &rsaquo;</a>`;
+      readerChorusCount.hidden = false;
+    })
+    .catch(() => {});
+}
 
 // ── Node search (adapted for Cytoscape: searches the currently loaded graph) ──
 const searchInput = document.getElementById('graph-search');
@@ -3783,30 +3875,55 @@ document.addEventListener('keydown', e => {
 });
 
 // === BOX-SELECT ZOOM ===
+// Ctrl+drag (Meta+drag on macOS). Capture-phase so Cytoscape does not start a
+// pan on the same mousedown; Shift was abandoned (Windows Sticky Keys).
 (function initBoxSelectZoom() {
   const graphBody = document.getElementById('graph-body');
   const rect = document.getElementById('box-select-rect');
   let active = false;
   let startX = 0, startY = 0;
 
-  function screenToModel(px, py) {
-    const z = cy.zoom();
-    const p = cy.pan();
-    const cont = cy.container().getBoundingClientRect();
+  function screenToModel(g, px, py) {
+    const z = g.zoom();
+    const p = g.pan();
+    const cont = g.container().getBoundingClientRect();
     return {
       x: (px - cont.left - p.x) / z,
       y: (py - cont.top - p.y) / z
     };
   }
 
+  function isZoomModifier(e) {
+    return e.ctrlKey || e.metaKey;
+  }
+
+  // Prefer the live binding; fall back to the container registry (survives
+  // odd reload/destroy timing where `cy` briefly disagrees with the DOM).
+  function getCy() {
+    if (cy) return cy;
+    const el = document.getElementById('cy');
+    return (el && el._cyreg && el._cyreg.cy) || null;
+  }
+
+  function endBoxSelect() {
+    active = false;
+    rect.hidden = true;
+    graphBody.classList.remove('box-selecting');
+    const g = getCy();
+    if (g) g.userPanningEnabled(true);
+  }
+
   graphBody.addEventListener('mousedown', (e) => {
-    if (!cy) return;
+    const g = getCy();
+    if (!g) return;
     if (e.button !== 0) return;
-    if (!e.ctrlKey) return;
-    if (e.target.closest('#node-panel, .graph-search-wrap, .np-close, button, a')) return;
+    if (!isZoomModifier(e)) return;
+    if (e.target.closest('#node-panel, .graph-search-wrap, #api-view, .np-close, button, a, input, textarea')) return;
+    // Win the gesture before Cytoscape's pan handler.
     e.preventDefault();
+    e.stopImmediatePropagation();
     active = true;
-    cy.userPanningEnabled(false);
+    g.userPanningEnabled(false);
     const bounds = graphBody.getBoundingClientRect();
     startX = e.clientX - bounds.left;
     startY = e.clientY - bounds.top;
@@ -3816,7 +3933,7 @@ document.addEventListener('keydown', e => {
     rect.style.height = '0px';
     rect.hidden = false;
     graphBody.classList.add('box-selecting');
-  });
+  }, true);
 
   document.addEventListener('mousemove', (e) => {
     if (!active) return;
@@ -3832,56 +3949,48 @@ document.addEventListener('keydown', e => {
     rect.style.top = y + 'px';
     rect.style.width = w + 'px';
     rect.style.height = h + 'px';
-  });
+  }, true);
 
   document.addEventListener('mouseup', (e) => {
     if (!active) return;
-    active = false;
-    rect.hidden = true;
-    graphBody.classList.remove('box-selecting');
-    cy.userPanningEnabled(true);
-
     const bounds = graphBody.getBoundingClientRect();
     const endX = e.clientX - bounds.left;
     const endY = e.clientY - bounds.top;
     const w = Math.abs(endX - startX);
     const h = Math.abs(endY - startY);
+    endBoxSelect();
 
-    if (w < 20 || h < 20) return;
+    const g = getCy();
+    if (w < 20 || h < 20 || !g) return;
 
     const sx1 = Math.min(startX, endX) + bounds.left;
     const sy1 = Math.min(startY, endY) + bounds.top;
     const sx2 = sx1 + w;
     const sy2 = sy1 + h;
 
-    const tl = screenToModel(sx1, sy1);
-    const br = screenToModel(sx2, sy2);
+    const tl = screenToModel(g, sx1, sy1);
+    const br = screenToModel(g, sx2, sy2);
 
     const modelW = br.x - tl.x;
     const modelH = br.y - tl.y;
     if (modelW <= 0 || modelH <= 0) return;
 
-    const vpW = cy.width();
-    const vpH = cy.height();
+    const vpW = g.width();
+    const vpH = g.height();
     const zoom = Math.min(vpW / modelW, vpH / modelH) * 0.9;
-    const clamped = Math.min(Math.max(zoom, cy.minZoom()), cy.maxZoom());
+    const clamped = Math.min(Math.max(zoom, g.minZoom()), g.maxZoom());
     const centerX = (tl.x + br.x) / 2;
     const centerY = (tl.y + br.y) / 2;
     const pan = {
       x: vpW / 2 - clamped * centerX,
       y: vpH / 2 - clamped * centerY,
     };
-    cy.stop(true);
-    cy.animate({ zoom: clamped, pan: pan, duration: 400, easing: 'ease-out' });
-  });
+    g.stop(true);
+    g.animate({ zoom: clamped, pan: pan, duration: 400, easing: 'ease-out' });
+  }, true);
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && active) {
-      active = false;
-      rect.hidden = true;
-      graphBody.classList.remove('box-selecting');
-      cy.userPanningEnabled(true);
-    }
+    if (e.key === 'Escape' && active) endBoxSelect();
   });
 })();
 
