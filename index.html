@@ -2002,6 +2002,8 @@ let adjMap = {};
 let edgeList = [];
 let nodeIdNorm = {};
 let essayCollapsed = false;
+// Camera saved while the essay is collapsed so reopen can restore exploration.
+let collapsedExploreViewport = null;
 let loomFrameIndex = -1; // set to latest frame on first Loom load (sparsity finding)
 let loomPlayInterval = null;
 let loomFrameInitialized = false;
@@ -2534,6 +2536,16 @@ async function initGraph(source) {
     if (playBtn) { playBtn.classList.remove('active'); playBtn.textContent = 'Play'; }
   }
 
+  // Remember pan/zoom while essay is collapsed so "show essay" can restore it.
+  cy.on('pan zoom', () => {
+    if (!essayCollapsed || !cy) return;
+    collapsedExploreViewport = {
+      zoom: cy.zoom(),
+      pan: { x: cy.pan().x, y: cy.pan().y },
+      source: currentSource,
+    };
+  });
+
   // Explore-style: any node is clickable (including previously ghosted ones).
   // Background / edge clears ghosting so the full field is explorable again.
   cy.on('tap', 'node', evt => {
@@ -2608,6 +2620,9 @@ async function selectSection(sectionId) {
   if (!sec) return; // chorus / reader sections carry no graph excerpt — leave graph as-is
 
   const graphSource = SECTION_SOURCE[sectionId] || 'iso';
+  // Same section re-entry (observer/scroll after expand) must not yank the camera
+  // — especially after collapse → explore → reopen.
+  const samePlace = sectionId === currentSection && graphSource === currentSource && !!cy;
 
   if (graphSource !== currentSource) {
     const hopsChanged = syncHopsForSource(graphSource);
@@ -2617,7 +2632,9 @@ async function selectSection(sectionId) {
 
   currentSection = sectionId;
 
-  const fitMode = sectionGhostActive || !essayCollapsed ? 'highlight' : false;
+  const fitMode = samePlace
+    ? false
+    : (sectionGhostActive || !essayCollapsed ? 'highlight' : false);
   applySectionHighlight(sectionId, { fit: fitMode });
   if (fitMode === 'highlight') closeNodePanel();
 
@@ -3455,8 +3472,17 @@ let savedEssayScroll = 0;
 function setEssayCollapsed(collapsed) {
   const graphBody = document.getElementById('graph-body');
   const atDualView = dualViewRange.has(currentSection);
+  // Capture exploration camera before we flip the flag / re-fit.
+  const restore = (!collapsed && essayCollapsed && collapsedExploreViewport
+    && collapsedExploreViewport.source === currentSource)
+    ? {
+        zoom: collapsedExploreViewport.zoom,
+        pan: { x: collapsedExploreViewport.pan.x, y: collapsedExploreViewport.pan.y },
+      }
+    : null;
   if (collapsed) {
     savedEssayScroll = window.scrollY;
+    collapsedExploreViewport = null;
     if (atDualView && apiViewActive) {
       // §13 collapse: API left, graph right
       document.getElementById('cy').style.visibility = '';
@@ -3483,6 +3509,12 @@ function setEssayCollapsed(collapsed) {
   if (cy) {
     requestAnimationFrame(() => {
       cy.resize();
+      // User collapsed, explored, then reopened — keep their camera.
+      if (restore) {
+        cy.viewport({ zoom: restore.zoom, pan: restore.pan });
+        collapsedExploreViewport = null;
+        return;
+      }
       if (sectionGhostActive) {
         // Section ghost is active — re-fit to highlight for new panel width.
         const hl = cy.nodes('.hl');
@@ -3495,10 +3527,13 @@ function setEssayCollapsed(collapsed) {
           const keepInView = keepRaw
             .map(id => resolveNodeId(id))
             .filter(Boolean);
+          const frameOpts = (sec && SECTION_FRAME[sec]) || {};
           frameHighlight(hl, {
             seedId: seed,
             keepInView,
-            padding: collapsed ? 72 : 52,
+            padding: frameOpts.padding != null ? frameOpts.padding : (collapsed ? 72 : 52),
+            maxZoom: frameOpts.maxZoom != null ? frameOpts.maxZoom : 1.25,
+            minZoom: frameOpts.minZoom != null ? frameOpts.minZoom : null,
             duration: 450,
           });
         } else {
